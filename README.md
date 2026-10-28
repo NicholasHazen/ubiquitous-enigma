@@ -1,5 +1,7 @@
 # The Robotics Fieldbook
 
+Source: [NicholasHazen/ubiquitous-enigma](https://github.com/NicholasHazen/ubiquitous-enigma).
+
 A practical HTML textbook for building a room-survey rover while learning
 mechanical design, accurate 3D printing, electronics, model training, mapping,
 and navigation. The workbench keeps the next session, evidence, restart notes,
@@ -69,10 +71,10 @@ After choosing the intended audience and adding the files to a GitHub repository
 Ordinary GitHub Pages sites are public even when their source repository is
 private. Pages availability for private repositories, and any restricted site
 access, depend on the account or organization plan. Choose that audience before
-enabling publication. No GitHub repository or deployed URL is assumed here.
+enabling publication. This repository is public; its intended Pages site is public too.
 
 The workflow publishes only `dist/`. Hash navigation and relative download links
-support a project URL such as `https://OWNER.github.io/robotics-fieldbook/` without
+support a project URL such as `https://nicholashazen.github.io/ubiquitous-enigma/` without
 changing the application paths. Future pushes to `main` rebuild and publish while
 the variable remains enabled. Setting it to `false` stops future deployments;
 it does not remove an already published site.
@@ -84,7 +86,7 @@ automatically to a different domain, browser, or device.
 
 1. On the existing fieldbook, open `#ch-practice` and choose **Export notes & progress**.
 2. Save the JSON backup before changing sites.
-3. On the new site, open `#ch-practice` and choose **Import notes** with that file.
+3. On the new site, open `#ch-practice` and choose **Import saved notes** with that file.
 
 A Home Survey export includes chapter notes, checkpoints, the active session,
 workbench evidence and saved ideas. The archived edition has its own separate
