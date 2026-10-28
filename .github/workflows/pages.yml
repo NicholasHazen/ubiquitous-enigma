@@ -36,8 +36,8 @@ jobs:
           path: dist
 
   deploy:
-    # Leave PAGES_ENABLED unset until the intended site audience is confirmed.
-    if: github.ref == 'refs/heads/main' && vars.PAGES_ENABLED == 'true' && github.event_name != 'pull_request'
+    # Publish only reviewed main-branch source; pull requests only build.
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     permissions:

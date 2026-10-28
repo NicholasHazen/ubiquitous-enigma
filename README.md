@@ -55,29 +55,27 @@ performance must be checked through the course's physical experiments.
 
 ## GitHub Pages
 
-The prepared workflow builds and checks pushes to `main`, pull requests targeting
-`main`, and manual runs. Publication is **disabled by default**: the deploy job
-runs only on `main` when repository variable `PAGES_ENABLED` equals `true`.
-Pull requests never deploy.
+The workflow builds and checks pushes to `main`, pull requests targeting `main`,
+and manual runs. Successful builds on `main` deploy automatically once Pages is
+enabled. Pull requests never deploy.
 
-After choosing the intended audience and adding the files to a GitHub repository:
+One-time repository setting:
 
-1. Open **Settings → Pages** and select **GitHub Actions** as the source.
-2. Open **Settings → Secrets and variables → Actions → Variables**. Add a
-   repository variable named `PAGES_ENABLED` with value `true`.
-3. Open **Actions → Build and publish fieldbook → Run workflow**, choosing `main`.
-4. Use the URL reported by the successful `deploy` job or **Settings → Pages**.
+1. Open [Settings → Pages](https://github.com/NicholasHazen/ubiquitous-enigma/settings/pages).
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+3. Open [Actions → Build and publish fieldbook](https://github.com/NicholasHazen/ubiquitous-enigma/actions/workflows/pages.yml)
+   and choose **Run workflow** on `main` if no deployment is running.
 
-Ordinary GitHub Pages sites are public even when their source repository is
-private. Pages availability for private repositories, and any restricted site
-access, depend on the account or organization plan. Choose that audience before
-enabling publication. This repository is public; its intended Pages site is public too.
+The GitHub integration can update repository files but cannot enable Pages in
+repository settings, so the repository owner must make the one-time setting.
+No repository variable or deployment secret is needed.
 
-The workflow publishes only `dist/`. Hash navigation and relative download links
-support a project URL such as `https://nicholashazen.github.io/ubiquitous-enigma/` without
-changing the application paths. Future pushes to `main` rebuild and publish while
-the variable remains enabled. Setting it to `false` stops future deployments;
-it does not remove an already published site.
+The expected site address after successful deployment is
+<https://nicholashazen.github.io/ubiquitous-enigma/>. The repository and Pages site
+are public. The workflow publishes only `dist/`; hash navigation and relative
+download links work under the project URL. Future pushes to `main` rebuild and
+publish automatically. Disabling the workflow stops future deployments; it does
+not remove an already published site.
 
 ## Move existing notes and progress
 
