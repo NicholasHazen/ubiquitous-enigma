@@ -1,0 +1,11 @@
+timestamp,check,conditions,expected,observed,result,change,next_action
+,polarity,battery unplugged from controller,positive sign at keyed connector,,,,
+,encoder_count,left wheel handturned one output revolution,approximately2249 counts with quadrature convention,,,,
+,encoder_count,right wheel handturned one output revolution,approximately2249 counts with quadrature convention,,,,
+,direction,left positive command,wheel would drive body forward and count increases,,,,
+,direction,right positive command,wheel would drive body forward and count increases,,,,
+,physical_stop,wheels lifted low speed,drive halts and stays disabled until deliberate reset,,,,
+,command_age,encoder polling active but velocity command stopped,bridge sends zero at configured age deadline,,,,
+,serial_loss,bridge process killed,controller stops at configured serial timeout,,,,
+,rolling_distance,loaded rover on hardwood straight path,record measured versus odometry distance,,,,
+,turn,loaded rover slow rotation,record actual versus odometry angle,,,,

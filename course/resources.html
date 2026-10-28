@@ -1,0 +1,313 @@
+<div class="chapter-heading" id="ch-resources"><span class="eyebrow">Resource library · Read, watch, return to the bench</span><h2>Resources for your next experiment.</h2><p class="chapter-deck">Books, videos, and technical references for the home survey rover and its first trained models.</p></div>
+<p>We’re building a rover that measures a room and remembers what it saw. You already know how to program; this shelf supports the newer skills: fitting parts, powering motion, reading sensors, training a model, and connecting an observation to a place. Each recommendation gives you a small piece to read or watch, something to try, and a link back to your build.</p>
+<nav class="resource-jumps" aria-label="Resource categories"><a href="#resources-start">Start here</a><a href="#resources-route">Reading roadmap</a><a href="#resources-make">CAD &amp; printing</a><a href="#resources-power">Electronics &amp; motion</a><a href="#resources-models">Model training</a><a href="#resources-robotics">Mapping &amp; navigation</a><a href="#resources-memory">Join the tracks</a><a href="#resources-later">Later research</a></nav>
+<section class="resource-start" id="resources-start"><h3>Open one resource. Make one thing clearer.</h3>
+<p><strong>Starting today?</strong> Go to the <a href="#ch-first-hour">first-hour session</a> and collect your first images. When you open Fusion for the fit coupon, watch <a href="#resource-fusion">sketch constraints</a>. Before training, read <a href="#resource-validation">the session-split guidance</a>. That is enough reading to begin.</p>
+<p>I’d give a reading detour about ten minutes, then try the card’s task. If it raises another question, leave a note and return to the bench. The roadmap below shows the next reference when you need it; it is not a second course to finish first.</p>
+</section>
+<section class="resource-route" id="resources-route" aria-labelledby="resources-route-title"><h3 id="resources-route-title">Your reading roadmap</h3>
+<p>The two lanes can advance together. Photos and model training can move forward while a print runs or parts arrive. Arrows show the order within a lane; the tracks meet when you attach your own model’s observations to a checked map.</p>
+<div class="resource-lanes">
+<div class="resource-lane"><h4>Build the survey rover</h4><ol>
+<li><a href="#resource-fusion">Constrain the coupon</a><span>Then <a href="#resource-print-design">orient it</a>, print it and measure the fit.</span></li>
+<li><a href="#resource-fusion-course">Assemble separate components</a><span>Use the <a href="#resource-gearmotors">actual motor drawing</a> to place the drive.</span></li>
+<li><a href="#resource-multimeter">Measure the supply</a><span>Then use the <a href="#resource-embedded-timing">RoboClaw guide</a> for the first powered wheel.</span></li>
+<li><a href="#resource-ros2">Set up Jazzy</a><span>Inspect a <a href="#resource-lidar-rviz">stationary scan</a> before mapping.</span></li>
+<li><a href="#resource-frames">Draw the frames</a><span><a href="#resource-rosbag">Record</a> → <a href="#resource-slam">build and check a map</a> → <a href="#resource-nav2">navigate in it</a>.</span></li>
+</ol></div>
+<div class="resource-lane"><h4>Train the household observer</h4><ol>
+<li><a href="#resource-validation">Separate capture sessions</a><span>Collect your distinctive toy present and absent.</span></li>
+<li><a href="#model-setup">Check the training environment</a><span>Then <a href="#resource-islp">train the logistic baseline</a> and <a href="#resource-model-results">read its validation errors</a>.</span></li>
+<li><a href="#resource-neural-video">See how weights learn</a><span>Then inspect a <a href="#resource-convolution">small convolution</a>.</span></li>
+<li><a href="#resource-pytorch">Trace the CNN training loop</a><span>Compare it with the baseline on the same split.</span></li>
+<li><a href="#model-evaluation">Freeze the choice and evaluate</a><span>Keep the saved model, data split and report together.</span></li>
+</ol></div>
+</div>
+<div class="resource-join"><strong>Both lanes meet here ↓</strong><p><a href="#resources-memory">Link five real observations to the map</a>. You need a saved model, a mounted camera and checked capture poses. Further 3D reconstruction and language control remain optional branches.</p></div>
+<details><summary>If you want a book beside the bench</summary><p>For the first physical build, I’d choose <a href="#resource-mechanics-book">Making Things Move</a>. For electrical experiments, use <a href="#resource-electronics-book">Make: Electronics</a> when a measurement needs more explanation. For training, the free Python edition of <a href="#resource-islp">An Introduction to Statistical Learning</a> is the main book. Paid books are optional; the free references and supplied exercises support the default route.</p></details>
+</section>
+<section aria-labelledby="resources-make"><h3 id="resources-make">Make parts that fit</h3>
+<p>Use the next two resources while your first small part is on the screen or on the bench. The rest answer specific fit, strength, and assembly questions. You do not need to complete an entire CAD course before making your rover.</p><div class="resource-grid">
+<article class="resource-card" id="resource-fusion">
+<p class="resource-meta">Video · Free · First CAD session · 9 minutes</p>
+<h4><a href="https://www.autodesk.com/learn/ondemand/tutorial/sketch-constraints" target="_blank" rel="noopener noreferrer">Fusion sketch constraints</a></h4>
+<p class="resource-byline">Autodesk</p>
+<p>Watch with your fit coupon open. Focus on the difference between a dimension and a geometric constraint, then fully define the sketch you intend to reuse.</p>
+<p class="resource-task"><strong>Try it:</strong> Change one named clearance. Check that the mounting-hole relationships stay fixed and that the model rebuilds.</p>
+<p class="resource-return"><a href="#precision-cad">Return to the mounting coupon →</a></p>
+</article>
+<article class="resource-card" id="resource-fusion-course">
+<p class="resource-meta">Video + illustrated reference · Free · First assembly · 6-minute video</p>
+<h4><a href="https://www.autodesk.com/learn/ondemand/tutorial/introduction-to-fusion-assembly-modeling" target="_blank" rel="noopener noreferrer">Introduction to Fusion assembly modeling</a></h4>
+<p class="resource-byline">Autodesk</p>
+<p>Watch body-to-component conversion, fixing the base and adding a joint with your deck and mount open. Follow the chapter’s Pin/Ground terminology if your interface differs. For components already in position, use <a href="https://help.autodesk.com/cloudhelp/ENU/Fusion-Assemble/files/ASM-CREATE-AS-BUILT-JOINT.htm" target="_blank" rel="noopener noreferrer">Create an as-built joint</a> and select Rigid for the static mount.</p>
+<p class="resource-task"><strong>Try it:</strong> Make the deck and sensor mount separate components, fix the deck, and constrain their relationship. Change one mount parameter and check that the assembly still makes sense.</p>
+<p class="resource-return"><a href="#mechanics-first-assembly">Return to your first Fusion assembly →</a></p>
+</article>
+<article class="resource-card" id="resource-print-design">
+<p class="resource-meta">Illustrated guide · Free · Before the first full-size print</p>
+<h4><a href="https://help.prusa3d.com/article/modeling-with-3d-printing-in-mind_164135" target="_blank" rel="noopener noreferrer">Modeling with 3D printing in mind</a></h4>
+<p class="resource-byline">Prusa Research</p>
+<p>Read orientation, supports, and tolerances. These geometry principles are useful on the X1 Carbon; another printer’s numerical performance is not a tolerance specification for yours.</p>
+<p class="resource-task"><strong>Try it:</strong> Mark the loaded region and the mating surface on a screenshot. Choose an orientation that supports both, or divide the part into a bolted assembly.</p>
+<p class="resource-return"><a href="#precision-cad">Return to the mount and print orientation →</a></p>
+</article>
+<article class="resource-card" id="resource-x1-fit">
+<p class="resource-meta">Manufacturer reference · Free · After measuring a fit coupon</p>
+<h4><a href="https://wiki.bambulab.com/en/software/bambu-studio/xy-hole-contour-compensation" target="_blank" rel="noopener noreferrer">X-Y hole and contour compensation</a></h4>
+<p class="resource-byline">Bambu Lab · Bambu Studio</p>
+<p>Use the compensation diagrams when a measured error repeats. Distinguish an enclosed hole from an open slot and an outside contour. Start from the chapter’s saved X1C profile and correct one cause at a time.</p>
+<p class="resource-task"><strong>Try it:</strong> Record the original CAD dimension, measured print, and one proposed change. Reprint the small feature before applying the correction to the chassis.</p>
+<p class="resource-return"><a href="#precision-diagnose">Return to fit diagnosis →</a></p>
+</article>
+<article class="resource-card" id="resource-inserts">
+<p class="resource-meta">Video + article · Free · Optional after through-bolts</p>
+<h4><a href="https://www.cnckitchen.com/blog/tips-and-tricks-for-heat-set-inserts" target="_blank" rel="noopener noreferrer">Tips &amp; Tricks for Heat-Set Inserts used in 3D printing</a></h4>
+<p class="resource-byline">Stefan Hermann · CNC Kitchen</p>
+<p>Watch the installation and alignment. Use the specifications for the exact insert you buy; the internal thread size does not determine its required printed bore.</p>
+<p class="resource-task"><strong>Try it:</strong> Make one sacrificial boss, install an insert, let it cool, and check alignment and resistance to turning before changing your robot design.</p>
+<p class="resource-return"><a href="#precision-cad">Return to the serviceable mount →</a></p>
+</article>
+<article class="resource-card" id="resource-mechanics-book">
+<p class="resource-meta">Book · Paid · Optional bench reference</p>
+<h4><a href="https://www.mheducation.com/highered/mhp/product/making-things-move-diy-mechanisms-inventors-hobbyists-artists.html" target="_blank" rel="noopener noreferrer">Making Things Move: DIY Mechanisms for Inventors, Hobbyists, and Artists</a></h4>
+<p class="resource-byline">Dustyn Roberts · 1st edition</p>
+<p>My first mechanics-book pick for this course. Open Chapter 3’s fastening and joining material while building the chassis. Use Chapter 4’s forces, friction and torque when choosing wheel and motor geometry. Stop when you can explain the load or joint in front of you.</p>
+<p class="resource-task"><strong>Try it:</strong> Trace the weight of the computer through its mount, chassis, wheel supports, and floor. Identify the printed feature carrying each load.</p>
+<p class="resource-return"><a href="#mechanics-assembly">Return to the rolling assembly →</a></p>
+</article>
+</div></section>
+<section aria-labelledby="resources-power"><h3 id="resources-power">Make motion dependable</h3>
+<p>The first new electrical skill is measurement: identify the supply, check polarity, and understand what happens when a motor starts or stalls. Read alongside the selected component manuals in the drive chapter.</p><div class="resource-grid">
+<article class="resource-card" id="resource-electronics-book">
+<p class="resource-meta">Book · Paid · Optional practical foundation</p>
+<h4><a href="https://www.makershed.com/products/make-electronics-3rd-edition-print" target="_blank" rel="noopener noreferrer">Make: Electronics</a></h4>
+<p class="resource-byline">Charles Platt · 3rd edition</p>
+<p>Use the early measurement and component experiments when voltage, current, and resistance are still abstract. Follow an experiment’s specified parts before adapting it to a motor circuit.</p>
+<p class="resource-task"><strong>Try it:</strong> Explain where you would place the meter to measure supply voltage and why current measurement requires a different connection.</p>
+<p class="resource-return"><a href="#drive-power">Return to the power checks →</a></p>
+</article>
+<article class="resource-card" id="resource-multimeter">
+<p class="resource-meta">Illustrated guide · Free · Before connecting the motor supply</p>
+<h4><a href="https://learn.adafruit.com/multimeters" target="_blank" rel="noopener noreferrer">Multimeters</a></h4>
+<p class="resource-byline">Ladyada · Adafruit Learning System</p>
+<p>Read continuity and DC voltage first, with your meter manual beside you. Check the probe sockets and selected mode before touching the circuit.</p>
+<p class="resource-task"><strong>Try it:</strong> With power disconnected, confirm a planned ground connection using continuity. Then follow the chapter’s voltage checks before attaching the motor controller.</p>
+<p class="resource-return"><a href="#drive-power">Return to the meter and supply checks →</a></p>
+</article>
+<article class="resource-card" id="resource-gearmotors">
+<p class="resource-meta">Manufacturer tables + datasheet · Free · During parts selection</p>
+<h4><a href="https://www.pololu.com/product/4885" target="_blank" rel="noopener noreferrer">The reference motor: Pololu #4885 with encoder</a></h4>
+<p class="resource-byline">Pololu</p>
+<p>Read <strong>Dimensions</strong>, <strong>Using the encoder</strong>, and the specifications for this exact 47:1 LP 12V variant. The drawing answers where the motor fits; the electrical and encoder specifications answer how to drive and measure it. Keep the <a href="https://www.pololu.com/category/115/25d-metal-gearmotors" target="_blank" rel="noopener noreferrer">family comparison table</a> for a later redesign.</p>
+<p class="resource-task"><strong>Try it:</strong> Transfer the shaft diameter, mounting pattern, permitted screw engagement, voltage and stall current to the build sheet. Distinguish encoder counts at the motor shaft from counts at the geared output.</p>
+<p class="resource-return"><a href="#drive-parts">Return to the reference parts →</a></p>
+</article>
+<article class="resource-card" id="resource-embedded-timing">
+<p class="resource-meta">Manufacturer guides · Free · First powered wheel</p>
+<h4><a href="https://resources.basicmicro.com/dual-channel-roboclaw-quick-start-guide/" target="_blank" rel="noopener noreferrer">RoboClaw: connect, measure and save settings</a></h4>
+<p class="resource-byline">Basicmicro</p>
+<p>Use the motor/encoder diagrams and Motion Studio connection instructions beside the chapter’s supported-wheel checks. USB does not power the controller. Read <a href="https://resources.basicmicro.com/graphing-in-motion-studio/" target="_blank" rel="noopener noreferrer">Graphing in Motion Studio</a> when you compare requested and measured speed; use <a href="https://resources.basicmicro.com/manual/roboclaw/motion-studio-general-settings/" target="_blank" rel="noopener noreferrer">General Settings → Serial → Timeout</a> during interface work.</p>
+<p class="resource-task"><strong>Try it:</strong> Identify the supply, motor and encoder connections, check one encoder’s sign, and save the settings. At the <a href="#drive-interface">command-timeout session</a>, test fresh-command expiry while status polling continues separately from complete communication loss. The communication timeout alone does not prove both behaviors.</p>
+<p class="resource-return"><a href="#drive-encoder">Return to the first encoder and powered wheel →</a></p>
+</article>
+</div></section>
+<section aria-labelledby="resources-models"><h3 id="resources-models">Train while you build</h3>
+<p>Start collecting your own images in the first hour. These readings support the small present/absent classifier in Chapter 03. They are not a separate prerequisite course. Your first neural network earns its place by comparison with a simpler trained baseline.</p><div class="resource-grid">
+<article class="resource-card" id="resource-islp">
+<p class="resource-meta">Book · Free author PDF; paid print optional · First model</p>
+<h4><a href="https://www.statlearning.com/" target="_blank" rel="noopener noreferrer">An Introduction to Statistical Learning: with Applications in Python</a></h4>
+<p class="resource-byline">Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani, and Jonathan Taylor · 2023</p>
+<p>For the first visit, read the classification chapter’s logistic-regression explanation beside our baseline. Look back at statistical learning when you need the vocabulary of inputs, targets and error. Save resampling and deep learning for the question that needs them; the chapter’s session-separated split remains our evaluation plan.</p>
+<p class="resource-task"><strong>Try it:</strong> Write the image input, present/absent target, and an example of each type of classification error. Explain why a learned logistic classifier already counts as a trained model.</p>
+<p class="resource-return"><a href="#model-baseline">Return to the trained baseline →</a></p>
+</article>
+<article class="resource-card" id="resource-validation">
+<p class="resource-meta">Engineering reference · Free · Before the first fit</p>
+<h4><a href="https://scikit-learn.org/stable/common_pitfalls.html" target="_blank" rel="noopener noreferrer">Common pitfalls and grouped evaluation</a></h4>
+<p class="resource-byline">scikit-learn</p>
+<p>Read data leakage and preprocessing, then <a href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data" target="_blank" rel="noopener noreferrer">grouped-data evaluation</a>. Nearby frames from one capture run are related. Split complete capture sessions before fitting preprocessing or choosing model settings.</p>
+<p class="resource-task"><strong>Try it:</strong> List the session IDs in training, validation, and test. Confirm they are disjoint, and keep every augmented copy with its source image.</p>
+<p class="resource-return"><a href="#model-data">Return to the capture-session split →</a></p>
+</article>
+<article class="resource-card" id="resource-neural-video">
+<p class="resource-meta">Videos + illustrated lessons · Free · Before the CNN</p>
+<h4><a href="https://www.3blue1brown.com/lessons/neural-networks/" target="_blank" rel="noopener noreferrer">But what is a Neural Network?</a></h4>
+<p class="resource-byline">Grant Sanderson · 3Blue1Brown</p>
+<p>Watch the network explanation, then <a href="https://www.3blue1brown.com/lessons/gradient-descent/" target="_blank" rel="noopener noreferrer">Gradient descent, how neural networks learn</a>. Translate the handwritten-digit example into our two-class image task. Use the visualization to connect weights, outputs, loss, and updates.</p>
+<p class="resource-task"><strong>Try it:</strong> Point to the trainable parameters in the supplied model and explain what changes during training and what stays fixed during inference.</p>
+<p class="resource-return"><a href="#model-neural">Return to neural-network training →</a></p>
+</article>
+<article class="resource-card" id="resource-convolution">
+<p class="resource-meta">Illustrated book section · Free · When the first CNN is ready</p>
+<h4><a href="https://d2l.ai/chapter_convolutional-neural-networks/conv-layer.html" target="_blank" rel="noopener noreferrer">Convolutions for Images</a></h4>
+<p class="resource-byline">Dive into Deep Learning · Aston Zhang, Zachary C. Lipton, Mu Li and Alexander J. Smola</p>
+<p>Read the small sliding-filter illustration, <strong>Object Edge Detection in Images</strong>, and <strong>Learning a Kernel</strong>. A hand-chosen edge filter gives you a picture of the operation; learning the filter connects that picture to our CNN. You can use the diagrams without installing the book’s helper package.</p>
+<p class="resource-task"><strong>Try it:</strong> Calculate one output cell from the input and kernel diagram. Find a <code>Conv2d</code> weight in our supplied model and name which values training changes.</p>
+<p class="resource-return"><a href="#model-neural">Return to the first convolutional model →</a></p>
+</article>
+<article class="resource-card" id="resource-pytorch">
+<p class="resource-meta">Official tutorial · Free · Beside the supplied training code</p>
+<h4><a href="https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html" target="_blank" rel="noopener noreferrer">Optimizing Model Parameters</a></h4>
+<p class="resource-byline">PyTorch</p>
+<p>Read <strong>Loss Function</strong> and <strong>Optimizer</strong> beside <code>learn.py</code>. Then use <a href="https://docs.pytorch.org/tutorials/beginner/basics/saveloadrun_tutorial.html" target="_blank" rel="noopener noreferrer">Saving and Loading Model Weights</a> when you inspect the checkpoint. Read those examples for the API; run our supplied model in the chapter’s environment. Keep our validation loop and frozen final test separate, even where a tutorial calls recurring evaluation “test.”</p>
+<p class="resource-task"><strong>Try it:</strong> Find gradient reset, backpropagation and the optimizer step. Explain their order, then reload your saved model and compare its prediction on the same image.</p>
+<p class="resource-return"><a href="#model-neural">Return to the training loop →</a></p>
+</article>
+<article class="resource-card" id="resource-model-results">
+<p class="resource-meta">Definitions + small examples · Free · First validation report</p>
+<h4><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html" target="_blank" rel="noopener noreferrer">Read the mistakes behind the score</a></h4>
+<p class="resource-byline">scikit-learn</p>
+<p>Read the binary confusion-matrix example: rows are actual classes and columns are predicted classes. Then read the definition of <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html" target="_blank" rel="noopener noreferrer">balanced accuracy</a> and the opening explanation of <a href="https://scikit-learn.org/stable/modules/calibration.html" target="_blank" rel="noopener noreferrer">probability calibration</a>. This visit is about interpreting the existing report; fitting a calibrator is a later experiment.</p>
+<p class="resource-task"><strong>Try it:</strong> Name one missed toy and one false sighting in your validation results, or record that none occurred in this small set. Average the two class recalls to check balanced accuracy. Explain why <code>score_present=0.9</code> alone does not establish a 90% chance of being correct.</p>
+<p class="resource-return"><a href="#model-baseline">Return to the baseline validation report →</a></p>
+</article>
+<article class="resource-card" id="resource-pytorch-install">
+<p class="resource-meta">Installation selector · Free · Only when creating the environment</p>
+<h4><a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener noreferrer">Start Locally</a></h4>
+<p class="resource-byline">PyTorch</p>
+<p>Select the operating system and compute platform you actually use. The CPU path is enough to check the first small training pipeline. If you use the Windows RTX 4090, follow the supported CUDA installation for that environment and record the versions.</p>
+<p class="resource-task"><strong>Try it:</strong> Run the chapter’s import and device check. Record which device trained the model; a fast GPU does not repair a leaking data split.</p>
+<p class="resource-return"><a href="#model-setup">Return to the learning environment →</a></p>
+</article>
+</div></section>
+<section aria-labelledby="resources-robotics"><h3 id="resources-robotics">Give observations a place, then navigate</h3>
+<p>Keep the course’s ROS 2 Jazzy / Ubuntu 24.04 baseline while following these pages. Version selectors matter: a Rolling or older video command can differ from Jazzy. Windows is your familiar development workstation; the robot’s live sensor workflow has its own environment record and device checks.</p><div class="resource-grid">
+<article class="resource-card" id="resource-ros2">
+<p class="resource-meta">Official setup + selected tutorials · Free · Robot-computer setup</p>
+<h4><a href="https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html" target="_blank" rel="noopener noreferrer">ROS 2 Jazzy on Ubuntu 24.04</a></h4>
+<p class="resource-byline">Open Robotics and ROS contributors</p>
+<p>Follow the installation page through Desktop Install and the talker/listener examples. The <a href="https://github.com/ros2/ros2_documentation/blob/jazzy/source/Installation/Ubuntu-Install-Debs.rst" target="_blank" rel="noopener noreferrer">official source version</a> is an alternative reading view. Then use only the nodes and topics lessons from the <a href="https://docs.ros.org/en/jazzy/Tutorials.html" target="_blank" rel="noopener noreferrer">beginner CLI tutorials</a> when you inspect messages.</p>
+<p class="resource-task"><strong>Try it:</strong> Record the OS and ROS versions, run talker and listener, and inspect the topic’s message type and rate. Save the commands that worked in your environment notes.</p>
+<p class="resource-return"><a href="#drive-linux">Return to the robot-computer setup gate →</a></p>
+</article>
+<article class="resource-card" id="resource-lidar-rviz">
+<p class="resource-meta">Manufacturer driver + illustrated guide · Free · First stationary scan</p>
+<h4><a href="https://github.com/Slamtec/sllidar_ros2" target="_blank" rel="noopener noreferrer">Find your lidar scan, then inspect it in RViz</a></h4>
+<p class="resource-byline">Slamtec · ROS 2 Jazzy RViz documentation</p>
+<p>Use the driver’s model list, matching launch file and serial settings for your exact lidar. Retain our Jazzy installation steps; the driver README also links other distributions. In the <a href="https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/RViz/RViz-User-Guide/RViz-User-Guide.rst" target="_blank" rel="noopener noreferrer">RViz User Guide</a>, read Displays, Display Status, Configurations and Coordinate Frames. Record the driver revision you use.</p>
+<p class="resource-task"><strong>Try it:</strong> With the sensor stationary and motor outputs inhibited, inspect <code>/scan</code> in its actual laser frame. Move a flat target a measured distance, save a screenshot, and save the RViz configuration. The moving survey will need the full frame chain.</p>
+<p class="resource-return"><a href="#capture-first-rviz">Return to your first stationary scan →</a></p>
+</article>
+<article class="resource-card" id="resource-rosbag">
+<p class="resource-meta">Official tutorial · Free · Before the first room survey</p>
+<h4><a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data.html" target="_blank" rel="noopener noreferrer">Recording and playing back data</a></h4>
+<p class="resource-byline">ROS 2 Jazzy documentation</p>
+<p>Read record, info, and play; the <a href="https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-CLI-Tools/Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data.rst" target="_blank" rel="noopener noreferrer">official source version</a> is another way to read it. Follow the chapter’s selected topics and replay isolation so a recording cannot become a live motion command.</p>
+<p class="resource-task"><strong>Try it:</strong> Record a short stationary sample, inspect its duration and topic counts, and replay the observation data with motor output disabled.</p>
+<p class="resource-return"><a href="#mapping-record">Return to recording the room →</a></p>
+</article>
+<article class="resource-card" id="resource-frames">
+<p class="resource-meta">Two short standards · Free · First geometry lesson</p>
+<h4><a href="https://reps.openrobotics.org/rep-0103/" target="_blank" rel="noopener noreferrer">Coordinate conventions and mobile-robot frames</a></h4>
+<p class="resource-byline">REP 103 and <a href="https://reps.openrobotics.org/rep-0105/" target="_blank" rel="noopener noreferrer">REP 105</a> · Open Robotics</p>
+<p>Read the body and optical-frame axis conventions in REP 103, then base_link, odom, and map in REP 105. The camera and the rover do not use interchangeable axes, and a continuous odometry estimate can still drift.</p>
+<p class="resource-task"><strong>Try it:</strong> Draw the robot, laser, and camera axes. Label one measured mounting offset and identify which component publishes each transform.</p>
+<p class="resource-return"><a href="#geometry-frames">Return to the robot frame sketch →</a></p>
+</article>
+<article class="resource-card" id="resource-articulated">
+<p class="resource-meta">Video series + companion articles · Free · Visual reinforcement</p>
+<h4><a href="https://articulatedrobotics.xyz/category/build-a-mobile-robot-with-ros/" target="_blank" rel="noopener noreferrer">Build a Mobile Robot with ROS</a></h4>
+<p class="resource-byline">Josh Newans · Articulated Robotics</p>
+<p>Watch the project overview, then the hardware or application episode matching your current milestone. Use it to see how the pieces cooperate. Its robot, package versions, and wiring are a separate build; retain our selected hardware and Jazzy instructions.</p>
+<p class="resource-task"><strong>Try it:</strong> Draw the path from a velocity command to a turning wheel and from an encoder observation back to the robot’s estimated motion.</p>
+<p class="resource-return"><a href="#drive-interface">Return to the controller interface →</a></p>
+</article>
+<article class="resource-card" id="resource-slam">
+<p class="resource-meta">Maintainer documentation · Free · First measured room map</p>
+<h4><a href="https://github.com/SteveMacenski/slam_toolbox/blob/jazzy/README.md" target="_blank" rel="noopener noreferrer">SLAM Toolbox — Jazzy branch</a></h4>
+<p class="resource-byline">Steve Macenski and contributors</p>
+<p>Read the mapping workflow and the distinction between saving an occupancy map and serializing the pose graph. Use the chapter’s frame names, clocks, and configuration; the package cannot infer your physical sensor mounting.</p>
+<p class="resource-task"><strong>Try it:</strong> Save both the navigation map and the mapping state where required. Reopen the outputs and compare several mapped dimensions with independent measurements.</p>
+<p class="resource-return"><a href="#mapping-save">Return to saving the checked map →</a></p>
+</article>
+<article class="resource-card" id="resource-nav2">
+<p class="resource-meta">Official integration guide · Free · After the map and odometry checks</p>
+<h4><a href="https://docs.nav2.org/jazzy/configuration_and_development/first_time_robot_setup_guide/" target="_blank" rel="noopener noreferrer">First-Time Robot Setup Guide</a></h4>
+<p class="resource-byline">Nav2 · Jazzy documentation</p>
+<p>Read transforms, odometry, sensors, footprint, and navigation configuration in the order the chapter needs them. Use <a href="https://docs.nav2.org/jazzy/configuration_and_development/first_time_robot_setup_guide/sensors/mapping_localization/" target="_blank" rel="noopener noreferrer">Mapping and Localization</a> to distinguish mapping from finding yourself in a saved map.</p>
+<p class="resource-task"><strong>Try it:</strong> Draw the footprint including protruding parts. Before sending a destination, show where live obstacles and the saved map appear in the costmaps.</p>
+<p class="resource-return"><a href="#navigation-gate">Return to navigation configuration →</a></p>
+</article>
+</div></section>
+<section class="resource-start" id="resources-memory"><h3>Join the tracks: remember five real observations</h3>
+<p>Your next resource is the supplied <a href="#memory-evidence">observation-memory walkthrough and starter</a>. Work through its small synthetic example, then open <a href="#memory-real-observations">Session 09B</a> to import five observations from your own model and mounted camera. Keep the image, capture time, model identity, score meaning, map revision and capture pose together.</p>
+<p><strong>Finish this step when:</strong> a query returns those real records and you can show the evidence for each answer. Here, the capture pose records the rover’s <code>base_link</code> pose when the image was taken; it does not establish the toy’s position. Read <a href="#resource-depth">depth projection</a> only when you have the measurements needed to calculate an object location. You can complete the core course before adding a scene graph or an LLM.</p>
+</section>
+<details class="resource-later" id="resources-later"><summary>Later research · Choose one question after the core build</summary>
+<p>For your first extension, follow <a href="#horizon-geometry">reconstruct one corner</a> with recorded RGB-D and known camera poses. After that, choose the question you want to answer: <a href="#resource-octomap">which volume is observed free?</a>, <a href="#resource-splats">how does the room look from another viewpoint?</a>, <a href="#resource-conceptgraphs">which objects relate to each other?</a>, or <a href="#resource-saycan">how can language select a working robot skill?</a> These are separate experiments. Keep one question, one recorded dataset and one acceptance check per detour.</p><div class="resource-grid">
+<article class="resource-card" id="resource-depth">
+<p class="resource-meta">Manufacturer guide · Free · When adding calibrated RGB-D</p>
+<h4><a href="https://dev.realsenseai.com/docs/projection-in-realsense-sdk-2-0/" target="_blank" rel="noopener noreferrer">Projection in RealSense SDK 2.0</a></h4>
+<p class="resource-byline">RealSense</p>
+<p>Read pixels, 3D points, intrinsics, extrinsics, and depth units. Use the calibration returned by the exact camera and stream. This teaches the geometry; it is not a claim that every SDK version supports every host.</p>
+<p class="resource-task"><strong>Try it:</strong> Choose a valid depth pixel, convert it to camera coordinates, and explain which transform is still needed before storing a map coordinate.</p>
+<p class="resource-return"><a href="#memory-position">Return to the measured-point transform →</a></p>
+</article>
+<article class="resource-card" id="resource-conceptgraphs">
+<p class="resource-meta">Research paper + videos + code · Free · After explicit observation records</p>
+<h4><a href="https://concept-graphs.github.io/" target="_blank" rel="noopener noreferrer">ConceptGraphs: Open-Vocabulary 3D Scene Graphs for Perception and Planning</a></h4>
+<p class="resource-byline">Qiao Gu, Alihusein Kuwajerwala, Sacha Morin, Krishna Murthy Jatavallabhula, and collaborators · ICRA 2024</p>
+<p>Watch the overview and inspect how objects, features, and spatial relationships become a scene representation. Use the paper to identify the inputs and assumptions behind its examples. Your first presence classifier is a much narrower capability.</p>
+<p class="resource-task"><strong>Try it:</strong> Sketch how two sightings might be associated with the same object, and identify what evidence could prove the association wrong. Explain what an embedding can retrieve and what it cannot establish about current object position.</p>
+<p class="resource-return"><a href="#horizon-context">Return to the contextual-memory research branch →</a></p>
+</article>
+<article class="resource-card" id="resource-saycan">
+<p class="resource-meta">Research paper + video · Free · After real records and working waypoint navigation</p>
+<h4><a href="https://say-can.github.io/" target="_blank" rel="noopener noreferrer">SayCan: Grounding Language in Robotic Affordances</a></h4>
+<p class="resource-byline">SayCan authors · 2022</p>
+<p>Watch the overview and inspect the Approach diagram. The system combines a language model’s relevance score with learned estimates of whether robot skills can succeed. Use this as a conceptual reference for connecting requests to available actions. Our proposed checked-waypoint adapter is a smaller design, not a reproduction or a drop-in SayCan stack.</p>
+<p class="resource-task"><strong>Try it:</strong> List three actions your actual rover can already execute, the evidence each needs, and one request it must clarify. Trace a request through an allowed named action and deterministic checks before it reaches Nav2.</p>
+<p class="resource-return"><a href="#memory-language">Return to the language-to-action contract →</a></p>
+</article>
+<article class="resource-card" id="resource-octomap">
+<p class="resource-meta">Project overview + paper + library · Free · Voxel branch</p>
+<h4><a href="https://octomap.github.io/" target="_blank" rel="noopener noreferrer">OctoMap: probabilistic 3D occupancy mapping</a></h4>
+<p class="resource-byline">OctoMap project</p>
+<p>Read how the map distinguishes occupied, free, and unknown volume. Follow the link to the paper when you want the probabilistic update behind the picture.</p>
+<p class="resource-task"><strong>Try it:</strong> Sketch a depth ray with free space before its surface hit and unknown space behind it. State why an unobserved cell must not become a drivable shortcut.</p>
+<p class="resource-return"><a href="#horizon-representations">Return to the map representations →</a></p>
+</article>
+<article class="resource-card" id="resource-open3d">
+<p class="resource-meta">Worked tutorial · Free · Surface-reconstruction branch</p>
+<h4><a href="https://www.open3d.org/docs/release/tutorial/t_reconstruction_system/integration.html" target="_blank" rel="noopener noreferrer">TSDF Integration</a></h4>
+<p class="resource-byline">Open3D</p>
+<p>Inspect how depth images, intrinsics and known camera poses feed integration and surface extraction. The <a href="https://github.com/isl-org/Open3D/blob/main/docs/tutorial/t_reconstruction_system/integration.rst" target="_blank" rel="noopener noreferrer">official source documentation</a> provides another reading view. Use a separate reconstruction environment and record the installed version; the linked release documentation can change.</p>
+<p class="resource-task"><strong>Try it:</strong> Start with the documented sample, identify its pose and depth-unit inputs, then adapt three calibrated frames from your recording. Inspect alignment before expanding to a measured corner. Keep this surface model separate from the navigation occupancy map.</p>
+<p class="resource-return"><a href="#horizon-geometry">Return to reconstructing one corner →</a></p>
+</article>
+<article class="resource-card" id="resource-splats">
+<p class="resource-meta">Paper + project video + code · Free · Visual-reconstruction branch</p>
+<h4><a href="https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/" target="_blank" rel="noopener noreferrer">3D Gaussian Splatting for Real-Time Radiance Field Rendering</a></h4>
+<p class="resource-byline">Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis · SIGGRAPH 2023</p>
+<p>Use the project page to understand the representation, then <a href="https://docs.nerf.studio/nerfology/methods/splat.html" target="_blank" rel="noopener noreferrer">Nerfstudio Splatfacto</a> for a documented implementation route. Keep it in a separate experiment environment and inspect installation and license requirements before reuse.</p>
+<p class="resource-task"><strong>Try it:</strong> Compare a rendered view with a held-out photograph from the same static scene. Explain why a good image comparison does not establish free space or collision clearance.</p>
+<p class="resource-return"><a href="#horizon-splats">Return to the splatting experiment →</a></p>
+</article>
+<article class="resource-card" id="resource-modern-robotics">
+<p class="resource-meta">Book + videos · Free author preprint; paid print optional · Deeper geometry</p>
+<h4><a href="https://hades.mech.northwestern.edu/index.php/Modern_Robotics" target="_blank" rel="noopener noreferrer">Modern Robotics: Mechanics, Planning, and Control</a></h4>
+<p class="resource-byline">Kevin M. Lynch and Frank C. Park · 2017</p>
+<p>Use rigid-body motions and the companion videos after our coordinate-frame exercise gives you a concrete question. Read vectors, matrices, and rotations as that question requires them. The entire book is not a prerequisite for moving the rover.</p>
+<p class="resource-task"><strong>Try it:</strong> Work one camera-to-base coordinate transformation on paper, then compare it with the code using the same units and axes.</p>
+<p class="resource-return"><a href="#geometry-frames">Return to the coordinate-frame exercise →</a></p>
+</article>
+<article class="resource-card" id="resource-spark">
+<p class="resource-meta">Manufacturer reference · Free · Before moving a working experiment to the Spark</p>
+<h4><a href="https://docs.nvidia.com/dgx/dgx-spark-porting-guide/latest/porting/software-requirements.html" target="_blank" rel="noopener noreferrer">DGX Spark Porting Guide: software stack and dependencies</a></h4>
+<p class="resource-byline">NVIDIA</p>
+<p>Read the software stack and <a href="https://docs.nvidia.com/dgx/dgx-spark-porting-guide/latest/porting/dependencies.html" target="_blank" rel="noopener noreferrer">dependency support guide</a>. The Spark’s ARM64 environment and the Windows workstation are separate deployment targets. Record package, architecture, and accelerator support instead of assuming an existing environment transfers.</p>
+<p class="resource-task"><strong>Try it:</strong> Move one saved-data inference job, confirm the supported environment, and compare its outputs with the original machine before moving live workloads.</p>
+<p class="resource-return"><a href="#compute-layout">Return to the computer roles →</a></p>
+</article>
+<article class="resource-card" id="resource-rl-book">
+<p class="resource-meta">Book · Paid publisher edition · Optional later locomotion branch</p>
+<h4><a href="https://mitpress.mit.edu/9780262039246/reinforcement-learning/" target="_blank" rel="noopener noreferrer">Reinforcement Learning: An Introduction</a></h4>
+<p class="resource-byline">Richard S. Sutton and Andrew G. Barto · 2nd edition, 2018</p>
+<p>Return to this after supervised training, evaluation, and a simulation with a measured baseline controller. Start with the agent, action, reward, and episode ideas. This branch supports the earlier snake and unusual-locomotion interests.</p>
+<p class="resource-task"><strong>Try it:</strong> Define one simulated movement task and identify how a policy could exploit its reward while failing your actual objective.</p>
+<p class="resource-return"><a href="#horizon-later">Return to the later locomotion branch →</a></p>
+</article>
+</div></details>
+<p class="callout"><strong>Ask your coding agent for evidence.</strong> Have it explain an unfamiliar API, scaffold an experiment, or check a data split. Keep the choice of target, acceptance check, and interpretation in your hands. When a resource introduces five new ideas, capture the four you do not need yet in your <a href="#ch-practice">workshop notebook</a>.</p>
+<p class="resource-note">The selected ROS track is Jazzy. External documentation, video interfaces, package support, and commercial licenses can change; use the chapter’s environment record when reproducing an experiment. No resource recommendation establishes that the physical rover has already been tested.</p>

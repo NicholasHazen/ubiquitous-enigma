@@ -1,0 +1,17 @@
+<mujoco model="fieldbook_bench_joint">
+  <compiler angle="radian"/>
+  <option timestep="0.002"/>
+  <worldbody>
+    <body name="link" pos="0 0 0.10">
+      <joint name="hinge" type="hinge" axis="0 0 1"
+             limited="true" range="-0.8 0.8" damping="0.02"/>
+      <geom name="link_shape" type="capsule" fromto="0 0 0 0.10 0 0"
+            size="0.01" mass="0.10"/>
+    </body>
+  </worldbody>
+  <actuator>
+    <position joint="hinge" kp="0.8"
+              ctrllimited="true" ctrlrange="-0.6 0.6"
+              forcelimited="true" forcerange="-0.08 0.08"/>
+  </actuator>
+</mujoco>

@@ -1,0 +1,150 @@
+<section class="chapter" id="ch-learning" data-title="Compare ideas, then train a model" data-part="The desktop workshop" data-number="10">
+<div class="chapter-heading"><span class="eyebrow">Chapter 10 · The desktop workshop</span><h2>Compare ideas,<br>then train a model</h2><p class="chapter-deck">Run a fair parameter search, then follow a four-session plan for your first trained dynamics predictor.</p></div>
+<p>You have already tried two commands: jump to the target, or ease toward it over 0.30 seconds. Both arrive. One moves faster; the other avoids the highest speed. That is enough to build a real optimization experiment. We will let the computer try 25 candidates and show its working.</p>
+<p>The new skill here is experimental design: reset the robot, try a candidate, measure its behavior, select one, and test it on conditions that did not choose the winner. Your programming experience handles the implementation; the experiment must still earn its conclusion. This first runnable example searches a command parameter. After it, the <a href="#first-model-plan">first-model lesson plan</a> takes you from data to fitted parameters and evaluation.</p>
+<div class="exercise"><h3>Session 10A · A tiny robot audition</h3><p><strong>Allow:</strong> 20–30 minutes. <strong>Bring:</strong> the working <code>fieldbook-sim</code> folder from Chapter 09. <strong>Finish:</strong> a chosen command ramp, a results table, and a comparison on two reserved link masses.</p></div>
+<h3>1. Decide what “better” means</h3>
+<p>For this exercise, better means a compromise between staying near the desired angle and avoiding high peak angular speed. We score every two-second trial using:</p>
+<pre><code>cost = RMS angle error + 0.03 seconds × peak angular speed</code></pre>
+<p><strong>Lower cost wins.</strong> RMS means root mean square: square each error, average those squares, then take the square root. It gives one number for how far the joint is from its desired angle across the trial. Both terms in our cost have angle units; the 0.03-second weight expresses a preference we chose. It is not a material property, an energy measurement, or a universal safety limit.</p>
+<p>The baseline jumps to the target immediately. Candidates take between 0.02 and 0.60 seconds to ramp up. Every candidate gets the same target, joint model, torque limit, starting position, and trial duration. Otherwise we could accidentally reward an easier test.</p>
+<h3>2. Download and run the search</h3>
+<p>Save <a data-download="assets/examples/simulation/search_ramp.py" href="assets/examples/simulation/search_ramp.py" download="search_ramp.py">search_ramp.py</a> beside <code>joint_probe.py</code> and <code>joint.xml</code>. Use the same terminal folder and environment as Chapter 09.</p>
+<p><strong>Windows:</strong></p><pre><code>.\.venv-sim\Scripts\python.exe search_ramp.py</code></pre>
+<p><strong>macOS or Linux:</strong></p><pre><code>.venv-sim/bin/python search_ramp.py</code></pre>
+<p>Open <code>chosen.svg</code> in your browser and <code>search-results.csv</code> in a spreadsheet or text editor. The program also writes <code>search-summary.json</code>, a readable record of the settings, chosen candidate, and reserved trials. A random seed fixes the sequence of candidates so you can repeat this exact search.</p>
+<div class="callout"><h3>Expected result for this edition</h3><p>With seed 7 and the supplied model, the executed run chose a ramp of about <strong>0.3308 seconds</strong>. Its cost was about <strong>0.1491</strong>, compared with <strong>0.1807</strong> for the baseline. If your result is close, the experiment is working. “Best” here means best among these 25 candidates under this particular score.</p></div>
+<h3>3. Inspect what the winning score hides</h3>
+<p>Look at the <code>rms_error_rad</code> and <code>peak_speed_rad_s</code> columns separately. The chosen ramp reduces peak speed by accepting more angle error during the movement. If I told you only that it was “better,” you would miss that tradeoff. A score is a compact statement of what you asked for; it is not a substitute for watching the behavior.</p>
+<p>Now find the two <code>Held-out</code> lines in the terminal. The search used a 0.10 kg link. After selecting its winner, it tested both the winner and baseline at 0.08 kg and 0.12 kg. Those masses were reserved beforehand and did not pick the winner. In this edition's run, the chosen ramp also had lower cost in both reserved cases. That is evidence about these two variations, not evidence that it will control your real servo.</p>
+<div class="table-wrap"><table><thead><tr><th>Link mass</th><th>Baseline cost</th><th>Chosen-ramp cost</th><th>Role</th></tr></thead><tbody><tr><td>0.10 kg</td><td>0.180746</td><td>0.149126</td><td>Used for selection</td></tr><tr><td>0.08 kg</td><td>0.179492</td><td>0.147921</td><td>Reserved evaluation</td></tr><tr><td>0.12 kg</td><td>0.181667</td><td>0.150086</td><td>Reserved evaluation</td></tr></tbody></table></div>
+<p>These are actual headless software results from Python 3.12.14 and MuJoCo 3.3.7. No physical robot or ground-contact simulation was involved.</p>
+<h3>4. Change the preference, then predict the winner</h3>
+<p>In <code>joint_probe.py</code>, find <code>SPEED_WEIGHT_S = 0.03</code>. Change only that number to <code>0.00</code>. Predict which type of command the search will prefer when peak speed no longer counts against it. Rerun <code>search_ramp.py</code>; it overwrites the previous results, so save a copy first if you want both. Then restore <code>0.03</code> and rerun once to leave the original experiment ready.</p>
+<details><summary>Check your prediction</summary><p>The immediate step wins among the supplied candidates when the speed penalty is removed: it spends less time waiting for the commanded target to rise. This model's finite torque still limits acceleration. We changed the goal the search was solving, so a different winner is the expected outcome.</p></details>
+<details><summary>If the search does not run</summary><p><code>No module named joint_probe</code> means the two Python files are not together, or one has the wrong filename. <code>No module named mujoco</code> means you used the wrong Python environment; copy the full command above. If Chapter 09 no longer works, restore its original files before debugging the search. If you changed the seed, weight, or model, different numbers are expected: repeat the untouched baseline first.</p></details>
+<details><summary>Read or copy the complete search_ramp.py</summary><pre><code class="language-python">&quot;&quot;&quot;Search command rise times; evaluate the chosen setting on unseen link masses.&quot;&quot;&quot;
+import csv
+import json
+import random
+from joint_probe import run_trial, save_trace
+
+SEED = 7
+TRAIN_MASS_KG = 0.10
+HELD_OUT_MASSES_KG = (0.08, 0.12)  # decided before searching
+
+
+def main():
+    rng = random.Random(SEED)
+    candidates = [0.0] + [rng.uniform(0.02, 0.60) for _ in range(24)]
+    results = []
+    for ramp in candidates:
+        metrics, _ = run_trial(ramp, TRAIN_MASS_KG)
+        results.append({&quot;ramp_s&quot;: ramp, **metrics})
+    best = min(results, key=lambda item: item[&quot;cost&quot;])
+    with open(&quot;search-results.csv&quot;, &quot;w&quot;, newline=&quot;&quot;) as f:
+        writer = csv.DictWriter(f, fieldnames=list(results[0]))
+        writer.writeheader()
+        writer.writerows(results)
+    evaluations = []
+    for mass in HELD_OUT_MASSES_KG:
+        baseline, _ = run_trial(0.0, mass)
+        chosen, _ = run_trial(best[&quot;ramp_s&quot;], mass)
+        evaluations.append({&quot;mass_kg&quot;: mass, &quot;baseline&quot;: baseline, &quot;chosen&quot;: chosen})
+        print(f&quot;Held-out {mass:.2f}kg: baseline {baseline[&#x27;cost&#x27;]:.6f}; chosen {chosen[&#x27;cost&#x27;]:.6f}&quot;)
+    _, rows = run_trial(best[&quot;ramp_s&quot;], TRAIN_MASS_KG)
+    save_trace(&quot;chosen&quot;, rows)
+    with open(&quot;search-summary.json&quot;, &quot;w&quot;) as f:
+        json.dump({&quot;seed&quot;: SEED, &quot;train_mass_kg&quot;: TRAIN_MASS_KG,
+                   &quot;baseline&quot;: results[0], &quot;chosen&quot;: best,
+                   &quot;held_out&quot;: evaluations}, f, indent=2)
+    print(f&quot;Baseline cost: {results[0][&#x27;cost&#x27;]:.6f}&quot;)
+    print(f&quot;Chosen ramp: {best[&#x27;ramp_s&#x27;]:.6f}s; cost: {best[&#x27;cost&#x27;]:.6f}&quot;)
+    print(&quot;Wrote search-results.csv, search-summary.json, chosen.csv, chosen.svg&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<section id="first-model-plan" aria-labelledby="first-model-title">
+<h3 id="first-model-title">Your first trained model: predict one joint</h3>
+<p>You already use AI to help write software. Now you will build the smaller system underneath a learning experiment: a dataset, a parameterized function, an objective, and a test that can disagree with you. We will keep the same virtual joint so that learning the machinery does not also require inventing a new robot.</p>
+<div class="callout"><p><strong>This is the next implementation plan.</strong> The supplied <code>joint_probe.py</code> and <code>search_ramp.py</code> run the earlier experiments; they do not collect the transition dataset below or train a neural network. You will implement those additions in a separate project folder, with an agent if useful. No training result or accuracy target is claimed here. Plan four 60–90 minute work sessions; stop at each artifact and resume from its next action.</p></div>
+<p>Keep three jobs separate. <strong>The simulator</strong> advances a hand-specified physics model. <strong>Your learned dynamics model</strong> predicts what state comes next from examples. <strong>A controller or policy</strong> chooses what command to send. In this first project you train the predictor, then evaluate it offline. Its outputs never drive hardware.</p>
+<p><strong>Parameters</strong> are the numbers training fits, such as regression coefficients or network weights. A <strong>loss</strong> measures disagreement between predictions and examples; training adjusts parameters to reduce it. A <strong>gradient</strong> tells the optimizer how a small parameter change would change that loss. <strong>Inference</strong> is using the fitted parameters to make a prediction without updating them. A falling training loss is useful evidence that fitting works; it does not establish performance on new trials.</p>
+
+<div class="bench-session" id="model-data-contract">
+<h4>Session 10B · Freeze the question and collect transitions</h4>
+<p class="session-meta">60–90 minutes · Finish with a dataset and a split manifest</p>
+<p><strong>Read first:</strong> the statistical-learning overview in the free <a href="https://www.statlearning.com/" target="_blank" rel="noopener noreferrer">An Introduction to Statistical Learning with Applications in Python</a>. Focus on inputs, responses, fitting, and generalization. Then write this contract before asking an agent to implement the collector.</p>
+<div class="table-wrap"><table><thead><tr><th>Item</th><th>Our first experiment</th></tr></thead><tbody>
+<tr><td>Question</td><td>Given the current joint angle, angular velocity, and next held command, what changes over the next 20 ms?</td></tr>
+<tr><td>Input</td><td><code>[q_t, v_t, u_t]</code>: angle in radians, velocity in radians/second, and commanded angle in radians, all available before the transition.</td></tr>
+<tr><td>Target</td><td><code>[q_next − q_t, v_next − v_t]</code>. Predict both changes so the model can later advance its own state.</td></tr>
+<tr><td>Timing</td><td>Read the state, set one command, hold it through ten 0.002-second physics steps, then read the next state. One example spans 0.020 seconds.</td></tr>
+<tr><td>Metadata</td><td>Episode ID, step, command-sequence seed, link mass, simulator/package versions, and model/configuration hash. Metadata organizes evaluation; it is not automatically an input feature.</td></tr>
+</tbody></table></div>
+<ol class="bench-steps">
+<li>Reuse the supplied XML and simulator initialization in a new collector. Do not call the existing <code>run_trial()</code>: it validates positive targets and generates one ramp, while this collector needs a signed command sequence. Keep the XML’s axis, limits, damping, torque limit, and 0.002-second physics step. Create a fresh stationary simulation for every three-second episode. Change the command every 0.20 seconds, drawing it uniformly between −0.4 and +0.4 radians from a recorded seed. The collector records a transition every 20 ms while holding that interval’s command constant.</li>
+<li>Decide the split before fitting: 60 episodes at 0.10 kg for training, 20 for validation, and 20 for the final test. Give every episode a distinct command-sequence seed. Reserve another 20 episodes at each of 0.08 kg and 0.12 kg as separate mass-change stress tests. These are small teaching defaults, not a statistically certified sample size.</li>
+<li>Keep whole episodes in one split. Do not randomly mix neighboring time rows across splits or duplicate a deterministic command sequence across them. Training fits parameters; validation chooses settings and checkpoints; the final test estimates performance after those choices are fixed. See scikit-learn’s <a href="https://scikit-learn.org/stable/modules/cross_validation.html" target="_blank" rel="noopener noreferrer">guidance on grouped and time-dependent evaluation</a>.</li>
+<li>Plot one episode and audit three transitions by hand. Confirm the stated duration and units, then verify that inputs contain no next-state value, future error, or result-derived feature. Mark the first 80 ms after each scheduled command change as a motion window before examining model results.</li>
+</ol>
+<p><strong>Timing trap:</strong> the existing probe CSV stores position and velocity <em>after</em> each physics step, alongside the command that produced that step. Do not treat every same-row value as a pre-step input. The new collector’s explicit before/command/after record removes that ambiguity. An SG92R’s commanded angle is also not a measured physical angle; obtaining comparable real-world state would require sensing or estimation.</p>
+<p class="bench-check"><strong>Pass when:</strong> every episode belongs to exactly one split, the plots agree with the log, and you can explain one input/target pair without the agent. Save the dataset, configuration, and split manifest. <strong>Next:</strong> build the baselines in Session 10C.</p>
+</div>
+
+<div class="bench-session" id="model-baselines">
+<h4>Session 10C · Give the model something honest to beat</h4>
+<p class="session-meta">60–90 minutes · Finish with a validation report for three baselines</p>
+<p><strong>Read first:</strong> the linear-regression section of the same book, then scikit-learn’s <a href="https://scikit-learn.org/stable/common_pitfalls.html" target="_blank" rel="noopener noreferrer">preprocessing and data-leakage examples</a>. The important boundary is that fitting a scaler is also learning from data.</p>
+<ol class="bench-steps">
+<li>Implement persistence: predict <code>Δq = 0</code> and <code>Δv = 0</code>. Then constant velocity: predict <code>Δq = v_t × 0.020</code> and <code>Δv = 0</code>. At a short horizon these can be strong baselines.</li>
+<li>Fit a linear regression from the three inputs to the two targets using training episodes only. If you scale inputs or targets, compute means and scales from training data and reuse those exact values everywhere else. Record how you handle any zero-variance column.</li>
+<li>Evaluate all three on validation episodes. Report angle-change RMSE in radians and velocity-change RMSE in radians/second separately. Show full-episode results, the predeclared motion-window results, and the worst episode. Long stretches near rest can otherwise make “predict nothing changes” look excellent.</li>
+</ol>
+<p class="bench-check"><strong>Pass when:</strong> a saved report compares all three methods on identical examples, with physical units and no final-test use. Linear regression is already a trained model. If it loses, inspect timing, units, coverage, and plots before adding complexity. <strong>Next:</strong> keep that report fixed while you try a small network.</p>
+</div>
+
+<div class="bench-session" id="model-training">
+<h4>Session 10D · Train a small network you can account for</h4>
+<p class="session-meta">60–90 minutes · Finish with a checkpoint and learning curves</p>
+<p><strong>Read first:</strong> PyTorch’s <a href="https://docs.pytorch.org/tutorials/beginner/basics/intro.html" target="_blank" rel="noopener noreferrer">Learn the Basics</a> sections on tensors, datasets, building a model, autograd, and optimization. You can skim familiar Python syntax; trace where the examples compute loss, clear old gradients, backpropagate, and update weights. Their classification task differs from our two-output regression task.</p>
+<ol class="bench-steps">
+<li>Use a separate CPU training environment and record the package versions you install. Keep the working simulator environment intact. Start with three input values, two hidden layers of 32 units with ReLU activations, and two output values. These are a deliberately small first architecture, not a claim that it is optimal.</li>
+<li>Reuse the frozen dataset and training-only scaling. Train on mean squared error of the <em>standardized</em> two targets so radians and radians/second are not mixed without a declared scale. Convert predictions back to physical units for every reported metric.</li>
+<li>Start with Adam at a learning rate of 0.001, batches of 256, and at most 100 epochs. An epoch is one pass over the training examples. Save the checkpoint with the lowest validation loss; stop after ten epochs without improvement. These are starting choices. If you change them, log the reason and use validation results, not the final test, to choose.</li>
+<li>First check that a tiny subset of training examples can be fitted closely. This is a debugging check for shapes, target alignment, and the update loop, not a generalization result. Then train on the full training split and plot training versus validation loss. Run the fixed recipe with three recorded initialization seeds; retain every result.</li>
+</ol>
+<p>Let the agent write loaders, plots, and the training loop from your contract. You own the feature/target definition, split boundaries, loss, and interpretation. Ask it to walk through the shapes and units of one batch and to show which values change during one optimizer step. That review teaches more than accepting an impressive-looking loss curve.</p>
+<p class="bench-check"><strong>Pass when:</strong> you can reload the weights <em>and</em> preprocessing state and reproduce predictions with training updates disabled. Follow PyTorch’s <a href="https://docs.pytorch.org/tutorials/beginner/basics/saveloadrun_tutorial.html" target="_blank" rel="noopener noreferrer">save/load example</a>. Save code, package versions, seeds, split manifest, scalers, checkpoint, and curves. <strong>Next:</strong> freeze the recipe and open the test split.</p>
+</div>
+
+<div class="bench-session" id="model-evaluation">
+<h4>Session 10E · Find out where the model stops being useful</h4>
+<p class="session-meta">60–90 minutes · Finish with a comparison and a stated limit</p>
+<ol class="bench-steps">
+<li>Run the frozen baselines and network recipe on the untouched nominal-mass test episodes. Report per-output RMSE, motion-window error, and per-episode results; report all three training seeds rather than presenting only the best. A network that does not beat the simpler model is a valid result.</li>
+<li>Run the mass-change stress tests separately. This predictor has no mass input and learned at one mass; do not assume the same observed state and command identify all the changed physics. Label this as a change of conditions, not another sample from the training setup.</li>
+<li>On a test command sequence, start from its true initial state. Convert each predicted change into the next state: <code>q_next = q + predicted Δq</code> and <code>v_next = v + predicted Δv</code>. Feed that predicted state back into the model for one second. Use the recorded upcoming commands, but do not replace intermediate predictions with simulator truth. Plot angle and velocity against the simulator. Small one-step errors can accumulate into an unusable rollout.</li>
+<li>Write a short model report: task, data coverage, baselines, split policy, units, errors, failure cases, and what the model is not suitable for. If test results lead you to redesign the model, those results have become development feedback; reserve new final-test episodes for the next comparison.</li>
+</ol>
+<p class="bench-check"><strong>Finish line:</strong> a fitted model, reproducible inference, and evidence of where it helps or fails. Predictive accuracy alone does not make it a controller or establish safe real-world behavior. <strong>Next:</strong> <a href="#ch-practice">save the artifacts and choose one next experiment</a>; use the physical-validation route below when you are ready to make a learned policy move a robot.</p>
+</div>
+</section>
+
+<h3>The same loop can audition a gait</h3>
+<p>For your crawler, a candidate can contain wave amplitude, frequency, phase offset, and turning bias. The score can use measured forward distance, unwanted heading change, and failed runs. Start with a small set of <em>bounded</em> candidates and the same reset and trial duration you used in Chapter 08. Do not send this joint experiment's numbers to the crawler: seconds of command rise and degrees of gait amplitude are different quantities.</p>
+<p>A genetic algorithm adds a population, selection, and variation to this search pattern. Daniel Shiffman's <a href="https://natureofcode.com/genetic-algorithms/" target="_blank" rel="noopener noreferrer">Evolutionary Computing chapter and linked videos</a> are a good next explanation. Watch for how a candidate is represented and how its fitness is measured. You already have those two pieces in the program you just ran.</p>
+<p>Optimization by itself does not create feedback. A selected fixed wave remains open-loop: it will keep executing even if the floor changes. A controller that adjusts a wave from actual sensor measurements is a separate capability.</p>
+<details id="learned-locomotion-plan"><summary>The next expedition: a crawler that reacts</summary>
+<p>Your long-term operator request can be “forward speed plus turn rate.” A policy chooses bounded gait adjustments from that request and observations. A neural network can represent that policy; reinforcement learning can fit it through rewards from interaction. This is a new job compared with predicting the joint’s next state. A genetic algorithm instead searches candidate parameters using selection and variation. Adversarial imitation can supply a motion-style objective when suitable reference motion exists; building a general-purpose GAN is not a prerequisite for locomotion.</p><p>Keep the execution boundary explicit: <strong>operator request + available observations → policy → local angle/rate limits and command timeout → actuators</strong>. Limits and the watchdog stay outside the learned model. A stalled laptop or invalid prediction must still reach the defined stopping behavior.</p>
+<p>Keep this order for the next project:</p><ol><li><strong>Measure one real joint.</strong> Record its response at the allowed loads and command rate. Ordinary SG92R commands are not measured joint angles.</li><li><strong>Build and check the whole crawler model.</strong> Match hinge axes, mass, actuator response, and passive-wheel contact. A chain of boxes on a generic floor is not the same mechanism. Replay one known gait and compare direction and displacement with the physical trials.</li><li><strong>Search the measured gait parameters.</strong> Reuse the baseline, reserved conditions, and results log you practiced here. Keep the physical angle/rate bounds.</li><li><strong>Add a measured heading signal and a simple corrective controller.</strong> Confirm that a turning request has a predictable effect before training a control policy.</li><li><strong>Wrap the validated experiment for learning.</strong> Use Gymnasium's reset/step interface, then try one PPO implementation. Evaluate against the simple controller on reserved conditions and several random seeds.</li></ol>
+<p>That is a new build, with its own finish lines. The supervised-model plan above teaches fitting and evaluation; it does not supply a crawler contact model or an RL trainer.</p>
+<table><thead><tr><th>Learning ingredient</th><th>Write this down before training</th></tr></thead><tbody><tr><td>Command</td><td>Desired speed and turn rate, including units and allowed ranges.</td></tr><tr><td>Observation</td><td>Only values the physical robot can measure or estimate at deployment.</td></tr><tr><td>Action</td><td>Bounded changes to an existing gait, passed through local angle and rate limits.</td></tr><tr><td>Reward</td><td>Tracking error and explicit penalties; log each component separately.</td></tr><tr><td>Trial ending</td><td>Task success/failure versus a time limit; reset consistently.</td></tr></tbody></table>
+<p>The simulator can use its exact position to score a trial. That does not make exact position available to the deployed policy. Do not put simulator-only truth into the policy's inputs unless comparable sensing exists on the robot. An IMU contributes rotation and acceleration information; it does not magically supply reliable floor displacement.</p>
+<p>Useful references, in that order: <a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank" rel="noopener noreferrer">3Blue1Brown's neural-network introduction</a> for input-to-output mapping; <a href="https://spinningup.openai.com/en/latest/spinningup/rl_intro.html" target="_blank" rel="noopener noreferrer">Spinning Up's RL concepts</a> for policies and rewards; <a href="https://gymnasium.farama.org/introduction/create_custom_env/" target="_blank" rel="noopener noreferrer">Gymnasium's custom-environment tutorial</a> for the interface; and <a href="https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html" target="_blank" rel="noopener noreferrer">Stable-Baselines3's experiment guidance</a> for evaluation. These support a future project; you do not need to install them to finish this chapter.</p>
+<p>After calibrating a useful model, vary plausible masses, friction, delays, and sensor noise during training. This is domain randomization. The paper <a href="https://research.google/pubs/sim-to-real-learning-agile-locomotion-for-quadruped-robots/" target="_blank" rel="noopener noreferrer">Sim-to-Real: Learning Agile Locomotion for Quadruped Robots</a> shows why actuator modeling and latency matter. The <a href="https://xbpeng.github.io/projects/AMP_Locomotion/" target="_blank" rel="noopener noreferrer">Adversarial Motion Priors project</a> offers a later research direction when useful reference motions exist. Neither replaces a checked mechanism and a physical baseline.</p>
+</details>
+<div class="checkpoint"><h3>Done means this</h3><p>For the supplied runnable chapter: you ran the search, inspected the cost components, and found the reserved-mass results. You can explain why changing the score can change the winner. Save that working version. <strong>Your next learning action:</strong> start <a href="#model-data-contract">Session 10B’s data contract</a>. If you are stopping today, <a href="#ch-practice">leave yourself a restart note</a>. The four-session model plan has its own artifact gates above.</p></div>
+</section>

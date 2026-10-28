@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+out/
+test-results/
+.env
+.env.*
+!.env.example
+.openai/
+review/*.png
+review/*.pdf
+review/*.json

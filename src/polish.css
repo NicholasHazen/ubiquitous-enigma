@@ -1,0 +1,192 @@
+/* Playful maker — warm paper, vivid tools, and open working space. */
+@media screen {
+  :root {
+    --paper:#fff5e7; --surface:#fffefa; --ink:#33223d; --muted:#6e5d70;
+    --line:#e2ccba; --green:#ae3525; --mint:#ffe0d0; --orange:#6d3f9b;
+    --code:#f6ede3; --sidebar:#fffaf2; --tape:#eee1ff; --bench-line:#e2ccba;
+    --accent-ink:#ffffff;
+    --action:#ff784b; --action-ink:#33223d; --prep:#ffedc2;
+    --step-warm:#ffd0ba; --step-gold:#ffdf85; --step-violet:#decaff;
+    --illustration-orange:#ff7549; --illustration-gold:#ffd565;
+    --illustration-lilac:#cbb8f6; --illustration-ink:#33223d;
+    --shadow-soft:0 8px 32px rgb(94 45 24 / 5%);
+    --shadow-raised:0 20px 60px rgb(94 45 24 / 10%);
+    --sans:'Manrope',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+    --serif:'Manrope',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+    --rail-width:224px;
+  }
+  [data-theme=dark] {
+    --paper:#231c29; --surface:#332a3b; --ink:#fff4e7; --muted:#d1bdce;
+    --line:#5a455f; --green:#ffac85; --mint:#51352f; --orange:#d1adff;
+    --code:#2b2432; --sidebar:#2a212f; --tape:#443151; --bench-line:#5a455f;
+    --accent-ink:#33223d; --action:#ff9468; --prep:#493b2d;
+    --shadow-soft:0 8px 32px rgb(0 0 0 / 12%);
+    --shadow-raised:0 20px 60px rgb(0 0 0 / 18%);
+  }
+  body {font-family:var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  button,input,textarea,select {font-family:var(--sans)}
+  :is(a,button,input,textarea,summary):focus-visible {outline:2px solid var(--orange);outline-offset:4px}
+  #workbench-view h1:focus,.chapter :is(h1,h2,h3,h4):focus {outline:none}
+  .sidebar {width:var(--rail-width);background:var(--sidebar);border-right:1px solid var(--line);color:var(--ink);padding:0 15px}
+  .brand {padding:30px 8px 32px;gap:11px;color:var(--ink)}
+  .brand-mark {width:36px;height:38px;border:1.5px solid var(--action-ink);border-radius:12px 12px 12px 4px;background:var(--action);color:var(--action-ink);font-family:var(--sans);font-weight:800;font-size:20px;flex:none;transform:rotate(-5deg)}
+  .brand strong {font-size:14px;font-weight:800;letter-spacing:-.04em;line-height:1.4}
+  .brand small {font-family:var(--sans);font-size:9px;font-weight:550;letter-spacing:.02em;text-transform:none;color:var(--muted);margin-top:5px}
+  .sidebar .search-button {margin:0 0 25px;padding:11px 12px;border:0;border-radius:11px;background:var(--code);color:var(--muted);font-size:10px;min-height:40px}
+  .sidebar .search-button:hover {background:var(--mint);color:var(--green)}
+  .sidebar kbd {color:var(--muted);border-color:var(--line);border-radius:4px;padding:0 5px;font-size:10px}
+  .sidebar .roadmap-shortcut {display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 11px;margin:4px 0;background:transparent;border:0!important;border-radius:12px;color:var(--muted);font-size:10px;font-weight:650;line-height:1.5;text-decoration:none;min-height:43px;box-shadow:none}
+  .sidebar .roadmap-shortcut:hover {background:var(--mint);color:var(--green)}
+  .sidebar .roadmap-shortcut span {font-family:var(--sans);font-size:12px;color:var(--muted)}
+  .sidebar .nav-arrow {width:12px;height:12px;flex:none;opacity:.6}
+  .workbench-active .sidebar .workbench-shortcut {background:var(--step-gold);color:var(--action-ink)!important;box-shadow:none;font-weight:800;border-radius:12px 18px 18px 5px}
+  .sidebar .chapter-browser {margin:25px 0 10px;padding-top:16px;border-top:1px solid var(--line);flex:1}
+  .sidebar .chapter-browser>summary {padding:10px 11px;color:var(--muted);font-size:10px;line-height:1.5;min-height:40px}
+  .sidebar .chapter-browser[open]>summary {margin-bottom:10px}
+  .sidebar .nav-group {color:var(--muted);margin:18px 10px 8px;font-size:9px;letter-spacing:.04em}
+  .sidebar .chapter-link {color:var(--muted);border-radius:9px;padding:9px 10px;font-size:10px;line-height:1.6}
+  .sidebar .chapter-link:hover {background:var(--mint);color:var(--green)}
+  .sidebar .chapter-link .number {color:var(--muted);font-size:9px}
+  .sidebar .chapter-link[aria-current=page] {background:var(--mint);color:var(--green)}
+  .sidebar .chapter-link[aria-current=page] .number {color:var(--green)}
+  .sidebar .roadmap-shortcut,.sidebar .chapter-link,.sidebar .search-button {font-size:12px}
+  .sidebar .chapter-browser>summary {font-size:11px}
+  .sidebar-footer {margin:0 -15px;padding:20px 23px 23px;border-top:1px solid var(--line);background:transparent}
+  .sidebar-footer .sidebar-resume {color:var(--green);font-size:10px;font-weight:700;line-height:1.7;margin-bottom:15px;text-decoration-color:var(--line)}
+  .sidebar-footer small,.sidebar .chapter-progress>summary,.sidebar .progress-line {color:var(--muted);font-size:9px}
+  .sidebar .chapter-progress {margin:9px 0}
+  .sidebar progress {background:var(--line);accent-color:var(--green)}
+  .sidebar progress::-webkit-progress-bar {background:var(--line)}
+  .sidebar progress::-webkit-progress-value {background:var(--green)}
+  .main-wrap {margin-left:var(--rail-width)}
+  .toolbar {height:64px;padding:0 32px;border-color:transparent;background:var(--paper);font-family:var(--sans)}
+  .toolbar .edition {font-family:ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.065em;font-size:9px}
+  .toolbar .crumb-label {font-size:11px;letter-spacing:0;font-weight:600}
+  .toolbar-actions {gap:5px}
+  .tool-button {padding:8px 10px;border-radius:6px;font-size:10px;line-height:1.4;min-height:32px}
+  .download-link {background:var(--surface);border:1px solid var(--line);padding:8px 12px;color:var(--ink)}
+  .reading {max-width:1220px;padding:28px clamp(24px,3.6vw,55px) 76px}
+  #workbench-view[data-view=home] .wb-heading {position:relative;padding-right:255px;min-height:112px}
+  #workbench-view[data-view=home] .wb-heading h1:after {content:"";display:block;width:72px;height:5px;background:var(--action);border-radius:50%;transform:rotate(-3deg);margin:11px 0 12px}
+  .wb-room-sketch {position:absolute;right:0;top:-14px;width:245px;color:var(--green);pointer-events:none}
+  .wb-room-sketch svg {display:block;width:100%;height:auto}
+  .wb-button:not(.wb-secondary) {background:var(--action);color:var(--action-ink);border-color:var(--action-ink);box-shadow:0 3px 0 var(--action-ink);font-weight:800}
+  .wb-button:not(.wb-secondary):hover {box-shadow:0 4px 0 var(--action-ink)}
+  .wb-recovery .wb-button {box-shadow:none}
+  .wb-session-facts {background:var(--prep);border-radius:20px 20px 20px 6px}
+  .wb-journey-zone {margin-left:-24px;margin-right:-24px;padding:36px 24px 40px;border:0;border-radius:44px 24px 44px 12px;background:var(--surface);box-shadow:var(--shadow-soft)}
+  .wb-milestone-index {background:var(--step-gold);color:var(--action-ink);border-color:transparent;border-radius:50% 50% 50% 25%}
+  .wb-milestone-grid>article:nth-child(3n+2) .wb-milestone-index {background:var(--step-warm);border-radius:50% 25% 50% 50%}
+  .wb-milestone-grid>article:nth-child(3n) .wb-milestone-index {background:var(--step-violet);border-radius:25% 50% 50% 50%}
+  .wb-notebook-zone {border:0;padding-top:0}
+  .wb-saved-ideas {position:relative;background:var(--tape);border-radius:24px 8px 24px 8px;padding-top:32px}
+  .wb-saved-ideas:before {content:"";position:absolute;top:-7px;left:27px;width:44px;height:15px;background:var(--step-gold);transform:rotate(-7deg);border-radius:3px}
+  .chapter {max-width:850px;line-height:1.85;background:var(--surface);padding:42px 46px;border-radius:24px;box-shadow:var(--shadow-soft)}
+  .chapter-heading {padding-bottom:30px;margin-bottom:35px}
+  .chapter-heading h2 {font-family:var(--sans);font-weight:800;font-size:clamp(34px,3.5vw,46px);line-height:1.15;letter-spacing:-.045em;margin:18px 0}
+  .chapter-heading>.eyebrow {font-size:10px;letter-spacing:.14em}
+  .chapter-deck {font-size:18px;line-height:1.75;max-width:660px}
+  .chapter h3 {font-size:22px;letter-spacing:-.025em;margin-top:40px}
+  .chapter p {margin-bottom:23px}
+  .chapter :is(ol,ul) {line-height:1.85}
+  .chapter a {text-decoration-thickness:1px;text-underline-offset:4px}
+  .cover h1 {font-family:var(--sans);font-weight:800;letter-spacing:-.05em;line-height:1.07}
+  .cover .chapter-heading>.eyebrow {background:transparent;padding:0;border:0;color:var(--orange)}
+  .mission-art {border-radius:12px;background:var(--surface);border-color:var(--line);box-shadow:var(--shadow-soft)}
+  .bench-session {border:0;border-radius:0;box-shadow:none;padding:32px 0 0;margin:38px 0 0;border-top:2px solid var(--line);background:transparent}
+  .bench-session>h3,.bench-session>h2 {font-family:var(--sans);font-size:23px;line-height:1.4;font-weight:700;letter-spacing:-.03em}
+  .session-meta {border-bottom:1px solid var(--line);font-size:11px;padding-bottom:16px;margin-bottom:24px!important}
+  .session-pin {border:1px solid var(--line);border-radius:6px;padding:8px 11px;font-size:11px;background:var(--paper)}
+  .session-pin:hover {border-color:var(--green)}
+  .session-pin[aria-pressed=true] {background:var(--green);color:var(--accent-ink)}
+  .chapter .bench-steps>li {border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:17px}
+  .chapter .bench-steps>li::marker {font-size:13px}
+  :is(.callout,.pit-stop,.bench-check,.exercise,.checkpoint,.edition-banner) {border-radius:0 9px 9px 0;box-shadow:none;line-height:1.8}
+  .checkpoint {border:1px solid var(--line);border-left:3px solid var(--green)}
+  .chapter details {border-radius:8px;background:var(--surface);padding:17px 20px}
+  .chapter summary {font-size:14px}
+  .next-action {border-radius:18px 18px 18px 5px;padding:19px 22px;background:var(--action);color:var(--action-ink);font-size:15px}
+  [data-theme=dark] .next-action {background:var(--action);color:var(--action-ink)}
+  .next-action a {color:inherit}
+  .chapter .table-wrap {border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+  .chapter td,.chapter th {padding:14px 16px}
+  .chapter th {background:var(--mint);font-size:11px;line-height:1.6;letter-spacing:.015em}
+  .chapter tbody tr:last-child td {border-bottom:0}
+  .chapter pre {border-radius:8px;padding:22px;border-color:var(--line);line-height:1.8;font-size:12px}
+  .chapter :is(.notebook textarea,.search-top input) {border-radius:7px}
+  :is(.finish-button,.primary-button,.secondary-button,.lab-button) {border-radius:7px;padding:11px 15px;font-size:12px}
+  .chapter-pagination .next-chapter {border-radius:8px}
+  .resource-library .resource-jumps {gap:8px;margin-bottom:30px}
+  .resource-jumps a {border-radius:20px;padding:8px 13px;font-size:11px;background:transparent}
+  .resource-start {border-radius:0 10px 10px 0;padding:24px 27px}
+  .resource-library .resource-grid {gap:20px;margin-top:28px;grid-template-columns:1fr}
+  .resource-card {border:0;border-top:1px solid var(--line);border-radius:0;padding:26px 0;box-shadow:none;background:transparent}
+  .chapter .resource-card h4 {font-family:var(--serif);font-weight:500;font-size:25px;line-height:1.2;letter-spacing:-.025em}
+  .chapter .resource-card .resource-meta {font-size:10px;line-height:1.7;letter-spacing:.025em}
+  .chapter .resource-card .resource-byline {font-size:11px;padding-bottom:15px}
+  .chapter .resource-card p {font-size:13px;line-height:1.8}
+  .resource-card .resource-task {padding:14px 17px;background:var(--mint);border:0;border-radius:12px}
+  .chapter .resource-card .resource-return {padding-top:14px;border-top:1px solid var(--line);font-size:11px}
+  .resource-lane,.flow-lane {border-radius:10px;background:var(--surface);padding:22px}
+  .resource-join {border-radius:0 0 10px 10px;padding:22px}
+  .flow-node,.flow-start>a {border-radius:7px;border-width:1px;border-left-width:3px;box-shadow:none;padding:17px}
+  .flow-node:hover,.flow-start>a:hover {transform:none;box-shadow:var(--shadow-soft)}
+  .book-end {border-color:var(--line);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9px;line-height:1.9;padding:27px 20px;color:var(--muted)}
+  dialog {border-radius:12px;box-shadow:var(--shadow-raised);background:var(--surface)}
+  .search-top {padding:21px}
+  .search-results a {border-radius:6px}
+  .search-results a:hover {background:var(--mint)}
+  .search-count {font-size:11px}
+}
+@media screen and (min-width:1600px) {
+  :root {--rail-width:236px}
+  .reading {padding-top:36px}
+}
+@media screen and (max-width:1150px) and (min-width:801px) {
+  :root {--rail-width:212px}
+  .sidebar {padding:0 13px}
+  .sidebar-footer {margin:0 -13px;padding:19px 22px}
+  .reading {padding:26px 28px 64px}
+  .toolbar {padding:0 25px}
+}
+@media screen and (max-width:800px) {
+  #workbench-view[data-view=home] .wb-heading {padding-right:0;min-height:0}
+  .wb-room-sketch {display:none}
+  .sidebar {width:280px}
+  .main-wrap {margin-left:0}
+  .toolbar {height:59px;padding:0 15px;background:var(--paper)}
+  .toolbar .crumb-label {font-size:10px}
+  .tool-button {min-height:34px;padding:8px}
+  .reading {padding:22px 24px 56px}
+  .wb-journey-zone {margin-left:-12px;margin-right:-12px;padding:28px 18px 30px;border-radius:22px}
+  .chapter {padding:30px 28px;border-radius:20px}
+  .chapter-heading {margin-bottom:28px;padding-bottom:25px}
+  .chapter-heading h2 {font-size:40px}
+  .chapter-deck {font-size:17px}
+  .bench-session {padding:26px 0 0;margin:28px 0 0;border-radius:0}
+  .bench-session>h3 {font-size:21px}
+  .chapter pre {padding:16px;font-size:12px}
+  .chapter td,.chapter th {padding:11px 12px}
+}
+@media screen and (max-width:460px) {
+  .toolbar {padding:0 10px;gap:7px}
+  .toolbar-actions {gap:0}
+  .tool-button {padding:7px 6px;font-size:10px}
+  .toolbar .download-link {font-size:9px;padding:8px}
+  .reading {padding:18px 18px 48px}
+  .wb-journey-zone {margin-left:-8px;margin-right:-8px;padding-left:16px;padding-right:16px}
+  .chapter {padding:25px 20px;border-radius:18px}
+  .chapter-heading h2 {font-size:35px}
+  .chapter h3 {font-size:21px}
+  .bench-session {padding:24px 0 0}
+  .resource-card {padding:24px 0}
+  .resource-start,.resource-lane {padding:20px}
+  .chapter .resource-card h4 {font-size:25px}
+  .chapter .table-wrap {border-radius:6px}
+}
+@media screen and (max-width:350px) {
+  .reading {padding-left:16px;padding-right:16px}
+  .toolbar .crumb-label {max-width:66px}
+  .tool-button {padding-left:5px;padding-right:5px}
+  .toolbar .download-link {padding:7px 5px;font-size:9px}
+}

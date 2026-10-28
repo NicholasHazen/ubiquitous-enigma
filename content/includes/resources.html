@@ -1,0 +1,203 @@
+<div class="chapter-heading" id="ch-resources"><span class="eyebrow">Resource library · Keep nearby</span><h2>Resources</h2><p class="chapter-deck">Physical robotics and model building, with your software experience already in hand.</p></div>
+<p>I’ll assume you can read code, debug a program, and manage a software project. This shelf concentrates on the unfamiliar work: making parts fit, powering mechanisms, measuring behavior, and training models from data. Use a small section at the point of need, then return to the bench. Paid books remain optional.</p>
+<nav class="resource-jumps" aria-label="Resource categories"><a href="#resources-start">Start here</a><a href="#resources-models">Model building</a><a href="#resources-books">Books</a><a href="#resources-videos">Videos &amp; CAD</a><a href="#resources-guides">Bench guides</a><a href="#resources-toolchain">Optional toolchain help</a><a href="#resources-later">For later</a><a href="#chapter-source-links">Chapter sources</a><a href="#resource-vocabulary">Vocabulary</a></nav>
+<section class="resource-start" id="resources-start" aria-labelledby="resources-start-title">
+<h3 id="resources-start-title">Read for the next experiment.</h3>
+<p><strong>Your default route:</strong> follow the <a href="#experienced-path">experienced-programmer lesson plan</a>. Keep the physical build checks, skim familiar software setup, then use the <a href="#first-model-plan">first-model sequence</a> after the virtual-joint baseline. Using an AI coding agent already helps with implementation; model training adds data design, loss functions, optimization, and evidence that predictions generalize.</p>
+<div class="table-wrap"><table class="resource-path-table"><thead><tr><th>Your current work</th><th>Use this when…</th><th>Then return to…</th></tr></thead><tbody>
+<tr><td>Parts that fit</td><td>Your sketch keeps shifting: <a href="#resource-fusion">Fusion sketch constraints</a>.</td><td><a href="#precision-cad">Change one fit-strip dimension.</a></td></tr>
+<tr><td>Rover bring-up</td><td>The firmware must keep checking commands: <a href="#resource-embedded-timing">Arduino’s elapsed-time example</a>.</td><td><a href="#ch-code">Check reset and timeout behavior.</a></td></tr>
+<tr><td>Joints and creatures</td><td>Power and motion are unfamiliar: <a href="#resource-servo">Arduino’s servo guide</a>; for mechanics, <a href="#resource-mechanics-book">Making Things Move</a>.</td><td><a href="#ch-joint">Build the unloaded pointer joint.</a></td></tr>
+<tr><td>Simulation → first model</td><td>You have not trained a model: <a href="#resource-islp">statistical learning</a>, then <a href="#resource-validation">evaluation</a>, then <a href="#resource-pytorch">PyTorch</a>.</td><td><a href="#first-model-plan">Work through the first-model plan.</a></td></tr>
+</tbody></table></div>
+</section>
+<aside class="callout" aria-label="Your X1 Carbon printing route"><strong>Keep your X1 Carbon procedure close.</strong> The practical route is <a href="#precision-setup">save a printing baseline</a> → <a href="#precision-measure">measure a small test</a> → <a href="#precision-cad">change a Fusion parameter</a> → <a href="#precision-fit">test a hole and pin</a>. Use the <a href="#precision-diagnose">fit-diagnosis loop</a> when a part binds, and the <a href="#precision-fasteners">fastener lesson</a> before designing a joint.</aside>
+<section aria-labelledby="resources-models"><h3 id="resources-models">From software engineering to model training</h3>
+<p>Use this order: learning concepts and a simple regression model → evaluation and baselines → neural-network intuition → the PyTorch training loop. Read linear algebra, derivatives, or probability only as a current exercise calls for them. The <a href="#first-model-plan">lesson plan</a> gives each step an output and a stopping point.</p>
+<div class="resource-grid">
+<article class="resource-card" id="resource-python-book">
+<p class="resource-meta">Book · Free PDF; paid print optional · New to model training</p>
+<h4 id="resource-islp"><a href="https://www.statlearning.com/" target="_blank" rel="noopener noreferrer">An Introduction to Statistical Learning: with Applications in Python</a></h4>
+<p class="resource-byline">Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani, and Jonathan Taylor · Python edition, 2023</p>
+<p>Start with statistical learning and linear regression; use the resampling material when defining your evaluation. Read the ideas before doing one Python lab. Use the algebra and probability explanations as needed; professional programming does not make those prerequisites automatic.</p>
+<p class="resource-task"><strong>Try it:</strong> Write down your model’s inputs, prediction target, and error measure. Explain which values training will learn and which choices you set.</p>
+<p class="resource-return"><a href="#model-data-contract">Define your first model’s data contract →</a></p>
+</article>
+<article class="resource-card" id="resource-validation">
+<p class="resource-meta">Engineering reference · Free · Before fitting models</p>
+<h4><a href="https://scikit-learn.org/stable/common_pitfalls.html" target="_blank" rel="noopener noreferrer">Common pitfalls and recommended practices</a></h4>
+<p class="resource-byline">scikit-learn</p>
+<p>Read data leakage and inconsistent preprocessing first, then the <a href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data" target="_blank" rel="noopener noreferrer">grouped-data evaluation section</a>. A useful test asks about new runs or conditions; adjacent rows from one robot run are related. Fit preprocessing on training data only.</p>
+<p class="resource-task"><strong>Try it:</strong> Assign whole episodes to train, validation, or final test before training. Assert their IDs are disjoint; decide which error measure will compare your baseline and model.</p>
+<p class="resource-return"><a href="#model-baselines">Return to the baseline and split plan →</a></p>
+</article>
+<article class="resource-card" id="resource-python-video">
+<p class="resource-meta">Video + illustrated lesson · Free · Neural-network concepts</p>
+<h4 id="resource-neural-video"><a href="https://www.3blue1brown.com/lessons/neural-networks/" target="_blank" rel="noopener noreferrer">But what is a Neural Network?</a></h4>
+<p class="resource-byline">Grant Sanderson · 3Blue1Brown</p>
+<p>Watch the network-structure lesson, then <a href="https://www.3blue1brown.com/lessons/gradient-descent/" target="_blank" rel="noopener noreferrer">Gradient descent, how neural networks learn</a>. Use these for weights, loss, and gradients before the PyTorch training loop. This is a visual explanation, not a software installation guide.</p>
+<p class="resource-task"><strong>Try it:</strong> Sketch a network for one numeric prediction. Label the inputs, trainable weights, output, and loss; explain what changes during training and what stays fixed during inference.</p>
+<p class="resource-return"><a href="#model-training">Return to the neural-network lesson →</a></p>
+</article>
+<article class="resource-card" id="resource-pytorch">
+<p class="resource-meta">Hands-on tutorial · Free · First deep-learning framework</p>
+<h4><a href="https://docs.pytorch.org/tutorials/beginner/basics/intro.html" target="_blank" rel="noopener noreferrer">Learn the Basics — PyTorch</a></h4>
+<p class="resource-byline">PyTorch tutorial team</p>
+<p>After the model concepts and evaluation plan, start at Tensors, then follow datasets, model construction, autograd, optimization, and saving/loading. The official exercise uses FashionMNIST images. Use a separate environment for it; keep the fieldbook’s pinned simulation environment intact.</p>
+<p class="resource-task"><strong>Try it:</strong> Identify a batch’s input and output shapes, the loss, and the optimizer step. Save and reload the trained weights, then confirm the same example gives the same prediction in evaluation mode.</p>
+<p class="resource-return"><a href="#model-training">Return to training your own model →</a></p>
+</article>
+</div></section>
+<section aria-labelledby="resources-books"><h3 id="resources-books">Books for physical robotics</h3>
+<p>Your programming experience carries across; mechanical loads and electrical measurements need their own practice. If you want one mechanics book on the bench, I’d start with <em>Making Things Move</em>.</p>
+<div class="resource-grid">
+<article class="resource-card" id="resource-electronics-book">
+<p class="resource-meta">Book · Paid · Beginner</p>
+<h4><a href="https://www.makershed.com/products/make-electronics-3rd-edition-print" target="_blank" rel="noopener noreferrer">Make: Electronics</a></h4>
+<p class="resource-byline">Charles Platt · 3rd edition</p>
+<p>Open this when voltage, current, and resistance still blur together. Start with the early component and measurement experiments, using the book’s specified parts. One experiment is enough for a session.</p>
+<p class="resource-task"><strong>Try it:</strong> Draw your LED circuit and predict what increasing its series resistance will do before testing the change.</p>
+<p class="resource-return"><a href="#ch-power">Return to rover power →</a></p>
+</article>
+<article class="resource-card" id="resource-mechanics-book">
+<p class="resource-meta">Book · Paid · Beginner</p>
+<h4><a href="https://www.mheducation.com/highered/mhp/product/making-things-move-diy-mechanisms-inventors-hobbyists-artists.html" target="_blank" rel="noopener noreferrer">Making Things Move: DIY Mechanisms for Inventors, Hobbyists, and Artists</a></h4>
+<p class="resource-byline">Dustyn Roberts · 1st edition</p>
+<p>My first mechanics-book pick for this path. Start with Chapter 3 on fastening and joining, then Chapter 4 on forces, friction, and torque before the servo joint. Use our X1 Carbon lesson for current printing settings.</p>
+<p class="resource-task"><strong>Try it:</strong> Sketch a supported pivot. Predict how moving the same load twice as far from its shaft changes the torque needed to hold it.</p>
+<p class="resource-return"><a href="#ch-joint">Return to the pointer joint →</a></p>
+</article>
+</div></section>
+<section aria-labelledby="resources-videos"><h3 id="resources-videos">Watch a physical idea, then test it</h3>
+<p>Use these alongside Fusion and your X1 Carbon measurements. Choose one change you can check on a small part.</p>
+<div class="resource-grid">
+<article class="resource-card" id="resource-fusion">
+<p class="resource-meta">Video · Free · Beginner · 9 minutes</p>
+<h4><a href="https://www.autodesk.com/learn/ondemand/tutorial/sketch-constraints" target="_blank" rel="noopener noreferrer">Fusion sketch constraints</a></h4>
+<p class="resource-byline">Autodesk</p>
+<p>Start before drawing your first bracket. Constraints tell Fusion which relationships must survive when a dimension changes. Watch with Fusion open so you can try each idea.</p>
+<p class="resource-task"><strong>Try it:</strong> Constrain a rectangle, change its width, and check that its corners remain square and its intended position stays fixed.</p>
+<p class="resource-return"><a href="#precision-cad">Return to the Fusion fit exercise →</a></p>
+</article>
+<article class="resource-card" id="resource-print-video">
+<p class="resource-meta">Video + article · Free · Beginner</p>
+<h4><a href="https://www.cnckitchen.com/blog/calibration-cubes-are-bad-this-is-how-you-calibrate-your-3d-printer" target="_blank" rel="noopener noreferrer">Calibration Cubes are BAD! This is how you calibrate your 3D Printer</a></h4>
+<p class="resource-byline">Stefan Hermann · CNC Kitchen</p>
+<p>Watch after your first measured print to understand why one tidy cube cannot answer every fit question. Keep our X1 Carbon procedure rather than copying machine-specific adjustments. The optional CaliFlower model discussed is paid.</p>
+<p class="resource-task"><strong>Try it:</strong> Measure one coupon feature three times and record the spread before changing a setting. Repeated measurements test your measuring consistency; separately printed coupons test print repeatability.</p>
+<p class="resource-return"><a href="#precision-measure">Return to the measurement exercise →</a></p>
+</article>
+</div></section>
+<section aria-labelledby="resources-guides"><h3 id="resources-guides">Bench references for the build in front of you</h3>
+<p>These references cover timing, power, actuation, image processing, and simulation. Keep the fieldbook’s selected hardware, wiring, movement limits, and pinned environment for its builds.</p>
+<div class="resource-grid">
+<article class="resource-card" id="resource-arduino-video">
+<p class="resource-meta">Official example · Free · Embedded timing</p>
+<h4 id="resource-embedded-timing"><a href="https://docs.arduino.cc/built-in-examples/digital/BlinkWithoutDelay/" target="_blank" rel="noopener noreferrer">Blink Without Delay</a></h4>
+<p class="resource-byline">Arduino</p>
+<p>Skim the syntax and inspect the elapsed-time pattern. On the Uno, blocking work delays ordinary loop checks. Connect the example to the rover’s bounded serial parsing and command timeout rather than treating it as an introductory programming lesson.</p>
+<p class="resource-task"><strong>Try it:</strong> With motor power off, trace the longest path through the rover loop. Identify what refreshes the command timestamp, what requests stop, and what a reset does.</p>
+<p class="resource-return"><a href="#ch-code">Return to the rover’s timing contract →</a></p>
+</article>
+<article class="resource-card" id="resource-ohms-law">
+<p class="resource-meta">Illustrated guide · Free · Before rover wiring</p>
+<h4><a href="https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law" target="_blank" rel="noopener noreferrer">Voltage, Current, Resistance, and Ohm’s Law</a></h4>
+<p class="resource-byline">SparkFun</p>
+<p>Read the voltage, current, and resistance sections when the power diagram’s labels feel unfamiliar. Connect the terms to the circuit before checking component ratings.</p>
+<p class="resource-task"><strong>Try it:</strong> Calculate the current through a hypothetical 1 kΩ resistor across 5 V. Check: 5 ÷ 1,000 = 0.005 A, or 5 mA.</p>
+<p class="resource-return"><a href="#ch-power">Return to rover power →</a></p>
+</article>
+<article class="resource-card" id="resource-motor-power">
+<p class="resource-meta">Hardware guide · Free · While wiring the rover</p>
+<h4><a href="https://learn.adafruit.com/adafruit-motor-shield-v2-for-arduino/powering-motors" target="_blank" rel="noopener noreferrer">Powering Motors — Adafruit Motor Shield V2</a></h4>
+<p class="resource-byline">Adafruit</p>
+<p>Read the section on USB power for the Arduino and a separate motor supply. This is the guide for our shield family; it covers other configurations too. Keep the fieldbook’s selected parts and wiring.</p>
+<p class="resource-task"><strong>Try it:</strong> With power disconnected, trace the two supply paths and identify the shield’s removed power jumper.</p>
+<p class="resource-return"><a href="#ch-power">Return to the rover wiring →</a></p>
+</article>
+<article class="resource-card" id="resource-servo">
+<p class="resource-meta">Hardware guide · Free · Before the pointer joint</p>
+<h4><a href="https://docs.arduino.cc/learn/electronics/servo-motors/" target="_blank" rel="noopener noreferrer">Servo Motor Basics with Arduino</a></h4>
+<p class="resource-byline">Arduino</p>
+<p>Read how a servo’s control signal and external power supply work. Then use the fieldbook’s specific servo wiring and movement limits for your pointer joint.</p>
+<p class="resource-task"><strong>Try it:</strong> Label signal, servo supply, and shared ground on the book’s diagram, then follow its unloaded, small-angle test.</p>
+<p class="resource-return"><a href="#ch-joint">Return to the pointer joint →</a></p>
+</article>
+<article class="resource-card" id="resource-inserts">
+<p class="resource-meta">Video + article · Free · After through-bolts and nuts</p>
+<h4><a href="https://www.cnckitchen.com/blog/tips-and-tricks-for-heat-set-inserts" target="_blank" rel="noopener noreferrer">Tips &amp; Tricks for Heat-Set Inserts used in 3D printing</a></h4>
+<p class="resource-byline">Stefan Hermann · CNC Kitchen</p>
+<p>Visit when a part needs repeated disassembly. Insert dimensions depend on the actual product; use its manufacturer’s specifications rather than assuming every M3 insert needs the same hole.</p>
+<p class="resource-task"><strong>Try it:</strong> Design a small scrap test around your chosen insert’s dimensions before adding inserts to a robot part.</p>
+<p class="resource-return"><a href="#precision-fasteners">Return to the fastener exercise →</a></p>
+</article>
+<article class="resource-card" id="resource-opencv">
+<p class="resource-meta">Worked guide · Free · Camera branch; image-processing concepts</p>
+<h4><a href="https://docs.opencv.org/4.x/df/d9d/tutorial_py_colorspaces.html" target="_blank" rel="noopener noreferrer">Changing Colorspaces</a></h4>
+<p class="resource-byline">OpenCV-Python Tutorials</p>
+<p>Read the BGR-to-HSV and object-tracking example to see how a color mask works. This detector uses thresholds; it does not train a model. Use the fieldbook’s camera program for robot control and stopping behavior.</p>
+<p class="resource-task"><strong>Try it:</strong> With robot motion disabled, change one color threshold and compare the mask under brighter and dimmer lighting.</p>
+<p class="resource-return"><a href="#ch-vision">Return to the camera exercise →</a></p>
+</article>
+<article class="resource-card" id="resource-mujoco">
+<p class="resource-meta">Interactive notebook · Free · After the first virtual joint</p>
+<h4><a href="https://github.com/google-deepmind/mujoco/blob/main/python/tutorial.ipynb" target="_blank" rel="noopener noreferrer">MuJoCo introductory Python tutorial</a></h4>
+<p class="resource-byline">Google DeepMind · MuJoCo</p>
+<p>Start with the introductory model and simulation examples after completing the fieldbook’s virtual joint. This notebook follows MuJoCo development; retain our pinned environment for the book’s own exercises.</p>
+<p class="resource-task"><strong>Try it:</strong> Change one model parameter, predict its effect, and compare the result with an unchanged run.</p>
+<p class="resource-return"><a href="#ch-simulation">Return to the simulation chapter →</a></p>
+</article>
+</div></section>
+<details id="resources-toolchain"><summary>Optional · A new language or board toolchain</summary><p>You do not need a beginner programming course. Open these only for Python-specific conventions, environment setup, or the Arduino hardware/toolchain. Skip them when the supplied project already builds and runs.</p><div class="resource-grid">
+<article class="resource-card" id="resource-python-bridge">
+<p class="resource-meta">Language reference · Free · Optional for experienced programmers</p>
+<h4><a href="https://docs.python.org/3.12/tutorial/" target="_blank" rel="noopener noreferrer">The Python Tutorial</a></h4>
+<p class="resource-byline">Python documentation · 3.12 branch</p>
+<p>Use only if Python is not one of your working languages. Skim modules, exceptions, file I/O, and virtual environments; look up syntax as needed. You can skip introductory programming courses and still verify the interpreter and packages required by these projects.</p>
+<p class="resource-task"><strong>Try it:</strong> Create the project environment, confirm the interpreter used by your terminal and editor, and reproduce one supplied simulation run before refactoring anything.</p>
+<p class="resource-return"><a href="#python-setup">Return to the project environment setup →</a></p>
+</article>
+<article class="resource-card" id="resource-arduino-book">
+<p class="resource-meta">Book · Paid · Optional board/toolchain reference</p>
+<h4><a href="https://www.makershed.com/collections/all-books/products/make-getting-started-with-arduino-4th-edition-print" target="_blank" rel="noopener noreferrer">Getting Started with Arduino</a></h4>
+<p class="resource-byline">Massimo Banzi and Michael Shiloh · 4th edition</p>
+<p>Keep this only if you want a print reference for the Uno, pins, breadboards, and upload troubleshooting. Skim familiar programming explanations. The fieldbook’s free setup instructions are sufficient for this build, and current IDE screens may differ.</p>
+<p class="resource-task"><strong>Try it:</strong> Locate the board/port, pin reference, and reset behavior for the Uno. Confirm the supplied sketch starts stopped after opening the serial connection.</p>
+<p class="resource-return"><a href="#ch-code">Return to the Uno bring-up checks →</a></p>
+</article>
+</div></details>
+<details class="resource-later" id="resources-later"><summary>For later · Mechanisms, evolution, and learned locomotion</summary><p>Use the mechanics reference when a working joint gives you a concrete geometry question. Follow the first-model plan before exploring learned control. Genetic search, supervised learning, and reinforcement learning solve different problems; your baseline and evaluation decide which experiment is useful. These are not prerequisites for finishing the rover or pointer joint.</p><div class="resource-grid">
+<article class="resource-card" id="resource-nature-code">
+<p class="resource-meta">Book · Free online; paid print optional · Intermediate, optional branch</p>
+<h4><a href="https://natureofcode.com/" target="_blank" rel="noopener noreferrer">The Nature of Code: Simulating Natural Systems with JavaScript</a></h4>
+<p class="resource-byline">Daniel Shiffman · 2024 JavaScript edition</p>
+<p>A creative detour in JavaScript and p5.js, separate from our Python/MuJoCo implementation. Use vectors, forces, and oscillation as needed, then visit evolutionary computing after the baseline search experiment. No JavaScript refresher is required if the examples are already readable to you.</p>
+<p class="resource-task"><strong>Try it:</strong> In an evolutionary example, change only the mutation rate. Compare several runs while keeping the fitness function fixed.</p>
+<p class="resource-return"><a href="#ch-learning">Return to the search experiment →</a></p>
+</article>
+<article class="resource-card" id="resource-modern-robotics">
+<p class="resource-meta">Book + videos · Free author preprint; paid print optional · Later, advanced reference</p>
+<h4><a href="https://hades.mech.northwestern.edu/index.php/Modern_Robotics" target="_blank" rel="noopener noreferrer">Modern Robotics: Mechanics, Planning, and Control</a></h4>
+<p class="resource-byline">Kevin M. Lynch and Frank C. Park · 2017</p>
+<p>After a working joint, start with degrees of freedom and configuration space. Deeper kinematics and control use vectors, matrices, trigonometry, and calculus. The authors’ page includes video supplements and software.</p>
+<p class="resource-task"><strong>Try it:</strong> Count your crawler’s independently controlled joints. Draw two configurations and label the joint angles that distinguish them.</p>
+<p class="resource-return"><a href="#ch-gait">Return to the creature experiment →</a></p>
+</article>
+<article class="resource-card" id="resource-rl-book">
+<p class="resource-meta">Book · Paid publisher edition · Advanced, optional</p>
+<h4><a href="https://mitpress.mit.edu/9780262039246/reinforcement-learning/" target="_blank" rel="noopener noreferrer">Reinforcement Learning: An Introduction</a></h4>
+<p class="resource-byline">Richard S. Sutton and Andrew G. Barto · 2nd edition, 2018</p>
+<p>Save this for after your supervised-model exercise and a simulation with a measured hand-written controller. Begin with the introductory agent, action, and reward ideas. Probability and comfort with mathematical notation help with the algorithms.</p>
+<p class="resource-task"><strong>Try it:</strong> List your creature’s observations, actions, reward, and termination conditions. Find one way it could earn a high reward without moving as intended.</p>
+<p class="resource-return"><a href="#model-evaluation">Return to the model-evaluation gate →</a></p>
+</article>
+<article class="resource-card" id="resource-rl-video">
+<p class="resource-meta">Lecture · Free · Later, optional</p>
+<h4><a href="https://www.youtube.com/watch?v=2pWv7GOvuf0" target="_blank" rel="noopener noreferrer">RL Course by David Silver — Lecture 1: Introduction to Reinforcement Learning</a></h4>
+<p class="resource-byline">David Silver · Published by Google DeepMind</p>
+<p>A video introduction for after model training, evaluation, and a small simulation experiment. Algebra and basic probability help with the broader course. Use it to understand learned behavior; it is not a hardware deployment recipe.</p>
+<p class="resource-task"><strong>Try it:</strong> Define observation, action, reward, and episode-ending conditions for one hinged-joint task.</p>
+<p class="resource-return"><a href="#model-evaluation">Return to the model-evaluation gate →</a></p>
+</article>
+</div></details>
+<p class="callout"><strong>Use your agent as an implementation partner.</strong> Ask it to scaffold data loading, checks, plots, and training code. Keep ownership of the data split, target, baseline, and interpretation of results. Before moving on, explain one failure case without asking the agent to supply the conclusion. Return to <a href="#experienced-path">your lesson plan</a> with the next experiment written down.</p>

@@ -1,0 +1,13 @@
+{
+  "name": "robotics-fieldbook",
+  "version": "0.6.3",
+  "private": true,
+  "description": "Static robotics textbook and session workbench",
+  "scripts": {
+    "build": "python3 build.py",
+    "test:browser": "node review/check_survey.cjs && node review/check_workbench.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.57.0"
+  }
+}

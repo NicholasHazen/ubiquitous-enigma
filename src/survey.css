@@ -1,0 +1,42 @@
+/* A workbench notebook with a readable dependency map. */
+.mission-art{color:var(--green);border:1px solid var(--line);background:var(--surface);margin:30px 0 34px;border-radius:4px;overflow:hidden}
+.mission-art svg{display:block;width:100%;height:auto}
+.dual-roadmap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;margin:0 0 16px}
+.flow-lane{padding:16px;border:1px solid var(--line);background:var(--surface);border-radius:4px;min-width:0}
+.chapter .lane-label{margin:0 0 16px;text-transform:uppercase;letter-spacing:.08em;font-size:11px;font-weight:700;color:var(--muted)}
+.flow-node,.flow-start>a{display:block;text-decoration:none;border:1px solid var(--green);border-left:4px solid var(--green);padding:15px;background:var(--mint);border-radius:3px;line-height:1.5}
+.flow-node:hover,.flow-start>a:hover{box-shadow:0 2px 0 var(--green);transform:translateY(-1px)}
+.flow-node span,.flow-start span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.flow-node strong,.flow-start strong{display:block;font-size:15px;color:var(--ink)}
+.model-node{border-color:var(--orange);background:var(--surface)}
+.model-node span{color:var(--orange)}
+.flow-down{text-align:center;color:var(--orange);font-size:25px;line-height:1.25;padding:8px}
+.chapter .flow-note{font-size:13px;line-height:1.6;color:var(--muted);margin:20px 0 0}
+.flow-start{margin:12px 0}
+.chapter .session-meta{font-size:12px;color:var(--muted)}
+.chapter .bench-check{border-left:3px solid var(--green)}
+.chapter pre{max-width:100%;white-space:pre;overflow-x:auto}
+.chapter td code,.chapter li code,.chapter p code{overflow-wrap:anywhere}
+.chapter td a,.resource-card a{overflow-wrap:anywhere}
+.edition-banner{background:var(--mint);border-left:3px solid var(--orange);padding:16px 20px;font-size:14px;margin:25px 0}
+.chapter blockquote{margin:28px 0;padding:12px 24px;border-left:3px solid var(--orange);font-family:var(--serif);font-size:23px}
+.hardware-status{font-size:14px;border:1px solid var(--line);background:var(--surface);padding:18px;margin:24px 0}
+.definition-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:24px 0}
+.definition-grid>div{border:1px solid var(--line);padding:18px;font-size:15px;background:var(--surface)}
+.definition-grid strong{display:block;margin-bottom:8px;color:var(--green)}
+.chapter .definition-grid p{margin:0}
+.session-pin-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin:14px 0 22px}
+.session-pin{padding:7px 10px;border:1px solid var(--green);border-radius:3px;background:var(--surface);color:var(--green);font-size:12px;line-height:1.4;text-align:left}
+.session-pin[aria-pressed=true]{background:var(--green);color:var(--paper)}
+.pin-status{font-size:11px;color:var(--muted);max-width:100%}
+.sidebar-resume{display:block;font-size:12px;font-weight:650;margin-bottom:13px;line-height:1.5}
+@media print{.session-pin-row{display:none}#drive-power-diagram svg{min-width:0!important}}
+@media(max-width:650px){.dual-roadmap,.definition-grid{grid-template-columns:1fr}.flow-lane{padding:14px}.flow-node strong{font-size:15px}.mission-art{margin-left:-5px;margin-right:-5px}.toolbar-left .edition:first-of-type{font-size:9px}.chapter-heading h2{overflow-wrap:anywhere}}
+@media print{.dual-roadmap{grid-template-columns:1fr 1fr}.flow-node,.flow-start>a{break-inside:avoid;background:white;color:#173d2a}.flow-lane{break-inside:auto}.mission-art{max-width:650px}.edition-banner{background:white}.definition-grid>div{break-inside:avoid}.flow-note{font-size:9pt!important}}
+.chapter-browser{flex:1;min-height:0;overflow:auto;margin:8px 15px;padding:0;border:0;background:transparent}
+.chapter-browser>summary{font-size:12px;padding:10px;color:var(--muted);cursor:pointer}
+.chapter-browser nav{padding:0 0 18px;overflow:visible}
+.sidebar .chapter-progress{margin:10px 0;padding:0;border:0;background:transparent}
+.chapter-progress>summary{font-size:11px;cursor:pointer;color:var(--muted)}
+.chapter-progress .progress-line{margin-top:10px}
+.workbench-shortcut{border-color:var(--green)!important}

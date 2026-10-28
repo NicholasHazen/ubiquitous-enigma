@@ -1,0 +1,117 @@
+<section class="chapter" id="ch-joint" data-title="Make a tiny robot arm" data-part="The modular creature" data-number="07">
+<header class="chapter-heading"><p class="eyebrow">Chapter 07 · A joint on the bench</p><h2>Make a tiny robot arm</h2><p class="chapter-deck">One servo. One pointer. Three places it can point. We’ll make that work before asking a whole creature to cooperate.</p></header>
+<p>The rover’s motors keep turning while you feed them power. A <strong>positional servo</strong> has a different job: move toward a requested position and resist being moved away from it. Put a little pointer on one and you have the beginning of a camera mount, a waving arm, or a snake joint. Today’s mechanism can be small enough to lose beneath a coffee mug.</p>
+<div class="goal-block"><p><strong>Today’s win:</strong> your pointer visits three positions, returns near its center, and stops receiving commands when its timer expires. Budget two short bench sessions, with a print between them. The first session works without a printed part.</p></div>
+<h3>Put these parts on the bench</h3>
+<p>Use the following reference parts for this path. Buy one servo now; buy two more only after this chapter works. Power off and remove the rover’s motor shield from the Uno before starting. Put the rover wiring aside with a photograph so you can restore it later.</p>
+<div class="table-wrap"><table><thead><tr><th>Part or tool</th><th>What to get ready</th></tr></thead><tbody>
+<tr><td>One positional micro servo</td><td><a href="https://www.adafruit.com/product/169" target="_blank" rel="noopener noreferrer">Adafruit #169, TowerPro SG92R</a>, with its supplied horns and center screw. A horn is the little removable plastic arm that fits its output shaft. This is not a continuous-rotation servo.</td></tr>
+<tr><td>Servo power</td><td><a href="https://www.adafruit.com/product/1466" target="_blank" rel="noopener noreferrer">Adafruit #1466 regulated 5 V, 4 A enclosed supply</a>, an appropriate supplied/local mains lead, and <a href="https://www.adafruit.com/product/368" target="_blank" rel="noopener noreferrer">#368 female barrel-jack screw-terminal adapter</a>. Keep the adapter accessible as your DC disconnect. Leave the enclosed mains supply intact.</td></tr>
+<tr><td>Low-voltage wiring</td><td>One <a href="https://www.gobilda.com/servo-extension-3-pos-tjc8-mh-fc-to-fh-mc-300mm-length/" target="_blank" rel="noopener noreferrer">goBILDA 300 mm, 22 AWG servo extension</a>; two <a href="https://www.wago.com/us/wire-splicing-connectors/compact-splicing-connector/p/221-415" target="_blank" rel="noopener noreferrer">WAGO 221-415 five-position connectors</a>; one WAGO 221-412 two-position connector; 22 AWG stranded red/black wire; a prewired inline fuse holder with 18–22 AWG tails and a 2 A fuse; and 22 AWG solid-core hookup wire for the Uno connections. Do not substitute unknown thin jumper wires in these clamps. These connectors stay beside the robot, supported on the bench.</td></tr>
+<tr><td>Controller and tools</td><td>Your Uno R3 and USB data cable, computer with Arduino IDE, multimeter, small screwdriver, wire cutters/stripper, ruler or calipers, masking tape, a paper protractor, PLA, and two small cable ties.</td></tr>
+</tbody></table></div>
+<p>The listed servo’s supplier documents a voltage range that includes 5 V. The 4 A supply is a practical starting supply for our later three-servo experiment; it is not a measurement of what your mechanism draws. Our 2 A fuse protects the small wiring against a fault. If it opens, disconnect power and find the fault or overload before replacing it. Do not install a larger fuse to make a stalled mechanism run.</p>
+<details><summary>I already have an SG90</summary><p>Keep it for a later comparison unless its own supplier documents operation at 5 V and identifies its connector. “SG90” is used for many variants. Matching the case color is not a voltage check. The main instructions below use the specified SG92R so you can keep moving without comparing a dozen listings.</p></details>
+<h3>Session 1 · Get a bare servo to listen</h3>
+<ol>
+<li><strong>Prepare the extension lead with everything unplugged.</strong> Keep the end with three exposed metal pins; it mates with the servo’s socket. Cut off the other end, separate its three wires for about 3 cm, and strip 11 mm for the WAGO connectors, checking the strip-length mark on the delivered connector. Use the meter’s continuity setting to identify which free wire reaches each pin. Label the free extension wires signal, +, and ground using the servo’s pinout. The reference extension uses yellow, red, and black; the servo itself normally uses orange, red, and brown. Match function rather than assuming identical colors. Keep the servo’s own cable intact.</li>
+<li><strong>Make the two supply junctions.</strong> Connect the barrel adapter’s + terminal through the inline fuse to one 5-position lever connector. Connect its − terminal to the other. Label the two otherwise identical connectors <strong>+5 V</strong> with red tape and <strong>GND</strong> with black tape. Each connector joins all its ports internally: the red-labeled connector is one shared +5 V junction, and the black-labeled connector is one shared ground junction. Never put both polarities in the same connector.</li>
+<li><strong>Connect the extension’s free wires.</strong> Its + wire goes to the +5 V junction; its ground wire goes to GND. Keep the servo unplugged until after the voltage check. Cut two 15 cm pieces of 22 AWG solid-core wire; strip 11 mm at each connector end and about 7 mm at each Uno end. Join the extension’s signal wire to one piece using the 2-position connector, then insert its other end fully into Uno <strong>D9</strong>. Connect the second piece from Uno <strong>GND</strong> to the ground junction. Check that the clamps grip copper rather than insulation, lightly tug each connection, and leave no exposed metal outside the Uno sockets. Do not route servo current through the Uno or a breadboard.</li>
+<li><strong>Check before plugging in the servo.</strong> Leave its three-pin plug disconnected. With your meter set to DC volts and its leads in COM and V, briefly power the supply and measure between red and black junctions. Expect about +5 V with red probe on red. A negative reading means the polarity is reversed. Disconnect the supply again before correcting or connecting anything. Do not use the meter’s current socket for this voltage measurement.</li>
+<li><strong>Upload the sketch below.</strong> Leave the servo horn off. Connect USB, choose <strong>Arduino Uno</strong> and the board’s port, then upload <code>joint.ino</code>. If <code>Servo.h</code> is missing, install <strong>Servo by Arduino</strong> through Library Manager. Open Serial Monitor at <strong>115200 baud</strong>.</li>
+<li><strong>Make the first move.</strong> Secure the servo case to the bench with tape, plug in its connector, and connect its 5 V supply. Send capital <code>A</code>. It may turn quickly to its central command. Send <code>L</code>, then <code>C</code>, then <code>R</code>, leaving about two seconds between commands. If it times out, send <code>A</code> before continuing. Send <code>X</code> to stop the pulses, then unplug the servo’s DC supply.</li>
+</ol>
+<div class="table-wrap"><table><caption>Your low-voltage wiring map</caption><thead><tr><th>From</th><th>To</th></tr></thead><tbody><tr><td>Adapter +</td><td>2 A fuse → +5 V junction → extension + wire</td></tr><tr><td>Adapter −</td><td>GND junction → extension ground wire and Uno GND</td></tr><tr><td>Uno D9</td><td>Signal connector → extension signal wire</td></tr><tr><td>Computer USB</td><td>Uno USB socket; no +5 V junction connection to the Uno</td></tr></tbody></table></div>
+<p><strong>What you should see:</strong> a small rotation of the bare output shaft, and an <code>OFF</code> message five seconds after the last accepted command. Without a horn, the motion can be subtle; make a tiny marker dot on the output hub. <strong>If nothing moves:</strong> check the supply voltage and shared ground first, then D9 and the selected serial speed. If the servo turns continuously, you have the wrong servo type for this chapter.</p>
+<aside class="callout"><p><strong>Two different stops:</strong> <code>X</code> and the five-second timer stop control pulses. They do not disconnect electrical power, and a servo’s behavior without pulses is model-dependent. Unplug the DC supply before touching the mechanism. A supported tabletop joint can become loose when pulses stop; an arm carrying something could drop it.</p></aside>
+<p><a data-download="assets/examples/joint/joint.ino" href="assets/examples/joint/joint.ino" download="joint.ino">Download joint.ino</a>. Save it inside a folder named <code>joint</code> and open that file in Arduino IDE. This is a complete sketch for the reference wiring.</p>
+<details><summary>Show the complete joint sketch</summary><pre><code>#include &lt;Servo.h&gt;
+
+// Arduino Uno R3 + one positional micro servo. External regulated 5 V power.
+// Serial Monitor: 115200 baud. A = arm, L/C/R = 75/90/105, X = stop pulses.
+// These are nominal command angles, not measured shaft angles.
+Servo joint;
+const byte SERVO_PIN = 9;
+const unsigned long COMMAND_LEASE_MS = 5000;
+bool armed = false;
+float commandAngle = 90.0f;
+float targetAngle = 90.0f;
+unsigned long lastCommand = 0;
+unsigned long lastTick = 0;
+
+void disarm() {
+  joint.detach();                 // Stops signal pulses; does NOT cut servo power.
+  digitalWrite(SERVO_PIN, LOW);
+  armed = false;
+  Serial.println(F(&quot;OFF: unplug servo power before handling.&quot;));
+}
+
+void setup() {
+  pinMode(SERVO_PIN, OUTPUT);
+  digitalWrite(SERVO_PIN, LOW);
+  Serial.begin(115200);
+  Serial.println(F(&quot;READY: A arms at center. L C R move. X stops pulses.&quot;));
+}
+
+void loop() {
+  unsigned long now = millis();
+  for (byte n = 0; n &lt; 16 &amp;&amp; Serial.available(); ++n) {
+    char c = Serial.read();
+    if (c == &#x27;\r&#x27; || c == &#x27;\n&#x27; || c == &#x27; &#x27;) continue;
+    if (c == &#x27;X&#x27;) {
+      disarm();
+    } else if (c == &#x27;A&#x27;) {
+      if (!armed) {
+        commandAngle = 90.0f;
+        joint.attach(SERVO_PIN, 1000, 2000);
+        joint.write(90);          // Initial centering can jump. Start with horn off.
+        armed = true;
+      }
+      targetAngle = 90.0f;
+      lastCommand = now;
+      lastTick = now;
+    } else if (c == &#x27;L&#x27; || c == &#x27;C&#x27; || c == &#x27;R&#x27;) {
+      if (armed) {
+        targetAngle = c == &#x27;L&#x27; ? 75.0f : c == &#x27;R&#x27; ? 105.0f : 90.0f;
+        lastCommand = now;
+      } else {
+        Serial.println(F(&quot;Send A first, with the mechanism clear.&quot;));
+      }
+    } else {
+      disarm();                   // Unknown input never creates motion.
+    }
+  }
+  if (!armed) return;
+  if (now - lastCommand &gt;= COMMAND_LEASE_MS) {
+    disarm();
+    return;
+  }
+  if (now - lastTick &gt;= 20) {
+    lastTick = now;
+    // At most 0.4 nominal degrees each 20 ms: 20 degrees/second.
+    float error = targetAngle - commandAngle;
+    commandAngle += constrain(error, -0.4f, 0.4f);
+    joint.write((int)(commandAngle + 0.5f));
+  }
+}
+</code></pre></details>
+<p>The sketch adds a small amount to the requested angle every 20 milliseconds. That makes ordinary moves gentler. Its first <code>A</code> command still has to establish a center without knowing where the shaft was, so initial centering can jump. The values 75, 90, and 105 are <em>nominal library commands</em>, not measurements of the real shaft. The <a href="https://github.com/arduino-libraries/Servo/blob/master/docs/api.md" target="_blank" rel="noopener noreferrer">Arduino Servo reference</a> explains how its angle commands map to pulse widths.</p>
+<h3>Session 2 · Print a base, add a pointer</h3>
+<p>We’ll keep the shaft pointing upward so the pointer sweeps across the desk. The servo is turning a lightweight indicator, not lifting a payload yet. This is also the axis orientation we’ll use for the creature.</p>
+<ol>
+<li>In Fusion, create a component named <code>joint_base</code>. Sketch a <strong>60 × 40 mm rectangle</strong> on the XY plane and extrude it <strong>3 mm</strong>. Draw four <strong>3 × 10 mm slots</strong>: two pairs, centered at x = −8 and 0 mm, with each pair at y = −12 and +12 mm relative to the base center. Cut them through the base. The two cable ties will pass through these slots and around the servo case.</li>
+<li>Print it flat in PLA at <strong>0.2 mm layers, three walls, and 20% infill</strong>. These are starting settings, not a strength certification. Sit the servo on the base with its long case dimension along x, output shaft up, and the shaft toward the +x end. Thread the ties around the case behind the output shaft. Tighten just enough to prevent sliding. Make sure neither tie touches the rotating horn.</li>
+<li>Cut a <strong>40 × 8 mm pointer from thin card</strong>. Tape it to a supplied horn while the horn is off the servo. Keep it light. A printed pointer is a later cosmetic replacement; card lets us see the joint working immediately.</li>
+<li>Power the bare servo, send <code>A</code>, wait a second, then disconnect servo power. Fit the horn so the pointer faces along the base’s long axis. Use the supplied center screw; do not force the shaft around to improve alignment. If its teeth prevent perfect alignment, mark the actual neutral direction on the paper below it.</li>
+<li>Tape a protractor under the pointer. Reconnect power with the sweep clear, send <code>A</code>, then <code>L</code>, <code>C</code>, and <code>R</code>. Record the three observed directions. Repeat the sequence three times, rearming when necessary. Send <code>X</code> and disconnect servo power when finished.</li>
+</ol>
+<p><strong>What you should see:</strong> three distinct positions with center returning to roughly the same mark. Use <strong>within about 5° on your paper scale</strong> as this first jig’s acceptance target. If the base moves, fix the base before judging the servo. If the pointer rubs, shorten it or raise the paper clear of it. If it buzzes persistently, heats quickly, or strains against a stop, disconnect power and remove that obstruction before running again.</p>
+<div class="exercise"><p><strong>One useful prediction:</strong> <code>C</code> means “request center.” Does printing <code>90</code> in the Serial Monitor prove that the shaft is at 90°?</p><details><summary>Check your answer</summary><p>No. This three-wire servo sends no position measurement back to your program. Your paper scale is the measurement. The electronics inside the servo have their own position feedback, but your Arduino does not automatically receive it.</p></details></div>
+<h3>Why a longer arm changes the job</h3>
+<p>Before adding a camera or a gripper, use the lab below. Picture an arm lifting a 100 g object held 5 cm from its shaft. Gravity needs about <code>0.10 × 9.81 × 0.05 = 0.049 N·m</code> of turning effort, called <strong>torque</strong>. Put that same object twice as far away and its torque contribution doubles. A real link’s own weight adds to the load too.</p>
+<div data-lab="torque"></div>
+<p>That calculation is for holding still with a horizontal lever. Starting, stopping, rubbing bearings, and impacts add demands. A listed <em>stall torque</em> describes the point where the motor cannot turn; it is not a comfortable load to hold indefinitely. For this chapter, keep the card pointer and no payload. The next build keeps each segment supported by wheels so the servo mainly turns it sideways.</p>
+<details><summary>Bench reading: what powers a servo?</summary><p>Read the wiring and power sections in <a href="https://www.pololu.com/blog/16/electrical-characteristics-of-servos-and-introduction-to-the-servo-control-interface" target="_blank" rel="noopener noreferrer">Pololu’s servo electrical guide</a>. Look for the distinction between the control signal and motor power. For a quick visual introduction, watch <a href="https://www.youtube.com/watch?v=TfakrB1IzbM" target="_blank" rel="noopener noreferrer">Adafruit’s Servo Motors: Collin’s Lab Notes</a>, then point to the three wires on your own servo. The product’s supplied horn gives you a reliable shaft interface; there is no need to print those tiny spline teeth.</p></details>
+<div class="checkpoint"><h3>Done for today</h3><p>Your pointer visits three positions, returns within your first 5° target, and has a tested signal timeout and accessible power disconnect. Save the base CAD, the sketch, a wiring photo, and your three measured directions. That is a finished little mechanism you can actually reuse.</p><p><strong>Leave this note on the bench:</strong> “Next: make one wheeled segment and check that it rolls forward more easily than it slides sideways.”</p></div>
+<p class="next-action"><a href="#ch-gait">Next → Give the joint a body and wheels.</a></p>
+</section>

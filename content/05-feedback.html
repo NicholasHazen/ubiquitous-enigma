@@ -1,0 +1,61 @@
+<section class="chapter" id="ch-feedback" data-title="Give your rover a driving test" data-part="Build one · The rover" data-number="05">
+  <header class="chapter-heading">
+    <p class="eyebrow">05 · Tape on the floor, pencil in hand</p>
+    <h2>Give your rover a driving test</h2>
+    <p class="chapter-deck">Find out what one short motor command actually does. You need a ruler, not a new sensor.</p>
+  </header>
+  <p>Your rover has reached the very respectable stage of being a small machine that goes somewhere. Now we find out whether “somewhere” is repeatable. We will use the same firmware and the same motors from the last chapter. Leave the toolbox closed for this one.</p>
+  <div class="callout"><h3>On the bench</h3><p><strong>Bring:</strong> the assembled rover, its charged four-cell NiMH pack, laptop and USB cable, masking tape, a ruler, and a pencil. Leave enough cable slack for a short run without pulling on a connector. Use a clear, level floor, away from stairs and table edges.</p><p><strong>Finish with:</strong> five distance measurements, a note about any curve, and a verified left/right turn. Allow one short session; measuring and writing are part of the build.</p></div>
+
+  <h3>1. Make a tiny test track</h3>
+  <ol>
+    <li>With motor power off, put a strip of tape on the floor. Draw a start line and an arrow perpendicular to it. The arrow points forward.</li>
+    <li>Put a small tape mark at the centre of the rover's front edge. This is your measuring point for every run.</li>
+    <li>Place that mark over the start line, with the rover facing along the arrow. Keep the USB cable beside the track, clear of the wheels and caster.</li>
+    <li>Open Arduino Serial Monitor at <strong>115200 baud</strong>. Turn on the motor pack. Send <code>X</code>. The rover should remain still.</li>
+  </ol>
+  <p>We are making one thing easy to compare: the displacement of the same point on the same rover. If we change the starting position, surface, and battery state between runs, we give ourselves three extra mysteries.</p>
+
+  <h3>2. Send one nudge; measure where it ends</h3>
+  <ol>
+    <li>Type <code>F</code> and send it <strong>once</strong>. Do not hold a key or send a string of repeated commands.</li>
+    <li>Wait until the rover has stopped. The firmware releases the motors after about 350 milliseconds without another valid command; the wheels may coast beyond that.</li>
+    <li>Turn motor power off before touching the rover. Measure from the start line to your front-centre mark, along the direction of the arrow. Write that forward distance in millimetres.</li>
+    <li>Also measure how far the mark ended to the left or right of the arrow. Record the side in words, so a minus sign cannot confuse tomorrow's you.</li>
+    <li>Return to the same start position. Turn motor power on and send <code>X</code> before the next single <code>F</code>. Repeat the measure-and-reset sequence until you have five runs. Use <code>X</code> if you need to interrupt any run.</li>
+  </ol>
+  <div class="table-wrap"><table><thead><tr><th>Run</th><th>Forward distance (mm)</th><th>Left/right drift (mm)</th><th>Anything different?</th></tr></thead><tbody><tr><td>1</td><td>___</td><td>___</td><td>___</td></tr><tr><td>2</td><td>___</td><td>___</td><td>___</td></tr><tr><td>3</td><td>___</td><td>___</td><td>___</td></tr><tr><td>4</td><td>___</td><td>___</td><td>___</td></tr><tr><td>5</td><td>___</td><td>___</td><td>___</td></tr></tbody></table></div>
+  <p>For an example set of 58, 61, 60, 57, and 64 mm, the mean is <code>(58 + 61 + 60 + 57 + 64) / 5 = 60 mm</code>. The spread is <code>64 − 57 = 7 mm</code>. Those are invented numbers to show the arithmetic, not a distance your rover is expected to achieve. Write your own mean and spread in the notebook below.</p>
+  <p>Do not divide this final distance by 0.35 and label the answer “wheel speed.” The motor accelerates, then the rover coasts. We measured the result of a short command, including the stopping behavior. That is already useful information.</p>
+
+  <h3>3. Fix a big curve before adding smarter code</h3>
+  <p>A gentle curve is common. The firmware sends equal motor settings, but it cannot measure either wheel's speed: these yellow TT motors have no encoders. An <em>encoder</em> is a sensor that counts rotation. Equal electrical commands do not guarantee equal motion.</p>
+  <div class="table-wrap"><table><thead><tr><th>What you see</th><th>Do this next</th></tr></thead><tbody>
+    <tr><td>One wheel does not start.</td><td>Send <code>X</code>, switch motor power off, and return to the raised-wheel <code>1</code>/<code>2</code> checks in Chapter 04. Check wire seating and wheel rubbing. Do not leave a stalled motor powered.</td></tr>
+    <tr><td>Both spin on the stand, but one drags on the floor.</td><td>Power off. Check that its tyre clears the chassis, its wheel is fully seated, and the caster turns freely. Recheck the pack under load using <a href="#ch-rover">Chapter 04, Session C</a>.</td></tr>
+    <tr><td>The curve changes wildly between runs.</td><td>Place the cable to the same side each time. Check for a loose motor, a sliding battery pack, a sticking caster, or a changed floor surface. Fix one cause, then repeat all five runs.</td></tr>
+    <tr><td>Every run curves gently the same way.</td><td>Record it and continue. Your first camera behavior only asks for short left/right turns. Automatic straight driving is an upgrade below.</td></tr>
+  </tbody></table></div>
+  <p>It is tempting to hand the curve to an AI agent and ask for a controller. First give it the measurements. “These five runs drift right by these amounts” is a useful engineering prompt. “Make my robot better” leaves it guessing about the same loose caster you can see.</p>
+
+  <h3>4. Teach your eyes what a turn looks like</h3>
+  <ol>
+    <li>Put the rover back at the start, with the USB cable slack. Turn motor power on.</li>
+    <li>Send <code>L</code> once. Viewed from above, the nose should rotate left: the left wheel rolls backward and the right wheel forward.</li>
+    <li>Send <code>X</code>, switch motor power off, and reset the rover. Turn power on and send <code>R</code> once. The nose should rotate right.</li>
+    <li>If either direction is wrong, power off and repeat the motor-direction check in Chapter 04. Correct the wiring/direction once; do not hide the mistake in the future camera program.</li>
+  </ol>
+  <p>Try the model below: choose straight travel, then a left arc, then a spin. It assumes wheel speeds are known and the tyres do not slip. Our firmware currently accepts letters and fixed motor settings, so the model's metres-per-second numbers are an explanation of the geometry, not settings to paste into Serial Monitor.</p>
+  <div data-lab="drive"></div>
+  <div class="exercise"><h3>A 30-second prediction</h3><p>For a left arc while driving forward, which wheel must travel farther?</p><details><summary>Check your answer</summary><p>The right wheel is on the outside of the arc, so it travels farther. For an in-place left turn, the left wheel goes backward while the right goes forward. A two-wheel rover can turn left; it cannot slide sideways to the left without slipping.</p></details></div>
+
+  <details><summary>Later upgrade: encoders and automatic speed correction</summary>
+    <p>Leave this closed until your camera rover works. The main build needs no encoder purchase or PID tuning. When you want repeatable commanded speeds, replace the drivetrain with compatible encoder-equipped motors and select a driver for their current demands. That is a separate hardware-and-firmware upgrade; the two-wire TT motors cannot acquire position feedback through software.</p>
+    <p>After verifying the number of counts per wheel revolution, convert counts to speed. For a radius of 0.03 metres, 360 counts per wheel revolution, and 18 counts in 0.10 seconds, the wheel turned 0.05 revolutions at 0.5 revolutions per second: 30 rpm. Under rolling without slip, its ground-speed estimate is <code>0.5 × 2π × 0.03 = 0.0942 m/s</code>. Measure elapsed time rather than assuming the loop ran on schedule.</p>
+    <p>A feedback controller compares a requested speed with that estimate. Begin with a proportional correction, <code>output = Kp × (requested − measured)</code>, limit the output, and plot what happens. Add an integral term only after you understand the remaining steady error; limit its accumulation when the output saturates. Clear it on a stop. Brian Douglas's <a href="https://www.mathworks.com/videos/understanding-pid-control-part-1-what-is-pid-control--1527089264373.html" target="_blank" rel="noopener noreferrer">What Is PID Control?</a> is the video to watch when you reach this upgrade.</p>
+    <p>A future motion interface can accept forward speed <code>v</code> and left-turn rate <code>ω</code>. For wheel-track separation <code>b</code>, target wheel speeds are <code>left = v − ωb/2</code> and <code>right = v + ωb/2</code>. Use metres and seconds consistently. If a target exceeds the wheel-speed limit, scale both targets together. This requires a new, explicitly versioned command format and speed feedback; the existing <code>F/B/L/R/X</code> protocol does not carry these quantities.</p>
+    <p>Even matching encoder speeds cannot guarantee a straight ground path. Tyre diameter, slip, alignment, and caster behavior still matter. A robot can produce a lovely graph while driving into a chair leg.</p>
+  </details>
+
+  <div class="checkpoint"><h3>Done means this</h3><p>You have five measured nudges, a recorded mean and spread, and correct left/right turns. You can explain why equal motor commands might make a curve. A slight, repeatable curve does not block the next chapter.</p><p><strong>Pack-down:</strong> send <code>X</code>, switch motor power off, and write one sentence: “My next action is to install the camera script and detect a blue card.”</p><p><a href="#ch-vision">Next: give the rover a blue card to look at →</a></p></div>
+</section>

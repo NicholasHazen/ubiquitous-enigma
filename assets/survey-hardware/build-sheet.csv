@@ -1,0 +1,14 @@
+component,reference,quantity,measured_width_mm,measured_length_mm,measured_height_mm,mass_g,mount_pattern,voltage_range_V,peak_current_A,connector,verified_source,revision_notes
+left_motor,Pololu4885,1,,,,,manufacturer drawing,12 nominal,0.9 extrapolated stall,six wire,https://www.pololu.com/product/4885,
+right_motor,Pololu4885,1,,,,,manufacturer drawing,12 nominal,0.9 extrapolated stall,six wire,https://www.pololu.com/product/4885,
+motor_brackets,Pololu2676 pair,1,,,,,measure delivered bracket,,,,https://www.pololu.com/product/2676,
+wheel_pair,Pololu3690 80mm 4mm D collet,1,,,,,,,,,https://www.pololu.com/product/3690,
+controller,Basicmicro IMC404 RoboClaw2x7A,1,,,,,manufacturer drawing,model datasheet,,USB CDC,https://www.basicmicro.com/Roboclaw-2x7A-Motor-Controller_p_55.html,
+motor_battery,commercial 8cell NiMH 9.6V nominal,1,,,,,,verify charged <=12V,pack connector rating required,keyed connector,,choose matched charger and manufacturer datasheet
+motor_fuse,3A starting wiring-protection candidate,1,,,,,,DC voltage rating above pack,3,near pack positive,,finalize against wiring connector and source capability
+motor_disconnect,rated DC positive-line disconnect,1,,,,,,DC voltage rating above pack,at least fuse rating,,,leave battery negative connected during controlled shutdown
+caster,low-marking swivel or ball support,1,,,,,measure actual mounting pattern,,,,,select height after wheel assembly
+onboard_PC,nativeUbuntu24.04 x86 miniPC,1,,,,,measure case and cooling clearances,manufacturer label,,USB3 WiFi Ethernet,,match manufacturer-approved power
+PC_supply,separate matched portable supply,1,,,,,,match PC input and polarity,PC startup peak,,,verify together under sensor load
+lidar,RPLidarA1 candidate,1,,,,,manufacturer drawing,manufacturer interface kit,,USB,,verify exact SKU ROS2 driver and complete kit
+RGBD_camera,later RealSenseD435i candidate,1,,,,,manufacturer drawing,USB specification,,USB3,,defer until initial map is validated

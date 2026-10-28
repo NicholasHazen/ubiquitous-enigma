@@ -1,0 +1,135 @@
+<section class="chapter" id="ch-code" data-title="Teach it five commands" data-part="Build one · The rover" data-number="03">
+<div class="chapter-heading"><span class="eyebrow">03 · Give the wheels a vocabulary</span><h2>Teach it five commands</h2><p class="chapter-deck">Forward. Back. Left. Right. Stop. A small robot can get quite interesting with five words.</p></div>
+<p>The wiring is ready, and the motor pack stays off while you bring up the board. Use the supplied sketch as a small firmware contract: explicit startup state, bounded commands, and a local timeout. Your programming experience carries over; the new work is checking what each software state means at the driver and the moving wheel. Keep this same firmware through the camera chapter.</p>
+<div class="session-card"><h3>On the bench · about 35 minutes</h3><p><strong>Bring:</strong> the wired Uno and shield, USB data cable, computer and this chapter. Leave the AA pack switched off.</p><p><strong>Finish line:</strong> the Serial Monitor prints <code>READY</code>, accepts a command, and prints <code>STOP timeout</code> when you stop sending it. The wheels do not need to move yet.</p></div>
+<h3>03A · Get a known program onto the board</h3>
+<ol>
+<li>Install Arduino IDE 2 from the <a href="https://www.arduino.cc/en/software" target="_blank" rel="noopener noreferrer">official Arduino software page</a>. Connect the Uno to your computer with its USB data cable.</li>
+<li>In the IDE's board selector, choose <strong>Arduino Uno</strong> and the port that appears when you plug it in. If the IDE asks to install <strong>Arduino AVR Boards</strong>, accept. Use <strong>Tools → Board → Arduino AVR Boards → Arduino Uno</strong> if you need to set it manually.</li>
+<li>Open <strong>File → Examples → 01.Basics → Blink</strong> and click Upload, the right-arrow button. The Uno's onboard <strong>L</strong> LED should blink. This checks the USB cable, selected board, port and upload tool before we involve the shield.</li>
+<li>Open Library Manager, search for <strong>Adafruit Motor Shield V2 Library</strong>, and install the library by Adafruit. Accept its dependency installation. The V2 name is correct for our #1438 v2/v3 shield. Do not install the old <code>AFMotor</code> library. Adafruit's <a href="https://learn.adafruit.com/adafruit-motor-shield-v2-for-arduino/install-software" target="_blank" rel="noopener noreferrer">library installation page</a> shows the same package.</li>
+<li>Download the sketch below. Put <code>rover.ino</code> inside a folder named <code>rover</code>, then open it in the IDE. If the IDE offers to create that matching folder, accept. Click Verify, then Upload. The pack remains off.</li>
+</ol>
+<p><a class="primary-button" data-download="assets/examples/rover/rover.ino" href="assets/examples/rover/rover.ino" download="rover.ino">Download rover.ino ↓</a></p>
+<details><summary>The complete rover sketch · same code as the download</summary><p>This is a complete Arduino sketch for the stated board and installed library. It is supplied for you to compile and test using the steps here; it has not been run on a physical rover for this edition.</p><pre><code>// Arduino Uno R3 + Adafruit Motor Shield #1438 (v2/v3).
+// Install &quot;Adafruit Motor Shield V2 Library&quot; with its dependencies.
+// Left motor M1, right motor M2. Calibrate wire polarity on a stand.
+#include &lt;Wire.h&gt;
+#include &lt;Adafruit_MotorShield.h&gt;
+
+Adafruit_MotorShield shield;
+Adafruit_DCMotor *leftMotor = shield.getMotor(1);
+Adafruit_DCMotor *rightMotor = shield.getMotor(2);
+const int DRIVE_PWM = 90;       // Effort, not a measured wheel speed.
+const int TURN_PWM = 70;
+const unsigned long TIMEOUT_MS = 350;
+unsigned long lastCommandMs = 0;
+char requested = &#x27;X&#x27;;
+char applied = &#x27;?&#x27;;
+bool shieldReady = false;
+
+void setMotor(Adafruit_DCMotor *motor, int demand) {
+  if (demand == 0) {
+    motor-&gt;setSpeed(0);
+    motor-&gt;run(RELEASE);       // Coast; this is not an active brake.
+  } else {
+    motor-&gt;setSpeed(abs(demand));
+    motor-&gt;run(demand &gt; 0 ? FORWARD : BACKWARD);
+  }
+}
+
+void applyCommand(char command) {
+  int left = 0;
+  int right = 0;
+  switch (command) {
+    case &#x27;F&#x27;: left = DRIVE_PWM; right = DRIVE_PWM; break;
+    case &#x27;B&#x27;: left = -DRIVE_PWM; right = -DRIVE_PWM; break;
+    case &#x27;L&#x27;: left = -TURN_PWM; right = TURN_PWM; break;
+    case &#x27;R&#x27;: left = TURN_PWM; right = -TURN_PWM; break;
+    case &#x27;1&#x27;: left = DRIVE_PWM; break;  // Left wheel only, forward.
+    case &#x27;2&#x27;: right = DRIVE_PWM; break; // Right wheel only, forward.
+    default: break;                    // X means both demands stay 0.
+  }
+  setMotor(leftMotor, left);
+  setMotor(rightMotor, right);
+}
+
+void setup() {
+  Serial.begin(115200);
+  shieldReady = shield.begin();
+  if (!shieldReady) {
+    Serial.println(F(&quot;SHIELD NOT FOUND. Power off; check headers.&quot;));
+    return;
+  }
+  applyCommand(&#x27;X&#x27;);
+  applied = &#x27;X&#x27;;
+  Serial.println(F(&quot;READY. F B L R X; bench tests 1 and 2.&quot;));
+}
+
+void loop() {
+  if (!shieldReady) return;
+
+  // Read at most 8 bytes per visit, so timeout checking keeps running.
+  for (byte count = 0; count &lt; 8 &amp;&amp; Serial.available(); ++count) {
+    char incoming = Serial.read();
+    if (incoming == &#x27;\r&#x27; || incoming == &#x27;\n&#x27; || incoming == &#x27; &#x27;) continue;
+    switch (incoming) {
+      case &#x27;F&#x27;: case &#x27;B&#x27;: case &#x27;L&#x27;: case &#x27;R&#x27;: case &#x27;1&#x27;: case &#x27;2&#x27;:
+        requested = incoming;
+        lastCommandMs = millis();
+        break;
+      case &#x27;X&#x27;:
+        requested = &#x27;X&#x27;;
+        break;
+      default:
+        requested = &#x27;X&#x27;;       // Unknown input stops; never refreshes time.
+        break;
+    }
+  }
+
+  if (requested != &#x27;X&#x27; &amp;&amp;
+      (unsigned long)(millis() - lastCommandMs) &gt;= TIMEOUT_MS) {
+    requested = &#x27;X&#x27;;
+    Serial.println(F(&quot;STOP timeout&quot;));
+  }
+  if (requested != applied) {
+    applyCommand(requested);
+    applied = requested;
+    Serial.print(F(&quot;Command: &quot;));
+    Serial.println(applied);
+  }
+}
+</code></pre></details>
+<h3>03B · Talk to it while motor power is off</h3>
+<ol>
+<li>Open <strong>Tools → Serial Monitor</strong>. Set its speed to <strong>115200 baud</strong> and its line ending to <strong>No line ending</strong>. Press the Uno reset button once. Look for <code>READY. F B L R X; bench tests 1 and 2.</code></li>
+<li>Type uppercase <code>F</code> and click Send. You should see <code>Command: F</code>, then <code>STOP timeout</code> and <code>Command: X</code> after roughly a third of a second. Nothing spins because the pack is off.</li>
+<li>Send <code>L</code>, then <code>R</code>, then <code>B</code>, allowing each to time out. These are requests, not measured motion.</li>
+<li>Send <code>?</code>. It must not start a motion command. Send <code>X</code>; this explicitly requests stop. If already stopped, the sketch prints no extra line because it only reports state changes.</li>
+<li>Close the Serial Monitor, reopen it, and check that the Uno starts stopped again. Opening a serial connection commonly resets an Uno; a reset is not permission to move.</li>
+</ol>
+<div class="table-wrap"><table><caption>Our entire command protocol</caption><thead><tr><th>Byte</th><th>Requested wheel action</th><th>Output setting</th></tr></thead><tbody>
+<tr><td><code>F</code></td><td>Both forward</td><td>90 of 255</td></tr>
+<tr><td><code>B</code></td><td>Both backward</td><td>90 of 255</td></tr>
+<tr><td><code>L</code></td><td>Left backward, right forward</td><td>70 of 255</td></tr>
+<tr><td><code>R</code></td><td>Left forward, right backward</td><td>70 of 255</td></tr>
+<tr><td><code>X</code></td><td>Release both motors</td><td>Coast to rest</td></tr>
+<tr><td><code>1</code> / <code>2</code></td><td>Left only / right only, forward</td><td>90 of 255; raised-wheel checks only</td></tr>
+</tbody></table></div>
+<p>Each uppercase character is a complete command. There are no numbers to append and no newline is needed. Spaces and line endings are ignored; other unknown characters stop the motors without refreshing the timer. A later camera program will send the current command every 0.1 seconds—ten times per second. After <strong>350 milliseconds without another movement command</strong>, the Uno releases both motors.</p>
+<h3>Review three firmware contracts</h3>
+<p>Open the sketch and find <code>DRIVE_PWM</code>. That number sets motor effort on a scale from 0 to 255. A setting of 90 is not 90 RPM, and half the number does not promise half the ground speed. Load, friction and pack voltage all get a vote.</p>
+<p>Review the freshness contract around <code>lastCommandMs</code>. A valid movement command refreshes it; elapsed time in <code>loop()</code> eventually changes <code>requested</code> to <code>'X'</code>. The Uno enforces that timeout locally even when the laptop stops making progress. A successful serial write is evidence of sending a request, not evidence of motion.</p>
+<p>Finally, find <code>RELEASE</code>. The driver stops driving the motor, so a moving wheel can coast. The 350 ms limit is a software deadline, not a stopping-distance guarantee. The pack switch also matters: a timeout cannot rescue a completely hung controller or a broken connection to the driver.</p>
+<div class="exercise"><h3>Verify the timeout contract on the board</h3><p>With motor power off, send <code>F</code> once and let it expire. Repeat Bench 03B’s unknown-byte and reset checks. Compare the observed state transitions with the code before treating the board as ready for a physical test.</p><details><summary>Expected behavior</summary><p>The accepted <code>F</code> refreshes the command time once. Silence lets 350 ms expire, and the sketch requests <code>X</code>. Repeating <code>F</code> at ten times per second would keep it fresh. An unknown <code>?</code> requests stop without refreshing the movement timer. Reset starts stopped.</p></details></div>
+<h3>If the upload or messages do not match</h3>
+<div class="table-wrap"><table><thead><tr><th>What you see</th><th>Do this next</th></tr></thead><tbody>
+<tr><td>No new port appears</td><td>Try a known USB data cable and another USB port. A charging-only cable can light the board without carrying a program.</td></tr>
+<tr><td><code>Adafruit_MotorShield.h: No such file</code></td><td>Install the exact V2 library in Library Manager, then Verify again.</td></tr>
+<tr><td>Unreadable Serial Monitor text</td><td>Set 115200 baud, then press reset.</td></tr>
+<tr><td><code>SHIELD NOT FOUND</code></td><td>Unplug USB and keep the pack off. Check seated, soldered headers and that the shield is #1438 v2/v3 with unchanged address jumpers. Reconnect and reset.</td></tr>
+<tr><td>No <code>READY</code>, but upload succeeded</td><td>Confirm the port, close any other program using it, reopen Serial Monitor and press reset.</td></tr>
+</tbody></table></div>
+<details><summary>Embedded timing note · loop latency and timer rollover</summary><p>The input loop consumes a bounded number of bytes before returning to the timeout check. Audit any later library call or added work for how long it can postpone that check: <code>delay(2000)</code> would block ordinary loop checks for two seconds. Arduino's <a href="https://docs.arduino.cc/built-in-examples/digital/BlinkWithoutDelay/" target="_blank" rel="noopener noreferrer">Blink Without Delay</a> is a concise reference for the platform’s elapsed-time idiom if you need it.</p><p>The unsigned subtraction in the timeout expression handles the Uno timer wrapping around, as long as we keep checking at these short intervals. The motor library still performs hardware communication; this is a small teaching controller, not a hard real-time safety system.</p></details>
+<div class="checkpoint"><h3>Done for today</h3><p>You have seen <code>READY</code>, a movement-command message, and <code>STOP timeout</code>. Save the sketch in your project folder. Write one sentence in your notebook: “If my computer stops sending, the Uno ___.”</p><p><strong>Next:</strong> close the Serial Monitor, switch the pack off, and <a href="#ch-rover">check your assembled rover for its first wheel test →</a></p></div>
+</section>

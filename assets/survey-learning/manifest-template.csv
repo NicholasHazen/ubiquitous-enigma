@@ -1,0 +1,7 @@
+path,session,split,label
+train/A/absent/A_001.jpg,A,train,0
+train/A/present/A_002.jpg,A,train,1
+validation/E/absent/E_001.jpg,E,validation,0
+validation/E/present/E_002.jpg,E,validation,1
+test/G/absent/G_001.jpg,G,test,0
+test/G/present/G_002.jpg,G,test,1

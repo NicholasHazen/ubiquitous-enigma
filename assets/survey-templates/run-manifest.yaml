@@ -1,0 +1,33 @@
+# Fill from observed configuration. Null means not yet measured/recorded.
+run_id: room_001
+kind: raw_acquisition
+utc_started: null
+room_reference_note: notes/room-reference.md
+computer:
+  os_release: null
+  architecture: null
+  ros_distribution: jazzy
+  code_commit: null
+  package_versions_file: null
+  clock_source: null
+sensors:
+  lidar_model_and_serial: null
+  lidar_driver_revision: null
+  rgb_model_and_serial: null
+  camera_driver_revision: null
+  calibration_file_and_hash: null
+  depth_encoding: null
+  depth_units: null
+  depth_alignment: null
+mechanics:
+  cad_revision: null
+  measured_wheel_radius_m: null
+  effective_track_width_m: null
+  encoder_counts_per_wheel_revolution: null
+  mount_transforms_file: null
+topics: [/scan, /odom, /tf, /tf_static]
+clock_mode: live_system_time
+contains_map_to_odom: false
+contains_motion_commands: false
+scene_notes: null
+recording_verified_by_replay: false

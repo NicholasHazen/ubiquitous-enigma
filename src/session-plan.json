@@ -1,0 +1,1126 @@
+{
+  "version": 1,
+  "milestones": [
+    {
+      "id": "room",
+      "title": "A room and a clear question",
+      "why": "Choose the place your rover will measure and the one visual distinction your model will learn."
+    },
+    {
+      "id": "fit",
+      "title": "A chassis with measured fits",
+      "why": "Build serviceable mounts and a rolling structure whose geometry you can explain."
+    },
+    {
+      "id": "model",
+      "title": "A model whose mistakes you understand",
+      "why": "Train on your own images and preserve an honest comparison before adding robot context."
+    },
+    {
+      "id": "motion",
+      "title": "Wheels that follow requests and stop",
+      "why": "Give later navigation a measured, bounded way to move the rover."
+    },
+    {
+      "id": "sensing",
+      "title": "Measurements in the right coordinates",
+      "why": "Make camera, lidar and wheel observations agree about units, time and position."
+    },
+    {
+      "id": "map",
+      "title": "A room map you can check",
+      "why": "Compare the map with physical dimensions and save the evidence needed to rebuild it."
+    },
+    {
+      "id": "navigation",
+      "title": "A short trip with dependable stopping",
+      "why": "Demonstrate one supervised route and the conditions under which the rover should refuse it."
+    },
+    {
+      "id": "memory",
+      "title": "Five real observations with a place and time",
+      "why": "Connect your model and measured room without inventing the toy’s location."
+    }
+  ],
+  "sessions": [
+    {
+      "id": "first-hour",
+      "title": "Choose the room and the toy",
+      "track": "shared",
+      "milestone": "room",
+      "minutes": "About 10–20 minutes",
+      "why": "One bounded room and one distinctive object make the first robot experiment specific enough to test.",
+      "needs": [
+        "Computer, camera and tape measure",
+        "One clear area on a single floor; stair access will be physically blocked for powered tests"
+      ],
+      "actions": [
+        "Create home-rover with notes, cad, data and runs folders.",
+        "Photograph and sketch the test area; mark three measured spans and their exact endpoints.",
+        "Write the one-sentence present/absent question for your chosen toy."
+      ],
+      "finish": "Your notes identify the room, measurement endpoints and target object.",
+      "artifact": "notes/room-reference.md, a room photograph and the target sentence",
+      "restart": "Open the room sketch and point to one measured span in the real room.",
+      "diagnostic": "If choosing the room stalls you, use one clear section with three accessible reference spans and record that boundary.",
+      "shortAction": "Choose the object and write its one-sentence label rule.",
+      "reference": {
+        "href": "#resource-validation",
+        "label": "Why capture sessions must stay separate"
+      },
+      "requires": [],
+      "kind": "guided",
+      "uncertainty": "The first experiment measures one bounded area; whole-house coverage remains a later question."
+    },
+    {
+      "id": "capture-session-a",
+      "title": "Capture your first twenty examples",
+      "track": "learn",
+      "milestone": "room",
+      "minutes": "About 25 minutes",
+      "why": "These are the first images your own model will learn from while the rover is still being built.",
+      "needs": [
+        "The selected toy and an existing camera",
+        "home-rover/data; ordinary image files with people and private material kept out of frame"
+      ],
+      "actions": [
+        "Create data/train/A/present and data/train/A/absent.",
+        "Alternate ten present and ten absent photographs with varied viewpoints and backgrounds.",
+        "Open the files and check their labels; record the camera and capture conditions."
+      ],
+      "finish": "Twenty distinct images open correctly and are in their matching session and label folders.",
+      "artifact": "data/train/A with ten images per class and a capture note",
+      "restart": "Open one present and one absent image from session A and check their folder labels.",
+      "diagnostic": "If the images look almost identical, change viewpoint and placement; do not duplicate files to reach twenty.",
+      "shortAction": "Capture and label one varied present/absent pair, then note the remaining count.",
+      "reference": {
+        "href": "#resource-validation",
+        "label": "Keep related images in one split"
+      },
+      "requires": [
+        "first-hour"
+      ],
+      "kind": "guided",
+      "uncertainty": "Session A alone cannot train and evaluate the complete experiment; later capture sessions provide independent comparisons."
+    },
+    {
+      "id": "first-measurement",
+      "title": "Measure one physical interface",
+      "track": "build",
+      "milestone": "fit",
+      "minutes": "About 15 minutes",
+      "why": "A measured bolt or pin gives your printed fit experiment a real mating part.",
+      "needs": [
+        "Calipers and one actual M3 through-bolt or smooth pin",
+        "The fit-log template from this session"
+      ],
+      "actions": [
+        "Clean and zero the caliper jaws.",
+        "Measure the part in more than one direction and record units and method.",
+        "Save the first fit-log entry and name the coupon you will print next."
+      ],
+      "finish": "The log identifies a real measured part and the next small print.",
+      "artifact": "The first row of your fit log and the labelled mating part",
+      "restart": "Find the same part and repeat one recorded dimension.",
+      "diagnostic": "If readings vary, check zero and jaw contact and use light consistent pressure before changing the design.",
+      "shortAction": "Zero the calipers and record one repeated measurement.",
+      "reference": {
+        "href": "#resource-x1-fit",
+        "label": "Measured fit before compensation"
+      },
+      "requires": [
+        "first-hour"
+      ],
+      "kind": "guided",
+      "uncertainty": "A nominal M3 label or caliper display resolution does not establish a printed hole’s fit."
+    },
+    {
+      "id": "precision-setup",
+      "title": "Save a repeatable X1 Carbon recipe",
+      "track": "build",
+      "milestone": "fit",
+      "minutes": "About 15 minutes of setup",
+      "why": "Holding the print process steady lets you tell whether a geometry change improved the fit.",
+      "needs": [
+        "Bambu Studio, X1 Carbon and PLA already known to print well",
+        "The actual installed nozzle and build plate; the coupon geometry assumes a 0.4 mm nozzle"
+      ],
+      "actions": [
+        "Select the actual printer, nozzle, plate and filament profile.",
+        "Save the chapter’s baseline process and arranged 3MF; record compensation settings.",
+        "Add material and process details to the fit log before printing."
+      ],
+      "finish": "A saved 3MF and process record identify the actual configuration used for the coupon.",
+      "artifact": "X1C-survey-PLA-baseline, the coupon 3MF and fit-log process fields",
+      "restart": "Open the saved 3MF and confirm its nozzle, plate and material match the printer.",
+      "diagnostic": "If the selected profile differs from your installed hardware, correct that mismatch before comparing dimensions.",
+      "shortAction": "Record the installed nozzle, plate and filament and save the named process copy.",
+      "reference": {
+        "href": "#resource-x1-fit",
+        "label": "X1C compensation reference"
+      },
+      "requires": [
+        "first-measurement"
+      ],
+      "kind": "guided",
+      "uncertainty": "The baseline makes comparison repeatable; your own coupon measurements establish the local fit."
+    },
+    {
+      "id": "precision-measure",
+      "title": "Print and measure a fitting pair",
+      "track": "build",
+      "milestone": "fit",
+      "minutes": "About 30 minutes active work, plus printing",
+      "why": "A small successful fit can be transferred into a serviceable mount before you print the whole chassis.",
+      "needs": [
+        "Saved X1C baseline, clearance strip, actual M3 screw and calipers",
+        "Let prints cool before comparing fits; use light finger pressure"
+      ],
+      "actions": [
+        "Print the clearance strip with the unchanged baseline and label its slots.",
+        "Try the same screw in each slot without cutting threads; repeat the measurements.",
+        "When a round fit matters, print and check the round coupon and pin in their stated orientations."
+      ],
+      "finish": "You can show a fitting pair with measured dimensions, material, orientation and a repeat check.",
+      "artifact": "A labelled coupon, its mating part and completed fit-log rows",
+      "restart": "Find your first passing pair and verify the same part still fits with light pressure.",
+      "diagnostic": "If none fit, inspect a first-layer lip and repeat one measurement before changing one clearance parameter.",
+      "shortAction": "Label the cooled strip and record the fit in one slot.",
+      "reference": {
+        "href": "#resource-print-design",
+        "label": "Design for printed fits and orientation"
+      },
+      "requires": [
+        "precision-setup"
+      ],
+      "kind": "guided",
+      "uncertainty": "This result applies to the measured feature, orientation and process; different geometry needs another small check."
+    },
+    {
+      "id": "model-data",
+      "title": "Collect the independent image sessions",
+      "track": "learn",
+      "milestone": "model",
+      "minutes": "45–60 minutes per visit; several visits may help",
+      "why": "Independent capture sessions let us test whether the model learned something useful beyond one photographic setup.",
+      "needs": [
+        "Session A, the same target toy and a camera",
+        "A fixed label rule; whole sessions assigned before any fitting"
+      ],
+      "actions": [
+        "Collect sessions A–H with varied conditions and both labels in each session.",
+        "Assign A–D to training, E–F to validation and G–H to the reserved final test.",
+        "Check ambiguous labels and record the next missing session if collection needs another visit."
+      ],
+      "finish": "Every declared session contains both labels and each whole session belongs to exactly one split.",
+      "artifact": "The A–H image folders, capture notes and written split assignment",
+      "restart": "Open the capture log and identify the next missing session without renaming an existing one.",
+      "diagnostic": "If a shortcut cue appears, inspect whether hands or backgrounds predict the label; collect a genuinely varied session.",
+      "shortAction": "Collect one small varied present/absent set for the next named session and record what remains.",
+      "reference": {
+        "href": "#resource-validation",
+        "label": "Grouped evaluation and leakage"
+      },
+      "requires": [
+        "capture-session-a"
+      ],
+      "kind": "guided",
+      "uncertainty": "The initial 160-image target exercises the pipeline; it does not promise useful recognition throughout the house."
+    },
+    {
+      "id": "model-setup",
+      "title": "Make the training pipeline run",
+      "track": "learn",
+      "milestone": "model",
+      "minutes": "One or more 45–60 minute setup blocks",
+      "why": "A checked CPU environment lets you inspect your real inputs before hardware or GPU setup adds more variables.",
+      "needs": [
+        "Windows 11, Python 3.12 and PowerShell in home-rover",
+        "Extract the chapter’s training ZIP directly beside data; use the declared session folders"
+      ],
+      "actions": [
+        "Create the documented CPU environment and run the supplied synthetic smoke check.",
+        "Generate and validate data/manifest.csv from your declared sessions.",
+        "Make the training-input contact sheet and inspect the actual 64 × 64 images."
+      ],
+      "finish": "The synthetic check passes, the manifest validates, and the target is inspectable in the resized training images.",
+      "artifact": "Environment versions, data/manifest.csv and reports/train-inputs.png",
+      "restart": "Open the saved input sheet and rerun the small import or manifest check that last passed.",
+      "diagnostic": "Fix the first named installation, file or session error; preserve capture groups instead of changing IDs to silence it.",
+      "shortAction": "Extract the starter to home-rover and confirm learn.py sits beside data.",
+      "reference": {
+        "href": "#resource-pytorch-install",
+        "label": "Choose the supported training environment"
+      },
+      "requires": [
+        "model-data"
+      ],
+      "kind": "integration",
+      "uncertainty": "The supplied pipeline was checked on Linux CPU; your Windows execution and any later GPU environment require their own check."
+    },
+    {
+      "id": "model-baseline",
+      "title": "Train a baseline and inspect its mistakes",
+      "track": "learn",
+      "milestone": "model",
+      "minutes": "About 45–60 minutes",
+      "why": "A simple trained comparison tells you whether the later CNN earns its extra complexity.",
+      "needs": [
+        "Passing training environment and validated manifest",
+        "Keep preprocessing fitted on training data only; leave the reserved test unopened"
+      ],
+      "actions": [
+        "Run the supplied baseline training command in a new run directory.",
+        "Create the detailed validation report and contact sheet.",
+        "Explain one error or boundary example and locate the training-only scaler fit."
+      ],
+      "finish": "The baseline and its validation evidence are saved, and you can explain what data fitted its preprocessing.",
+      "artifact": "runs/baseline, validation-details.json and the validation image sheet",
+      "restart": "Open the saved validation sheet and inspect one image with its label and prediction.",
+      "diagnostic": "If the score is surprising, inspect the exact resized image and session split before changing the model.",
+      "shortAction": "Read one confusion-matrix row and open one corresponding validation image.",
+      "reference": {
+        "href": "#resource-model-results",
+        "label": "Read the mistakes behind the score"
+      },
+      "requires": [
+        "model-setup"
+      ],
+      "kind": "guided",
+      "uncertainty": "A small validation result is evidence about these sessions, not established household accuracy."
+    },
+    {
+      "id": "model-neural",
+      "title": "Train the CNN and compare the evidence",
+      "track": "learn",
+      "milestone": "model",
+      "minutes": "About 45–60 minutes, plus training time",
+      "why": "Learning small image filters lets you test a different representation against the same baseline.",
+      "needs": [
+        "The unchanged dataset, passing environment and saved baseline",
+        "Use validation for checkpoint selection; keep final test data reserved"
+      ],
+      "actions": [
+        "Train the supplied small CNN with the declared seed and a new output directory.",
+        "Trace gradient reset, backpropagation and optimizer update in learn.py.",
+        "Inspect reload checks, history and validation mistakes beside the baseline’s results."
+      ],
+      "finish": "The neural checkpoint reloads, both validation reports are saved, and you can explain one parameter update.",
+      "artifact": "runs/cnn-7, history.csv, run.json and the neural validation sheet",
+      "restart": "Open run.json and the validation sheet to recover the exact model and data version.",
+      "diagnostic": "If the CNN loses, compare its resized inputs and errors with the baseline before adding layers.",
+      "shortAction": "Find make_cnn and identify one Conv2d weight and the three optimizer-update steps.",
+      "reference": {
+        "href": "#resource-convolution",
+        "label": "See what a convolution learns"
+      },
+      "requires": [
+        "model-baseline"
+      ],
+      "kind": "guided",
+      "uncertainty": "The neural model may lose to the baseline; that is a legitimate comparison rather than a failed course checkpoint."
+    },
+    {
+      "id": "model-evaluation",
+      "title": "Freeze the comparison and test it once",
+      "track": "learn",
+      "milestone": "model",
+      "minutes": "About 45–60 minutes",
+      "why": "A reserved evaluation records what survived a new capture after your model choices were fixed.",
+      "needs": [
+        "Both saved runs and their validation reports",
+        "Write the frozen model, preprocessing and threshold choices before opening final test reports"
+      ],
+      "actions": [
+        "Record the fixed comparison and evaluate both runs on the reserved test split.",
+        "Inspect per-session results and the permitted test error sheets.",
+        "Predict one real image and write the result, limitation and next useful data collection."
+      ],
+      "finish": "Both frozen reports and reload evidence exist, with an explanation of a failure or still-untested condition.",
+      "artifact": "Final test reports, saved model identifiers and a three-sentence experiment conclusion",
+      "restart": "Read the frozen-comparison note before touching the test data or changing code.",
+      "diagnostic": "If test errors suggest a redesign, keep the reports and reserve fresh sessions for the next final evaluation.",
+      "shortAction": "Write the comparison choices and threshold using the validation evidence already saved.",
+      "reference": {
+        "href": "#resource-model-results",
+        "label": "Interpret results and uncalibrated scores"
+      },
+      "requires": [
+        "model-neural"
+      ],
+      "kind": "guided",
+      "uncertainty": "Once test errors guide changes, those sessions become development evidence; a new claim needs a fresh final test."
+    },
+    {
+      "id": "mechanics-layout",
+      "title": "Place the real components in Fusion",
+      "track": "build",
+      "milestone": "fit",
+      "minutes": "About 45–60 minutes",
+      "why": "An editable assembly catches collisions, unreachable fasteners and unstable packaging before a full print.",
+      "needs": [
+        "Fusion in millimetres, measured component drawings and the passing fit coupon",
+        "Read the chapter’s selected motor, bracket, wheel and third-contact details; verify delivered revisions and include cable/tool space"
+      ],
+      "actions": [
+        "Create separate deck, drive, support and electronics components with the stated body-frame convention.",
+        "Set the measured deck height and wheel geometry, then place simple component envelopes.",
+        "Check the support triangle, wheel clearances, scan view and reachable disconnect and fasteners."
+      ],
+      "finish": "The layout shows a shared axle line, three support contacts, clear cables and removable components.",
+      "artifact": "The native Fusion assembly and a labelled front/side-view screenshot",
+      "restart": "Open the side view and verify that the wheels reach the floor and the deck clears it.",
+      "diagnostic": "If parts collide, move their simple envelopes and verify actual drawing dimensions before adding detail.",
+      "shortAction": "Create the named components and place one measured motor envelope.",
+      "reference": {
+        "href": "#resource-fusion-course",
+        "label": "Build the first Fusion assembly"
+      },
+      "requires": [
+        "precision-measure"
+      ],
+      "kind": "integration",
+      "uncertainty": "The initial deck dimensions are a packaging trial; the course does not supply a physically validated complete chassis design."
+    },
+    {
+      "id": "precision-cad",
+      "title": "Make one bracket mount fit",
+      "track": "build",
+      "milestone": "fit",
+      "minutes": "About 45–60 minutes active work, plus printing",
+      "why": "One removable, well-located bracket establishes the mounting pattern the full deck will reuse.",
+      "needs": [
+        "The Fusion layout and a delivered bracket with its current drawing",
+        "Passing coupon clearance, through-bolts, washers and nuts"
+      ],
+      "actions": [
+        "Model only the deck region under one bracket with named dimensions and measured hole spacing.",
+        "Print in the intended deck orientation and test both fastener and tool access.",
+        "Fix the deck and use the appropriate rigid joint to preserve the bracket position in CAD."
+      ],
+      "finish": "The bracket fits without forcing, remains located under a gentle hand load and can be removed.",
+      "artifact": "Native Fusion mount design, slicer project and photograph of the fitted bracket",
+      "restart": "Open the mount design and place the same bracket on the printed coupon.",
+      "diagnostic": "If it binds, compare measured hole spacing and clearance separately; avoid scaling the whole assembly.",
+      "shortAction": "Measure the delivered bracket’s selected hole spacing and enter one named parameter.",
+      "reference": {
+        "href": "#resource-fusion",
+        "label": "Constrain the mounting sketch"
+      },
+      "requires": [
+        "mechanics-layout"
+      ],
+      "kind": "integration",
+      "uncertainty": "The local mounting check establishes fit and serviceability; it does not certify the full deck’s load capacity."
+    },
+    {
+      "id": "mechanics-assembly",
+      "title": "Assemble a chassis that rolls freely",
+      "track": "build",
+      "milestone": "fit",
+      "minutes": "45–60 minutes active work, plus printing",
+      "why": "A mechanically sound, accessible rover gives the motor and sensor experiments a stable base.",
+      "needs": [
+        "Passing mounting coupon, full deck and measured unpowered components, including the selected third contact",
+        "Use correct screw engagement and wheel collets; keep representative masses secured"
+      ],
+      "actions": [
+        "Print and assemble the deck only after the local mount passes.",
+        "Set the third contact height and roll the unpowered chassis over clean hardwood.",
+        "Check wheel/caster clearance, mount stiffness, fastener access and the physical disconnect."
+      ],
+      "finish": "The loaded layout sits on three contacts, retains its parts and rolls without visible binding.",
+      "artifact": "Assembly photographs, measured footprint, loaded radius estimate and wheel-centre separation",
+      "restart": "With power disconnected, repeat the gentle hand-roll and clearance check.",
+      "diagnostic": "If a wheel rubs or a mount moves, repair that physical interface before adding motor power.",
+      "shortAction": "Check one wheel’s full rotation and record any rubbing or wobble with power disconnected.",
+      "reference": {
+        "href": "#resource-mechanics-book",
+        "label": "Trace loads through the chassis"
+      },
+      "requires": [
+        "precision-cad"
+      ],
+      "kind": "integration",
+      "uncertainty": "A roll check supports the prototype layout; it is not a rated payload or endurance test."
+    },
+    {
+      "id": "drive-power",
+      "title": "Trace and check the motor power path",
+      "track": "build",
+      "milestone": "motion",
+      "minutes": "One or more 45–60 minute blocks",
+      "why": "A checked power path lets the first wheel experiment begin with known polarity and a reachable stop.",
+      "needs": [
+        "Read the reference-electronics and purchase-gate context; use exact board and pack documentation",
+        "Battery disconnected for wiring and continuity; motor outputs disconnected for first controller power",
+        "Correct fuse, DC-rated disconnect, secured wiring and a separate supported PC supply"
+      ],
+      "actions": [
+        "Draw the positive fuse/disconnect path and direct negative return using the real board labels.",
+        "Check the unpowered harness for continuity and unintended shorts.",
+        "Measure disconnected-pack polarity and charged voltage in DC voltage mode; record limits before connecting the controller."
+      ],
+      "finish": "You can trace both conductors, identify the fuse/disconnect and show measured polarity before any motor turns.",
+      "artifact": "Labelled wiring diagram, harness inspection and pack-voltage record",
+      "restart": "Leave the pack disconnected and trace the diagram against the labelled harness.",
+      "diagnostic": "If a reading is unclear, isolate the unpowered harness and check the meter’s sockets and mode before proceeding.",
+      "shortAction": "With power disconnected, draw and label the battery-positive to controller-positive path.",
+      "reference": {
+        "href": "#resource-multimeter",
+        "label": "Measure continuity and DC voltage"
+      },
+      "requires": [
+        "mechanics-assembly"
+      ],
+      "kind": "integration",
+      "uncertainty": "Wire protection, voltage settings and regeneration behavior depend on your actual pack and controller; documentation is not a completed bench check."
+    },
+    {
+      "id": "drive-encoder",
+      "title": "Read and turn one wheel, then the other",
+      "track": "build",
+      "milestone": "motion",
+      "minutes": "About 45–60 minutes per wheel",
+      "why": "Verified direction and encoder counts connect software requests to measurable physical motion.",
+      "needs": [
+        "Checked power path, Windows Motion Studio and exact motor/controller pinouts",
+        "Power disconnected while wiring; chassis secured with wheels suspended",
+        "Encoder power comes from the documented low-voltage supply, not motor outputs"
+      ],
+      "actions": [
+        "Wire one motor and encoder from the verified pinout and record controller/firmware identity.",
+        "At zero command, hand-turn one marked revolution and inspect the count convention.",
+        "Use a brief low-duty request, verify direction/sign and return to zero; repeat separately for the other wheel."
+      ],
+      "finish": "Each positive command and count agrees with forward motion, channels stay distinct and zero halts both wheels.",
+      "artifact": "The completed direction/count log and saved controller settings",
+      "restart": "With output commands inhibited, hand-turn one marked wheel and inspect only its encoder.",
+      "diagnostic": "If direction and count signs disagree, stop and correct the documented direction setting before enabling feedback.",
+      "shortAction": "With power disconnected, label the motor and encoder cable groups LEFT and RIGHT.",
+      "reference": {
+        "href": "#resource-embedded-timing",
+        "label": "RoboClaw first-wheel setup"
+      },
+      "requires": [
+        "drive-power"
+      ],
+      "kind": "integration",
+      "uncertainty": "The expected count is based on a stated quadrature convention; the controller’s actual reporting must be measured."
+    },
+    {
+      "id": "drive-feedback",
+      "title": "Compare requested and measured wheel speed",
+      "track": "build",
+      "milestone": "motion",
+      "minutes": "One or more 45–60 minute blocks",
+      "why": "A small speed trace shows whether the drivetrain follows requests before navigation depends on it.",
+      "needs": [
+        "Verified encoder signs and zero command; exact tuning reference for the controller revision",
+        "Secure suspended wheels first, conservative motor/current settings and reachable disconnect",
+        "Floor tests require a clear bounded area with stairs blocked and people/pets outside"
+      ],
+      "actions": [
+        "Follow the documented velocity setup and configure justified limits for the actual motor and supply.",
+        "Record a small zero-to-low-speed-to-zero trace for one wheel with labelled numeric scales.",
+        "Repeat for the other wheel and inspect current, oscillation and return to zero."
+      ],
+      "finish": "Both wheels follow small requests without sustained oscillation and return to zero within recorded operating limits.",
+      "artifact": "Labelled speed traces or CSV exports, software versions and controller configuration",
+      "restart": "Open the last labelled trace and identify which line is requested speed and which is measured speed.",
+      "diagnostic": "If the trace oscillates or current rises, stop the run and check signs, tuning, drag and limits before adding load.",
+      "shortAction": "Open a saved graph and label its signals, numeric axes and available time resolution.",
+      "reference": {
+        "href": "#resource-embedded-timing",
+        "label": "RoboClaw graphing and settings"
+      },
+      "requires": [
+        "drive-encoder"
+      ],
+      "kind": "integration",
+      "uncertainty": "Suspended-wheel response does not establish loaded floor behavior; record what each measured trial actually supports."
+    },
+    {
+      "id": "drive-linux",
+      "title": "Get two ROS programs talking",
+      "track": "build",
+      "milestone": "motion",
+      "minutes": "One or more setup blocks",
+      "why": "A known ROS environment isolates later sensor and bridge faults from basic installation problems.",
+      "needs": [
+        "Selected robot computer with native Ubuntu 24.04",
+        "Use ROS 2 Jazzy Desktop Install outside the model-training environment; keep motor outputs disabled"
+      ],
+      "actions": [
+        "Follow the Jazzy Ubuntu installation for the selected computer.",
+        "Source the same installation in two terminals and run talker and listener.",
+        "Save the OS, ROS and package versions and the commands that exchanged messages."
+      ],
+      "finish": "Talker output has matching received messages in the second terminal.",
+      "artifact": "Environment notes and the successful local message-exchange check",
+      "restart": "Source Jazzy in two terminals and repeat the talker/listener exchange.",
+      "diagnostic": "If nothing arrives, check both sourced installations and the Desktop demo packages before adding devices or networking.",
+      "shortAction": "Record the Ubuntu release and verify which ROS installation the current shell uses.",
+      "reference": {
+        "href": "#resource-ros2",
+        "label": "Install Jazzy and inspect a topic"
+      },
+      "requires": [
+        "first-hour"
+      ],
+      "kind": "integration",
+      "uncertainty": "Passing the local demo verifies this setup step; each real driver still needs its own compatibility and device check."
+    },
+    {
+      "id": "drive-interface",
+      "title": "Give manual movement a bounded interface",
+      "track": "build",
+      "milestone": "motion",
+      "minutes": "Several focused integration sessions",
+      "why": "Navigation needs a drive interface that rejects stale requests and reports measured movement.",
+      "needs": [
+        "Verified wheel feedback, native Jazzy environment and measured geometry",
+        "Read the full interface contract; pinned driver candidate and local command-freshness guard",
+        "Suspended wheels first; floor tests remain supervised with blocked stairs and physical stop in reach"
+      ],
+      "actions": [
+        "Establish firmware and encoder queries with motor commands disabled.",
+        "Review or implement the contract for bounded commands, measured odometry, timeouts and deliberate re-arm.",
+        "Test loss of fresh commands while polling continues, bridge failure, network loss and physical stop; record the outcomes."
+      ],
+      "finish": "Manual motion and every required stop/re-arm case have measured evidence; continued or resumed stale motion is resolved.",
+      "artifact": "Pinned bridge revision, configuration, telemetry and command-age/stop test records",
+      "restart": "Open the first unfinished contract row and reproduce its smallest read-only or wheels-supported check.",
+      "diagnostic": "If polling keeps stale motion alive, locate the independent fresh-command-age check before attempting another floor run.",
+      "shortAction": "With motor commands disabled, inspect the driver’s firmware/encoder query path and record its exact revision.",
+      "reference": {
+        "href": "#resource-embedded-timing",
+        "label": "Separate communication timeout from command freshness"
+      },
+      "requires": [
+        "drive-feedback",
+        "drive-linux"
+      ],
+      "kind": "integration",
+      "uncertainty": "The guide supplies an interface contract and driver candidate; a complete validated bridge and local freshness guard are implementation work."
+    },
+    {
+      "id": "capture-driver-check",
+      "title": "See one real sensor measurement",
+      "track": "build",
+      "milestone": "sensing",
+      "minutes": "45–60 minutes per device",
+      "why": "An inspectable scan or image is the smallest useful proof that a real sensor is connected correctly.",
+      "needs": [
+        "Verified native Jazzy setup, exact lidar/camera identity and matching driver",
+        "Motor outputs disabled; lidar stationary for the first view",
+        "Retain the chapter’s computer roles and topic/clock contract beside the device instructions"
+      ],
+      "actions": [
+        "Pin the matching driver and inspect its actual topic, type, frame, timestamp and rate.",
+        "Use the scan’s own frame for the first stationary RViz display and move a flat target a measured distance.",
+        "Save the device identity, configuration and screenshot; inspect the camera separately and keep depth optional."
+      ],
+      "finish": "You can identify one real measurement and explain its units, frame, time and relation to the target you moved.",
+      "artifact": "Device/version notes, lidar-bench.rviz and a labelled sensor screenshot",
+      "restart": "Launch the known driver and reproduce the same stationary target view with outputs inhibited.",
+      "diagnostic": "If RViz is blank while messages arrive, inspect display status, fixed frame and QoS before changing the driver.",
+      "shortAction": "With outputs inhibited, record one device identity and its actual published topic/frame.",
+      "reference": {
+        "href": "#resource-lidar-rviz",
+        "label": "Inspect a stationary lidar scan"
+      },
+      "requires": [
+        "drive-linux"
+      ],
+      "kind": "integration",
+      "uncertainty": "A viewer image does not establish depth; firmware, USB and ROS-driver support must be checked for each selected device."
+    },
+    {
+      "id": "geometry-frames",
+      "title": "Put measured coordinate arrows on the rover",
+      "track": "build",
+      "milestone": "sensing",
+      "minutes": "About 45–60 minutes",
+      "why": "Measured frames let a sensor observation become a meaningful location relative to the rover.",
+      "needs": [
+        "Assembled chassis, fixed sensor mounts, ruler and frame sketch",
+        "Metres and radians in ROS; preserve the explicit conversion from CAD millimetres"
+      ],
+      "actions": [
+        "Mark the base_link origin projection and forward direction using the floor-plane convention.",
+        "Measure sensor position and orientation with units and the mount revision.",
+        "Draw map → odom → base_link → sensors and name one publisher for each relationship."
+      ],
+      "finish": "You can locate the origin vertically and explain every measured offset and frame relationship.",
+      "artifact": "Frame sketch, mount photograph and signed offsets with units",
+      "restart": "Point to the real origin projection and compare one sensor offset with the sketch.",
+      "diagnostic": "If an orientation is uncertain, use that exact sensor’s frame diagram before entering any rotation.",
+      "shortAction": "Mark forward on the deck and measure one sensor’s offset in millimetres and metres.",
+      "reference": {
+        "href": "#resource-frames",
+        "label": "ROS body and map-frame conventions"
+      },
+      "requires": [
+        "mechanics-assembly",
+        "capture-driver-check"
+      ],
+      "kind": "guided",
+      "uncertainty": "A measured offset is incomplete without orientation; a changed mount revision requires revisiting the transform."
+    },
+    {
+      "id": "geometry-odometry",
+      "title": "Compare wheel motion with a tape measure",
+      "track": "build",
+      "milestone": "sensing",
+      "minutes": "About 45–60 minutes",
+      "why": "A sign-and-scale check prevents a pretty room map from hiding incorrect wheel geometry.",
+      "needs": [
+        "Verified manual drive/stop interface, encoder convention and frame sketch",
+        "Clear supervised floor, blocked stairs and reachable disconnect",
+        "For hand-roll logging, inhibit motor commands but keep controller/encoders powered; USB alone is insufficient"
+      ],
+      "actions": [
+        "Check forward count signs and positive left yaw with motor outputs inhibited.",
+        "Drive a measured short straight baseline slowly and compare tape travel with odometry.",
+        "Repeat before adjusting scale, then check a slow turn and save raw counts and geometry."
+      ],
+      "finish": "Signs and short-run scale are credible, and raw measurements explain the comparison.",
+      "artifact": "Counts, configured counts per revolution, wheel geometry and tape/odometry comparisons",
+      "restart": "Open the last straight-line record and recover its units, signs and wheel parameters.",
+      "diagnostic": "Resolve a wrong counting convention before tuning radius; investigate slip or loose hardware when errors are inconsistent.",
+      "shortAction": "Recalculate one saved count-to-distance example using the recorded convention.",
+      "reference": {
+        "href": "#resource-frames",
+        "label": "Keep motion estimates in the intended frame"
+      },
+      "requires": [
+        "drive-interface",
+        "geometry-frames"
+      ],
+      "kind": "integration",
+      "uncertainty": "Wheel rotation estimates travel under an ideal rolling assumption; traction can make physical travel differ."
+    },
+    {
+      "id": "geometry-rays",
+      "title": "Mark what the lidar did and did not observe",
+      "track": "build",
+      "milestone": "sensing",
+      "minutes": "About 45–60 minutes",
+      "why": "Knowing the sensor’s blind spots prevents an unseen area from becoming an imagined safe route.",
+      "needs": [
+        "Stationary live lidar, RViz and a broad cardboard target",
+        "Keep the test zone clear of low obstacles and physically isolated from stairs; depth remains optional"
+      ],
+      "actions": [
+        "Move the target a measured distance within the scan plane and inspect its returns.",
+        "Annotate observed surface, free ray and unknown space behind an obstruction.",
+        "Lift the target out of the scan plane and record what its disappearance does not establish."
+      ],
+      "finish": "Your annotated observation distinguishes a surface, observed free ray and unknown space.",
+      "artifact": "A labelled scan screenshot or sketch and the measured target movement",
+      "restart": "Open the annotation and identify one area that is still unknown.",
+      "diagnostic": "If a return disappears, first check the target’s height relative to the scan plane rather than marking the volume empty.",
+      "shortAction": "Annotate one saved scan with a surface, a free ray and an unknown region.",
+      "reference": {
+        "href": "#resource-octomap",
+        "label": "Occupied, free and unknown space"
+      },
+      "requires": [
+        "capture-driver-check"
+      ],
+      "kind": "guided",
+      "uncertainty": "A horizontal scan is a slice; it cannot establish clearance above/below the plane or detect every stair edge."
+    },
+    {
+      "id": "geometry-inspect",
+      "title": "Check the live frame chain",
+      "track": "build",
+      "milestone": "sensing",
+      "minutes": "About 45–60 minutes",
+      "why": "A coherent live transform chain makes the upcoming recording interpretable instead of merely large.",
+      "needs": [
+        "Running verified bridge and sensor publishers; measured frame sketch and wheel checks",
+        "Use one owner per transform and keep acquisition free of map → odom corrections"
+      ],
+      "actions": [
+        "Run the chapter’s frame and message inspection commands in sourced Jazzy.",
+        "Compare the live diagram with the measured sensor mounts and body convention.",
+        "Check frame ownership and timestamp availability, then save the diagram and any remaining mismatch."
+      ],
+      "finish": "The live diagram agrees with physical frames and required sensor/odometry messages carry usable transforms.",
+      "artifact": "Live frame diagram, topic checks and the matching mount revision",
+      "restart": "Recreate the frame diagram and compare it with the saved physical sketch.",
+      "diagnostic": "For jumps or missing transforms, check duplicate publishers and timestamps before increasing queues or tuning SLAM.",
+      "shortAction": "Inspect one child frame and identify its sole parent and publisher.",
+      "reference": {
+        "href": "#resource-nav2",
+        "label": "Understand the robot transform contract"
+      },
+      "requires": [
+        "geometry-frames",
+        "geometry-odometry",
+        "geometry-rays"
+      ],
+      "kind": "integration",
+      "uncertainty": "The inspection commands do not create missing drivers or transforms; those publishers must already implement the measured contract."
+    },
+    {
+      "id": "mapping-record",
+      "title": "Record one short room survey",
+      "track": "build",
+      "milestone": "map",
+      "minutes": "One or two 45–60 minute blocks",
+      "why": "A raw recording lets you improve mapping without repeatedly moving the robot around the room.",
+      "needs": [
+        "Passing frame and manual-motion gates, working sensors and storage",
+        "One bounded room with stairs blocked, route clear of people/pets and physical stop within reach",
+        "Live clocks checked; SLAM, localization and navigation stopped; exclude motion-command topics",
+        "Keep Chapter 05’s recording topic/clock contract and the mapping prerequisite callout beside the acquisition steps"
+      ],
+      "actions": [
+        "Sketch a short loop and measure three observable reference spans in two directions.",
+        "Declare the provisional dimensional target and make a short stationary recording check.",
+        "Record the slow loop, inspect retained topics/transforms and save the acquisition manifest."
+      ],
+      "finish": "One raw bag contains the planned route and required topics, with measurements and configuration recorded beside it.",
+      "artifact": "data/room_001, run manifest, room sketch and three measured reference spans",
+      "restart": "Read the bag summary and manifest before starting another acquisition.",
+      "diagnostic": "If a stream is absent, inspect its actual name, QoS and rate and repeat a short sample before a whole-room run.",
+      "shortAction": "Mark the exact endpoints and height of one reference span on the room sketch.",
+      "reference": {
+        "href": "#resource-rosbag",
+        "label": "Record and inspect a raw bag"
+      },
+      "requires": [
+        "geometry-inspect"
+      ],
+      "kind": "integration",
+      "uncertainty": "The 0.10 m comparison target is a provisional course goal; only your survey measurements establish whether it is met."
+    },
+    {
+      "id": "mapping-replay",
+      "title": "Turn the recording into an inspectable map",
+      "track": "build",
+      "milestone": "map",
+      "minutes": "About 45–60 minutes",
+      "why": "Replaying the same observations makes a map problem a repeatable software experiment.",
+      "needs": [
+        "Raw room bag, manifest and native Jazzy analysis environment",
+        "Motor power off and robot command processes stopped",
+        "Isolated replay ROS domain; no live publishers; matching replay clocks in every participating node"
+      ],
+      "actions": [
+        "Copy the installed SLAM Toolbox configuration and match its frame/topic names to the robot contract.",
+        "Run mapping and bag playback in the same isolated domain with simulated time.",
+        "Inspect map, scan and frames in RViz and compare the route with the room sketch."
+      ],
+      "finish": "One replay produces an inspectable map with broadly consistent surfaces and a route you can compare with the sketch.",
+      "artifact": "Mapping configuration, replay commands and an annotated first-map screenshot",
+      "restart": "With motor power off, reopen the bag and the exact configuration that produced the saved view.",
+      "diagnostic": "For a blank or doubled map, check names, clocks, transforms and old map corrections before tuning scan matching.",
+      "shortAction": "Compare the configuration’s base, odom and map frame names with your saved frame diagram.",
+      "reference": {
+        "href": "#resource-slam",
+        "label": "SLAM Toolbox mapping and saved state"
+      },
+      "requires": [
+        "mapping-record"
+      ],
+      "kind": "integration",
+      "uncertainty": "A consistent-looking image is a first inspection; independent dimensional checks come next."
+    },
+    {
+      "id": "mapping-measure",
+      "title": "Check the map against the room",
+      "track": "build",
+      "milestone": "map",
+      "minutes": "One or more 45–60 minute blocks",
+      "why": "Independent measurements turn the room picture into a bounded claim about layout accuracy.",
+      "needs": [
+        "Inspectable map, raw bag and the three recorded physical reference spans",
+        "Use the same endpoints and height; note raster resolution and selected wall boundaries"
+      ],
+      "actions": [
+        "Measure the matching map spans and compute map minus physical distance.",
+        "Inspect the loop closure and compare each absolute error with the declared target.",
+        "Collect a second independent survey and repeat; if a target fails, record and investigate one justified cause."
+      ],
+      "finish": "The three dimensional checks meet the declared acceptance target and a second independent survey supports the result. Keep failed attempts as evidence while correcting the map.",
+      "artifact": "Signed-error table, map screenshots and second-survey comparison",
+      "restart": "Recalculate one saved signed error from its physical and map distances.",
+      "diagnostic": "If a span fails, replay the same bag after one justified correction; distinguish repeatable scale error from inconsistent data.",
+      "shortAction": "Identify one physical reference span and its matching map endpoints.",
+      "reference": {
+        "href": "#resource-slam",
+        "label": "Inspect the mapping workflow and assumptions"
+      },
+      "requires": [
+        "mapping-replay"
+      ],
+      "kind": "integration",
+      "uncertainty": "Grid resolution is not measurement accuracy; endpoint selection and pose errors affect the result. Navigation needs a map fit for its tested route."
+    },
+    {
+      "id": "mapping-save",
+      "title": "Save the map and its provenance",
+      "track": "build",
+      "milestone": "map",
+      "minutes": "About 30–60 minutes",
+      "why": "A versioned map package lets later navigation and observations refer to the same room coordinates.",
+      "needs": [
+        "Running mapper in the isolated replay domain, checked map and measurement report",
+        "Retain the raw bag; keep map image and YAML metadata together"
+      ],
+      "actions": [
+        "Save the occupancy map using the same environment, domain and clock settings.",
+        "Save the mapping state as well if you intend to resume SLAM.",
+        "Package configuration, measurements, frame diagram and bag identity under a named map revision."
+      ],
+      "finish": "The saved map has scale/origin metadata, a measurement report and a raw recording that can reproduce it.",
+      "artifact": "Map YAML/image, map_revision and the provenance package",
+      "restart": "Open the map YAML beside its image and confirm the matching revision and bag identifier.",
+      "diagnostic": "If only a picture was saved, recover the scale/origin metadata before treating it as a navigation map.",
+      "shortAction": "Write the map revision and list the raw bag and configuration that produced it.",
+      "reference": {
+        "href": "#resource-slam",
+        "label": "Save the occupancy map and mapping state"
+      },
+      "requires": [
+        "mapping-measure"
+      ],
+      "kind": "guided",
+      "uncertainty": "An occupancy raster and a serialized pose graph serve different purposes; retain the raw observations regardless."
+    },
+    {
+      "id": "navigation-gate",
+      "title": "Review the route from goal to motor",
+      "track": "build",
+      "milestone": "navigation",
+      "minutes": "One or more 45–60 minute integration blocks",
+      "why": "A reviewed robot contract makes navigation’s output traceable all the way to measured, stoppable motion.",
+      "needs": [
+        "Saved map and measurement report, current mounts and verified manual stop tests",
+        "Actual Jazzy package versions and measured footprint, geometry and motion limits",
+        "One selected command source; retain blocked stairs and known physical clearance",
+        "Use the fixed-map AMCL route; SLAM and AMCL must not publish competing map corrections"
+      ],
+      "actions": [
+        "Recheck live transforms, sensor data and manual stop behavior at the current load.",
+        "Copy the installed Nav2 configuration and adapt each contract row from measured evidence.",
+        "Trace the final command type and route, freshness guards and local stopping behavior before enabling navigation."
+      ],
+      "finish": "Every configuration row has a measured value or named tested implementation, including the command and failure routes.",
+      "artifact": "Reviewed Nav2 configuration, version record and completed integration-contract notes",
+      "restart": "Open the first unfinished contract row and identify the measurement or implementation it needs.",
+      "diagnostic": "If the bridge or freshness guard is unfinished, complete that specific contract before an autonomous trial.",
+      "shortAction": "With motor outputs inhibited, trace the configured final velocity topic to the bridge and record its message type.",
+      "reference": {
+        "href": "#resource-nav2",
+        "label": "Integrate a custom robot with Nav2"
+      },
+      "requires": [
+        "mapping-save",
+        "drive-interface"
+      ],
+      "kind": "integration",
+      "uncertainty": "The installed sample is not a calibrated rover configuration; adapting plugins and implementing guards are substantial integration work."
+    },
+    {
+      "id": "navigation-localize",
+      "title": "Place the stationary rover in its saved map",
+      "track": "build",
+      "milestone": "navigation",
+      "minutes": "About 45–60 minutes",
+      "why": "A plausible robot pose and responsive costmap are the evidence needed before sending a destination.",
+      "needs": [
+        "Passing Nav2 configuration gate and verified live acquisition",
+        "Stop replay and SLAM; use the live ROS domain and a single map → odom owner",
+        "Motor outputs disabled initially; broad test obstacle visible in the scan plane"
+      ],
+      "actions": [
+        "Start the reviewed live stack and initialize AMCL to the real marked pose and heading.",
+        "Compare walls, footprint and map placement while stationary.",
+        "Add and remove the test obstacle and inspect marking, clearing and unknown space."
+      ],
+      "finish": "Displayed placement agrees with reality, the footprint covers the rover and the obstacle appears and clears as expected.",
+      "artifact": "Local/global costmap screenshots and a pose/obstacle inspection note",
+      "restart": "With outputs inhibited, compare one real wall and the current heading with the saved map view.",
+      "diagnostic": "If walls disagree, check initialization, map revision, transforms and timing before changing planner parameters.",
+      "shortAction": "Verify the loaded map revision and identify the current map → odom publisher with outputs inhibited.",
+      "reference": {
+        "href": "#resource-nav2",
+        "label": "Mapping, localization and costmaps"
+      },
+      "requires": [
+        "navigation-gate"
+      ],
+      "kind": "integration",
+      "uncertainty": "Loading a map does not tell the rover where it was placed; localization and obstacle updates need direct checks."
+    },
+    {
+      "id": "navigation-trip",
+      "title": "Make one short measured trip",
+      "track": "build",
+      "milestone": "navigation",
+      "minutes": "About 45–60 minutes",
+      "why": "A half-metre trip gives the first autonomous movement a visible destination and a physical success check.",
+      "needs": [
+        "Passing localization/costmap gate and proven local stop behavior",
+        "Clear supervised route, blocked stairs, people/pets outside and stop within reach",
+        "Use demonstrated low speed and review recovery maneuvers before enabling motion"
+      ],
+      "actions": [
+        "Mark a destination about half a metre ahead and inspect the entire planned swept footprint.",
+        "Run the short goal through the verified command route and observe physical motion and status.",
+        "Measure the final error and stopping, then save three trials including unsuccessful attempts."
+      ],
+      "finish": "Three trial records show repeatable short-route behavior, measured endpoints and dependable stopping.",
+      "artifact": "Waypoint-trial log with endpoint error, timing, outcome and any intervention",
+      "restart": "Read the last trial’s start mark, map revision, limits and intervention before repeating it.",
+      "diagnostic": "If the rover oscillates near the goal, inspect controllable speed and odometry before goal tolerance and controller limits.",
+      "shortAction": "With motion disabled, mark the goal and inspect the planned footprint along the short route.",
+      "reference": {
+        "href": "#resource-nav2",
+        "label": "Review footprint and motion configuration"
+      },
+      "requires": [
+        "navigation-localize"
+      ],
+      "kind": "integration",
+      "uncertainty": "The initial 0.15 m endpoint target is provisional; a success status alone does not establish physical arrival or stopped wheels."
+    },
+    {
+      "id": "navigation-change",
+      "title": "Test when the rover should stop or refuse",
+      "track": "build",
+      "milestone": "navigation",
+      "minutes": "About 45–60 minutes per group of checks",
+      "why": "A useful home rover needs a measured response to changes and missing information.",
+      "needs": [
+        "Repeatable short trip, broad scan-plane obstacle and supervised bounded floor",
+        "Reachable stop and blocked stairs; test required-sensor loss with outputs disabled first"
+      ],
+      "actions": [
+        "Block the route with the visible obstacle and inspect a clearance-respecting alternate path or refusal.",
+        "Test cancellation and fresh-command loss, recording delay and travel after the request.",
+        "Check sensor-freshness inhibition, restore normal conditions and repeat the uncomplicated trip."
+      ],
+      "finish": "The log shows obstacle handling/refusal and tested cancellation, timeout and sensor-loss behavior with a recovery procedure.",
+      "artifact": "Failure-test records and the floor/load/speed/sensor envelope that passed",
+      "restart": "Open the failure-test log and identify the next unverified case and its disabled-output first check.",
+      "diagnostic": "If a guard fails, keep motion inhibited and inspect the specific freshness/stop path before another moving trial.",
+      "shortAction": "With outputs disabled, interrupt one required stream and inspect whether the freshness guard inhibits motion.",
+      "reference": {
+        "href": "#resource-nav2",
+        "label": "Make failure behavior part of integration"
+      },
+      "requires": [
+        "navigation-trip"
+      ],
+      "kind": "integration",
+      "uncertainty": "Passing a broad obstacle test does not establish detection of low toys, shoelaces, glass or stair edges."
+    },
+    {
+      "id": "memory-evidence",
+      "title": "Query the supplied observation example",
+      "track": "learn",
+      "milestone": "memory",
+      "minutes": "About 45–60 minutes",
+      "why": "A small inspectable example teaches what an observation can support before we join your real robot data.",
+      "needs": [
+        "The Chapter 03 Python environment, memory.py, demo records and data contract",
+        "Keep the illustrative demo database separate from future real observations"
+      ],
+      "actions": [
+        "Import the supplied records and reproduce the stated historical query.",
+        "Change the time window, score filter and map revision and explain which evidence remains.",
+        "Import the unchanged data again and inspect the distinction between candidates and all recent observations."
+      ],
+      "finish": "You can explain inclusion/exclusion, deduplication and why the demo establishes no current object position.",
+      "artifact": "memory/demo.sqlite, original demo records and annotated query output",
+      "restart": "Run the known historical query against the unchanged demo and inspect its first returned record.",
+      "diagnostic": "If import fails, check one complete JSON object per line and timezone-bearing timestamps using the untouched demo first.",
+      "shortAction": "Inspect one demo record and point to its image reference, time, map revision and null object position.",
+      "reference": {
+        "href": "#resource-model-results",
+        "label": "Keep scores distinct from established probabilities"
+      },
+      "requires": [
+        "model-setup"
+      ],
+      "kind": "guided",
+      "uncertainty": "The demo image paths and poses are illustrative; completing it does not complete the real-observation milestone."
+    },
+    {
+      "id": "memory-real-observations",
+      "title": "Connect five real predictions to the room",
+      "track": "shared",
+      "milestone": "memory",
+      "minutes": "One or more 45–60 minute blocks",
+      "why": "This is where the rover you built and the model you trained become one inspectable household-observation system.",
+      "needs": [
+        "Saved evaluated model, mounted camera, checked map and frame measurements",
+        "Read the shared memory contract for label/score conversion and provenance",
+        "Stationary marked base_link poses with documented uncertainty; motor outputs inhibited"
+      ],
+      "actions": [
+        "Mark two measured rover poses in the current map and capture five distinct present/absent images with actual times.",
+        "Run the saved model and build five records using real identifiers, documented observer poses and null object positions.",
+        "Import into a separate real database and query all five; open every image and inspect its decision and capture-pose evidence."
+      ],
+      "finish": "Five real records appear in recent_observations and each image, model identity, capture time and observer pose can be checked.",
+      "artifact": "memory/observations-own.jsonl, memory/own.sqlite, five real images and pose-measurement notes",
+      "restart": "Open one referenced image and trace its record back to the saved model and physically marked capture pose.",
+      "diagnostic": "If a pose lacks evidence, leave it out of the real database and finish the frame/map check; preserve incorrect predictions honestly.",
+      "shortAction": "Prepare one actual image and model output, or inspect one record’s label/score conversion without inventing missing poses.",
+      "reference": {
+        "href": "#resource-frames",
+        "label": "Keep observer pose and object position distinct"
+      },
+      "requires": [
+        "memory-evidence",
+        "model-evaluation",
+        "mapping-save",
+        "navigation-change",
+        "geometry-frames",
+        "capture-driver-check"
+      ],
+      "kind": "integration",
+      "uncertainty": "The starter stores references but cannot verify image existence or pose accuracy; your inspection supplies that evidence. Automatic ROS association is later work."
+    },
+    {
+      "id": "memory-position",
+      "title": "Transform a measured point on paper",
+      "track": "shared",
+      "milestone": "memory",
+      "minutes": "About 45–60 minutes; optional extension",
+      "why": "A small geometry calculation shows what additional evidence a future object location will require.",
+      "needs": [
+        "Paper, calculator and the established base/map frame conventions",
+        "Treat the worked numbers as illustrative; an image-only prediction has no measured depth"
+      ],
+      "actions": [
+        "Draw the supplied measured base-frame point at zero yaw and at a quarter-turn.",
+        "Apply the planar transform and compare it with the drawing.",
+        "Name the missing intrinsics, depth and time-matched transforms for a real camera pixel."
+      ],
+      "finish": "The arithmetic and sketch agree, and observer pose, measured object point and image-only prediction stay distinct.",
+      "artifact": "Annotated two-pose calculation and a list of missing localization inputs",
+      "restart": "Recalculate the zero-yaw example and identify which measurements its formula assumes.",
+      "diagnostic": "If signs disagree, draw forward/left axes at both headings and check the rotation before using software.",
+      "shortAction": "Draw the zero-yaw example and predict the quarter-turn result.",
+      "reference": {
+        "href": "#resource-depth",
+        "label": "Project a calibrated depth measurement"
+      },
+      "requires": [
+        "memory-evidence",
+        "geometry-frames"
+      ],
+      "kind": "guided",
+      "uncertainty": "This is an optional paper exercise; the current observation schema intentionally rejects object coordinates until a new localization contract is designed.",
+      "optional": true
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+<section class="chapter" id="ch-gait" data-title="Build a little wiggle machine" data-part="The modular creature" data-number="08">
+<header class="chapter-heading"><p class="eyebrow">Chapter 08 · The first creature</p><h2>Build a little<br>wiggle machine</h2><p class="chapter-deck">Three joints, four short segments, and a bend that travels from one end to the other. Our first job is a reliable wiggle. Our next is finding out whether it goes anywhere.</p></header>
+<p>The appealing part happens quickly: coordinated joints make an object look rather more alive than its pile of parts suggested. The floor is less easily impressed. A body can waggle all afternoon and finish exactly where it started. We’ll build a small wheel-supported creature, give it one fixed wave, and measure what the floor lets it do.</p>
+<div class="goal-block"><p><strong>This build’s finish line:</strong> a supported three-joint body performs the same bounded movement three times, and you can say how far it traveled—or show exactly what prevented travel. Net movement is an experimental result, not a guaranteed outcome of this unbuilt starting design. A reliable joint is already a completed project; this chapter is your first locomotion investigation.</p></div>
+<h3>Gather the second batch</h3>
+<p>Reuse your Uno, 5 V supply, fused power junctions, wiring tools, PLA, and first servo. Add <strong>two more of the same SG92R servos</strong>, two more of the specified 22 AWG servo extension leads, two 15 cm pieces of 22 AWG solid-core signal wire, and two WAGO 221-412 connectors. You also need <strong>16 M3 × 20 mm bolts, 32 M3 nuts, 32 M3 washers, six M3 × 12 mm bolts with nuts and washers for the bridges, six M1.6 × 8 mm bolts with nuts for the horn connections, six small cable ties, and 16 small rubber bands for wheel treads</strong>. Keep a 3.5 mm drill bit or hand reamer nearby for clearing printed wheel bores, plus the paper protractor, ruler, masking tape, and a phone for recording trials.</p>
+<p>We’ll print four decks, sixteen small wheels, and three raised connector bridges. Make and test <strong>one deck and one wheel first</strong>. The dimensions below are a starting fabrication recipe, not a validated CAD kit. Two measurements from your delivered servo—the output-shaft location and horn height—set the fit. Taking those measurements is the next action, rather than hunting for an unrelated robot STL.</p>
+<h3>Session 1 · Make one segment that rolls the right way</h3>
+<ol>
+<li><strong>Start the deck.</strong> In Fusion make an <strong>80 × 50 × 3 mm</strong> plate, with x along its length and y across it. Its center is x = 0, y = 0. Add four axle tabs underneath: each <strong>8 mm along x, 4 mm along y, and 12 mm tall</strong>, centered at x = −20/+20 and y = −23/+23. Place a <strong>3.4 mm diameter hole through each tab along y</strong>, centered 6 mm below the deck’s underside. All four axles point across the segment, so the wheels roll along its length. Print the deck <strong>upside down, with its broad upper face flat on the bed and the tabs pointing up</strong>, using PLA, 0.2 mm layers, three walls, and 20% infill. No support is needed beneath this orientation’s deck; clear the small axle holes by hand afterward.</li>
+<li><strong>Make one wheel.</strong> Create a <strong>20 mm diameter, 6 mm wide</strong> disc with a <strong>3.4 mm center hole</strong>. Add a shallow central tread groove <strong>2 mm wide and 0.6 mm deep</strong> around its rim. Print the disc flat. Deburr its bore with a hand-held bit or reamer; a bolt must pass without forcing it. Fit a small rubber band snugly in the groove so the wheel resists sideways sliding.</li>
+<li><strong>Test the axle before making fifteen more.</strong> Put a washer, wheel, and second washer on an M3 bolt, then pass it through a tab from the outside. The wheel sits <strong>outboard of the deck edge</strong>; its inner washer provides separation from the tab and plate edge. Fit two nuts on the inside. Adjust the first nut until the wheel turns freely with slight end play; hold it still while tightening the second nut against it. The second is a jam nut that locks the adjustment. The wheel must spin without rubbing the deck or dragging on the bolt head.</li>
+<li><strong>Finish one four-wheel deck.</strong> Print the other three wheels. Set the deck on a level tabletop and lightly push it lengthwise, then sideways. It should roll along its length and resist sliding across it. If it skids equally easily both ways, check rubber tread contact; if it barely rolls, free the axles. Fix this deck before duplicating it.</li>
+</ol>
+<p><strong>What you should see:</strong> four rims touching the surface, a deck clear of the floor, and a noticeable difference between rolling and sliding. Swiveling caster wheels would turn to follow a sideways shove, so they defeat the contact behavior we are trying to create here.</p>
+<p>This directional resistance is the mechanical trick. <a href="https://www.inm.uni-stuttgart.de/einzelprojekte/toys/lego_snake_robot/" target="_blank" rel="noopener noreferrer">The University of Stuttgart’s LEGO snake demonstration</a> uses passive wheels for the same purpose. Watch its short animation now: follow one bend through the body, then look at the wheel directions. Our smaller printed experiment still needs its own measurements.</p>
+<h3>Session 2 · Join two decks before building four</h3>
+<p>Each servo stands upright on one deck and turns the next deck through a small raised bridge. The wheels carry the body’s weight. Keep the mechanism horizontal; this simple connection is not designed to suspend the next segment as a lifting arm.</p>
+<ol>
+<li><strong>Locate the servo on the first deck.</strong> Place its output shaft at <strong>x = +25 mm, y = 0</strong>, pointing upward. Orient its long case dimension along x, with the case extending mostly toward the deck center. Measure the actual shaft offset from the case center. Add two pairs of cable-tie slots beside the case, like the Chapter 07 base, clear of the shaft and horn. Save the updated deck and <strong>reprint it upside down; reuse the first deck’s wheels and hardware</strong>. Secure the servo snugly. Do not crush its case. Duplicate this updated deck component to make the second deck.</li>
+<li><strong>Measure the connection height.</strong> Center the bare servo with <code>A</code>, disconnect servo power, and fit its supplied two-arm horn. Measure <strong>h</strong>, the height from the deck’s top surface to the horn’s upper face. Write it down. Both decks will sit at the same height; a raised bridge on the second deck reaches back to that horn.</li>
+<li><strong>Model a separate bridge for the second deck.</strong> Make a new component using the second deck’s center as origin. Its mounting foot is <strong>32 × 14 × 3 mm</strong>, spanning x = −40 to −8 and centered on y = 0, sitting on the deck. Add an <strong>8 × 14 mm</strong> riser centered at x = −36, y = 0. It rises from the foot’s top until its upper face is at height <strong>h</strong> above the deck; its extrusion height is therefore <strong>h − 3 mm</strong>. At height h, add a horizontal bridge <strong>52 × 14 × 3 mm</strong>, spanning x = −77 to −25. Add a 3 mm fillet where bridge and riser meet. The bridge’s underside will rest on the previous horn. Add two 3.4 mm mounting holes through the foot at x = −24 and −14, y = 0; put matching holes through the deck.</li>
+<li><strong>Transfer the horn’s holes.</strong> The previous output shaft will sit below x = −65, y = 0 in this deck’s coordinates. Put a <strong>6 mm access hole</strong> there for the horn’s center screw. Measure two suitable holes on the supplied horn, one on each arm, and copy their positions into the bridge as 1.8 mm clearance holes. Print the updated second deck upside down after adding its bridge mounting holes. Print the separate bridge <strong>lying on its broad side</strong>: the whole foot–riser–bridge outline lies on the bed, and its 14 mm width grows vertically. Use the same PLA settings and clear the horizontal holes afterward. Bolt its foot to the second deck with two M3 × 12 mm bolts, washers, and nuts, then use two M1.6 bolts and nuts to attach the bridge to the horn. Clear the horn holes by hand only if necessary; do not crack or distort it. Confirm the nuts and bolt ends clear the servo case throughout the small sweep.</li>
+<li><strong>Do a two-deck fit check.</strong> With both decks on their wheels, the first servo shaft and second deck’s bridge center should align without lifting a wheel or bending the bridge. Send <code>A</code>, then <code>L</code>, <code>C</code>, and <code>R</code> using the joint sketch. Keep hands clear and the power connector within reach. Disconnect power before adjusting. Look for deck corners, wheels, cable ties, and bridge fasteners colliding.</li>
+</ol>
+<p><strong>What you should see:</strong> one supported deck turns relative to the other through a small clear arc. If a wheel lifts when you tighten the horn bolts, adjust the measured bridge height; do not pull it into alignment with the screws. If the bridge bends noticeably, increase its thickness and fillet, then recheck height. This fit test earns the right to duplicate the part.</p>
+<details><summary>What the dimensions are arranging</summary><p>In the neutral pose, deck centers are 90 mm apart. The first shaft is 25 mm ahead of its deck center; the next bridge reaches 65 mm behind the next center to meet it. The decks have a 10 mm gap in the straight pose. Our nominal ±15° command limits are deliberately small, but the actual servo angle must still be checked for clearance. A future load-bearing joint should add a properly aligned passive bearing or pivot; do not use this horn-and-bridge jig as a recipe for a heavy arm.</p></details>
+<h3>Session 3 · Add the other two joints</h3>
+<ol>
+<li>Print the remaining two decks and wheels only after the pair passes. Build a chain of <strong>four decks and three servos</strong>. Decks 1–3 carry servos; decks 2–4 carry bridges. Label the head, tail, and joints <strong>0, 1, 2</strong> from head to tail. Fit all horns in a straight neutral pose after centering their bare servos individually with the Chapter 07 sketch.</li>
+<li>Prepare the added extensions as in Chapter 07, leaving the servos’ original cables intact. Wire all three extensions’ + leads to the fused +5 V junction and all three ground leads to the GND junction. Keep Uno GND on that black junction. Connect joint 0 signal to <strong>D9</strong>, joint 1 to <strong>D10</strong>, and joint 2 to <strong>D11</strong>. The Uno still receives power through USB. The separate 5 V positive supply never goes into an Uno power pin.</li>
+<li>Upload <code>crawler.ino</code> below. Secure the supply junctions and Uno beside the test area. Route light servo leads above the links with slack for bending; a cable under a wheel can overpower the effect you are measuring. Do not carry the whole chain by one link.</li>
+<li>With every segment supported, send <code>A</code> and then <code>1</code>. Only joint 0 should make a small test bend, return toward center after two seconds, and stop receiving pulses three seconds later. Repeat <code>A</code>, <code>2</code>, then <code>A</code>, <code>3</code>. Record which side each bends toward when viewed from above.</li>
+<li>If one joint bends in the opposite sense from the others, change its entry in <code>SIGN</code> from <code>1</code> to <code>-1</code>, upload, and repeat that test. Keep all three positive test bends consistent. Then send <code>A</code> and <code>G</code>. Watch the complete 12-second wave and its return toward center. Send <code>X</code> at any time to stop pulses; disconnect DC power before touching the body.</li>
+</ol>
+<p><strong>What you should see:</strong> a bend traveling through the three joints, with no hard stops, resets, wheel snagging, or persistent straining. The code uses short, locally timed actions. One <code>G</code> starts one 12-second trial; it does not need a live stream from a laptop. At the end it requests center for three seconds and then stops pulses. This timing bounds the normal trial; it does not replace the physical power disconnect.</p>
+<p><a data-download="assets/examples/crawler/crawler.ino" href="assets/examples/crawler/crawler.ino" download="crawler.ino">Download crawler.ino</a>. Save it inside a folder named <code>crawler</code>. Open Serial Monitor at <strong>115200 baud</strong>; the commands are capitals.</p>
+<details><summary>Show the complete crawler sketch</summary><pre><code>#include &lt;Servo.h&gt;
+#include &lt;math.h&gt;
+
+// Arduino Uno R3; three independently powered positional servos.
+// Serial: 115200. A arms; 1/2/3 test a joint; G runs a 12-second wave.
+// B reverses wave phase; L/R apply +/-3 nominal degrees of curvature.
+// X stops pulses. Physical DC disconnect is the power-off control.
+const byte COUNT = 3;
+const byte PINS[COUNT] = {9, 10, 11};
+const int SIGN[COUNT] = {1, 1, 1}; // Change an entry to -1 after direction test.
+const float AMPLITUDE = 12.0f;    // Nominal command degrees, not measured angles.
+const float FREQUENCY = 0.25f;    // Cycles per second.
+const float PHASE = 1.04719755f;  // 60 degrees expressed in radians.
+const unsigned long TRIAL_MS = 12000;
+Servo servos[COUNT];
+float commandAngles[COUNT] = {90, 90, 90};
+enum Mode { OFF, HOLD, TEST, RUN };
+Mode mode = OFF;
+unsigned long started = 0;
+unsigned long lastTick = 0;
+unsigned long holdDuration = 5000;
+int testJoint = 0;
+float bias = 0.0f;
+float phaseSign = 1.0f;
+
+void disarm() {
+  for (byte i = 0; i &lt; COUNT; ++i) {
+    servos[i].detach();
+    digitalWrite(PINS[i], LOW);
+  }
+  mode = OFF;
+  Serial.println(F(&quot;OFF: disconnect servo power before handling.&quot;));
+}
+
+void holdCenter(unsigned long now, unsigned long duration) {
+  mode = HOLD;
+  started = now;
+  holdDuration = duration;
+}
+
+void setup() {
+  for (byte i = 0; i &lt; COUNT; ++i) {
+    pinMode(PINS[i], OUTPUT);
+    digitalWrite(PINS[i], LOW);
+  }
+  Serial.begin(115200);
+  Serial.println(F(&quot;READY: A, then 1/2/3 or G. X stops pulses.&quot;));
+}
+
+void loop() {
+  unsigned long now = millis();
+  for (byte n = 0; n &lt; 16 &amp;&amp; Serial.available(); ++n) {
+    char c = Serial.read();
+    if (c == &#x27;\r&#x27; || c == &#x27;\n&#x27; || c == &#x27; &#x27;) continue;
+    if (c == &#x27;X&#x27;) {
+      disarm();
+    } else if (c == &#x27;A&#x27;) {
+      if (mode == OFF) {
+        for (byte i = 0; i &lt; COUNT; ++i) {
+          commandAngles[i] = 90.0f;
+          servos[i].attach(PINS[i], 1000, 2000);
+          servos[i].write(90);    // Can jump at arming: support the whole body.
+        }
+      }
+      holdCenter(now, 5000);
+      lastTick = now;
+    } else if (c &gt;= &#x27;1&#x27; &amp;&amp; c &lt;= &#x27;3&#x27; &amp;&amp; mode == HOLD) {
+      testJoint = c - &#x27;1&#x27;;
+      mode = TEST;
+      started = now;
+    } else if ((c == &#x27;G&#x27; || c == &#x27;B&#x27; || c == &#x27;L&#x27; || c == &#x27;R&#x27;) &amp;&amp; mode == HOLD) {
+      bias = c == &#x27;L&#x27; ? 3.0f : c == &#x27;R&#x27; ? -3.0f : 0.0f;
+      phaseSign = c == &#x27;B&#x27; ? -1.0f : 1.0f;
+      mode = RUN;
+      started = now;
+      Serial.println(F(&quot;TRIAL: 12 seconds; X stops early.&quot;));
+    } else {
+      // Commands out of sequence also stop. Use A to set up each new run.
+      disarm();
+    }
+  }
+  if (mode == OFF) return;
+  unsigned long elapsed = now - started;
+  if ((mode == TEST &amp;&amp; elapsed &gt;= 2000) || (mode == RUN &amp;&amp; elapsed &gt;= TRIAL_MS)) {
+    holdCenter(now, 3000);
+    elapsed = 0;
+    Serial.println(F(&quot;CENTERING: pulses end in 3 seconds.&quot;));
+  }
+  if (mode == HOLD &amp;&amp; elapsed &gt;= holdDuration) {
+    disarm();
+    return;
+  }
+  if (now - lastTick &lt; 20) return;
+  lastTick = now;
+  for (byte i = 0; i &lt; COUNT; ++i) {
+    float relative = 0.0f;
+    if (mode == TEST &amp;&amp; i == testJoint) relative = 8.0f;
+    if (mode == RUN) {
+      float seconds = elapsed / 1000.0f;
+      // One-second fade at each end avoids an abrupt wave start or stop.
+      float envelope = min(1.0f, min(seconds, (TRIAL_MS - elapsed) / 1000.0f));
+      relative = envelope * (bias + AMPLITUDE * sinf(6.28318531f * FREQUENCY * seconds + phaseSign * i * PHASE));
+    }
+    float target = constrain(90.0f + SIGN[i] * relative, 75.0f, 105.0f);
+    commandAngles[i] += constrain(target - commandAngles[i], -0.6f, 0.6f);
+    servos[i].write((int)(commandAngles[i] + 0.5f));
+  }
+}
+</code></pre></details>
+<h3>The small idea inside the wiggle</h3>
+<p>Every joint repeats the same motion, but starts at a different point in the cycle. The starting point is its <strong>phase</strong>. With different phases, the bend appears to travel. The sketch uses a nominal amplitude of 12°, one cycle every four seconds, and 60° of phase between neighbors. It fades the wave in and out and limits how quickly each command changes.</p>
+<div data-lab="gait"></div>
+<p>The lab displays five joints to make the pattern easier to follow; your starter body has three. Keep the firmware’s small default commands for the physical trials. In the lab, first change only the phase to zero. All joints then bend together. Restore the phase and the traveling pattern returns. The sketch is showing joint geometry; it contains no wheels, friction, or prediction of real travel. You can discover the shape here and still need the tabletop to discover the propulsion.</p>
+<details><summary>Put the wave into one line of mathematics</summary><p><code>qᵢ(t) = b + A sin(2πft + iφ)</code>. Here <code>A</code> is amplitude, <code>f</code> is cycles per second, <code>φ</code> is phase difference in radians, and <code>b</code> is a curvature bias. Joint index <code>i</code> starts at zero. Our code converts the resulting nominal relative angle to a servo command around 90. The largest speed requested by an unmodified fixed wave is <code>2πfA</code>; faster frequency therefore asks the joint to move faster even when its endpoints stay the same. The fade and final angle/rate limits also affect the actual command.</p></details>
+<h3>Session 4 · Measure three honest attempts</h3>
+<ol>
+<li>Tape a start line and a straight heading line to a level floor or large mat. Keep the robot away from a table edge. Mark a point on the head deck. Position a phone above or square to the test area so its view includes a ruler and that point.</li>
+<li>Start from the straight neutral pose each time. Place the cables in the same loose arrangement. Send <code>A</code>, then <code>G</code>, and record the 12-second trial. Measure the head marker’s forward displacement, sideways displacement, and final heading. Record zero or backward travel exactly as it happened.</li>
+<li>Repeat twice more without changing the code. Write down all three results. Power off between trials to reset the pose without forcing a powered servo. If the body gets warm or strains, stop and inspect the cause instead of completing a quota.</li>
+<li>If the body moves consistently, run three trials with <code>A</code>, then <code>B</code> to reverse the phase progression. After that, try <code>A</code>, then <code>L</code> for a small positive bias. The labels are experimental requests: record which way your actual body travels or turns. Do not assume wave reversal guarantees backward travel or that a positive bias always turns left.</li>
+</ol>
+<div class="table-wrap"><table><thead><tr><th>Trial</th><th>Command</th><th>Forward / sideways travel</th><th>Final heading and observation</th></tr></thead><tbody><tr><td>1</td><td>G</td><td>___ mm / ___ mm</td><td>___°; __________________</td></tr><tr><td>2</td><td>G</td><td>___ mm / ___ mm</td><td>___°; __________________</td></tr><tr><td>3</td><td>G</td><td>___ mm / ___ mm</td><td>___°; __________________</td></tr></tbody></table></div>
+<h3>If it only wiggles, here is the next move</h3>
+<p>After three baseline trials with no repeatable progress, <strong>keep the code unchanged</strong>. Disconnect power and separate one wheeled deck. Repeat the forward-versus-sideways push test. Free dragging wheels, restore missing rubber treads, and verify that no wire touches the floor. Reconnect the body and repeat the same three <code>G</code> trials.</p>
+<p>If the individual deck passes but the chain still does not travel, film one trial from above and inspect for wheels lifting or joints barely reaching their commanded bends. Fix a visible mechanical problem first. If those checks pass, change only <code>AMPLITUDE</code> from <code>12.0f</code> to <code>8.0f</code> and run three more trials. Keep the fixed 75–105 command bounds. Save both sets even if neither wins; do not add more joints or larger commands to hide an unexplained result.</p>
+<p>You may find that this lightweight geometry and surface do not produce useful locomotion. That is a valid stopping point for this prototype, with a specific record of what did and did not work. The next chapter gives you a simpler virtual joint to inspect while you consider a better contact mechanism. A simulation cannot repair missing evidence about the real one.</p>
+<details><summary>Reading for the floor puzzle</summary><p>Read the abstract and friction illustration in <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2700932/" target="_blank" rel="noopener noreferrer">The mechanics of slithering locomotion</a>. Look for resistance changing with direction; you can leave the derivation for later. Our timed wave is <em>open loop</em> at the body level: it does not measure its progress or correct its heading. The servos have internal position controllers, but that does not give the whole robot awareness of where it went.</p></details>
+<div class="checkpoint"><h3>Done for this version</h3><p>Save a video of the bounded wave, a wiring photo, the three recorded trials, and your first diagnosed constraint. If it moves, name the repeatable motion you observed. If it stays put, name the completed contact test and its result. Both tell us what the next model must explain.</p><p><strong>Leave this note on the bench:</strong> “Next: run the supplied single-joint simulation and compare a command with the motion it produces.”</p></div>
+<p class="next-action"><a href="#ch-simulation">Next → Put one joint in a virtual workbench.</a></p>
+</section>
