@@ -1,6 +1,6 @@
-<div class="chapter-heading" id="ch-resources"><span class="eyebrow">Resource library · Read, watch, return to the bench</span><h2>Resources for your next experiment.</h2><p class="chapter-deck">Books, videos, and technical references for the home survey rover and its first trained models.</p></div>
-<p>We’re building a rover that measures a room and remembers what it saw. You already know how to program; this shelf supports the newer skills: fitting parts, powering motion, reading sensors, training a model, and connecting an observation to a place. Each recommendation gives you a small piece to read or watch, something to try, and a link back to your build.</p>
-<nav class="resource-jumps" aria-label="Resource categories"><a href="#resources-start">Start here</a><a href="#resources-route">Reading roadmap</a><a href="#resources-make">CAD &amp; printing</a><a href="#resources-power">Electronics &amp; motion</a><a href="#resources-models">Model training</a><a href="#resources-robotics">Mapping &amp; navigation</a><a href="#resources-memory">Join the tracks</a><a href="#resources-later">Later research</a></nav>
+<div class="chapter-heading" id="ch-resources"><span class="eyebrow">Resource library · Read, watch, listen, return to the bench</span><h2>Resources for your next experiment.</h2><p class="chapter-deck">Books, videos, audio conversations, and technical references for the home survey rover and its first trained models.</p></div>
+<p>We’re building a rover that measures a room and remembers what it saw. You already know how to program; this shelf supports the newer skills: fitting parts, powering motion, reading sensors, training a model, and connecting an observation to a place. Each recommendation gives you a small piece to read, watch, or listen to, something to notice, and a link back to your build.</p>
+<nav class="resource-jumps" aria-label="Resource categories"><a href="#resources-start">Start here</a><a href="#resource-inspiration">Keep the vision in view</a><a href="#resources-route">Reading roadmap</a><a href="#resources-make">CAD &amp; printing</a><a href="#resources-power">Electronics &amp; motion</a><a href="#resources-models">Model training</a><a href="#resources-robotics">Mapping &amp; navigation</a><a href="#resources-memory">Join the tracks</a><a href="#resources-later">Later research</a></nav>
 <section class="resource-start" id="resources-start"><h3>Open one resource. Make one thing clearer.</h3>
 <p><strong>Starting today?</strong> Go to the <a href="#ch-first-hour">first-hour session</a> and collect your first images. When you open Fusion for the fit coupon, watch <a href="#resource-fusion">sketch constraints</a>. Before training, read <a href="#resource-validation">the session-split guidance</a>. That is enough reading to begin.</p>
 <p>I’d give a reading detour about ten minutes, then try the card’s task. If it raises another question, leave a note and return to the bench. The roadmap below shows the next reference when you need it; it is not a second course to finish first.</p>
@@ -25,6 +25,36 @@
 </div>
 <div class="resource-join"><strong>Both lanes meet here ↓</strong><p><a href="#resources-memory">Link five real observations to the map</a>. You need a saved model, a mounted camera and checked capture poses. Further 3D reconstruction and language control remain optional branches.</p></div>
 <details><summary>If you want a book beside the bench</summary><p>For the first physical build, I’d choose <a href="#resource-mechanics-book">Making Things Move</a>. For electrical experiments, use <a href="#resource-electronics-book">Make: Electronics</a> when a measurement needs more explanation. For training, the free Python edition of <a href="#resource-islp">An Introduction to Statistical Learning</a> is the main book. Paid books are optional; the free references and supplied exercises support the default route.</p></details>
+</section>
+<section id="resource-inspiration" aria-labelledby="resource-inspiration-title"><h3 id="resource-inspiration-title">Keep the vision in view</h3>
+<p>We’re working toward a rover you can ask about a room: where it can travel, what it observed, and what evidence supports its answer. A photograph or a fit coupon is a small beginning, but it belongs to that same project. When you want to see the possibilities again, choose one of these companions. You can stop after the idea that interests you; none is a gate to the next session.</p>
+<div class="resource-grid">
+<article class="resource-card" id="resource-rover-overview">
+<p class="resource-meta">Watch · Free · See a small robot become useful</p>
+<h4><a href="https://articulatedrobotics.xyz/tutorials/mobile-robot/project-overview" target="_blank" rel="noopener noreferrer">Build a Mobile Robot with ROS: Project Overview</a></h4>
+<p class="resource-byline">Josh Newans · Articulated Robotics</p>
+<p>Watch the opening overview for remote driving, room mapping, and camera-based observations. This gives the separate pieces on your bench a shared destination. The series uses its own robot and software versions; our selected hardware and Jazzy instructions remain your build route.</p>
+<p class="resource-task"><strong>Bring one idea back:</strong> Name the capability you most want to demonstrate, then point to the next session that contributes to it. You do not need to follow the whole series.</p>
+<p class="resource-return"><a href="#session/first-hour">Choose your first room and observation →</a></p>
+</article>
+<article class="resource-card" id="resource-navigation-podcast">
+<p class="resource-meta">Listen · Free audio episode · A wider view of mapping</p>
+<h4><a href="https://www.robottalk.org/2024/09/27/episode-91-john-leonard/" target="_blank" rel="noopener noreferrer">Episode 91 – Robot navigation on land and in water</a></h4>
+<p class="resource-byline">Robot Talk · Claire Asher interviews John Leonard of MIT</p>
+<p>The episode page has an audio player and a downloadable recording. Listen for the relationship between knowing where a robot is and building a map. The discussion of autonomous navigation connects your room survey to questions faced by larger systems.</p>
+<p class="resource-task"><strong>Bring one idea back:</strong> Write one sentence connecting the interview to your rover: for example, why a saved map alone cannot tell it where it is now. Listening is optional; your next build step is still available.</p>
+<p class="resource-return"><a href="#session/mapping-measure">Return to checking your room map →</a></p>
+</article>
+<article class="resource-card" id="resource-rt2-vision">
+<p class="resource-meta">Read · Free illustrated research article · The longer-term assistant vision</p>
+<h4><a href="https://deepmind.google/blog/rt-2-new-model-translates-vision-and-language-into-action/" target="_blank" rel="noopener noreferrer">RT-2: New model translates vision and language into action</a></h4>
+<p class="resource-byline">Google DeepMind</p>
+<p>Read the examples connecting camera observations, language, and robot actions. This is a glimpse of a larger research direction, with training data and robot capabilities beyond our first build. Our immediate contribution is to make one observation trustworthy and connect it to a checked capture pose.</p>
+<p class="resource-task"><strong>Bring one idea back:</strong> Write a future request for your rover, then list the observations and tested actions it would need. Keep that request as an idea while you finish the current experiment.</p>
+<p class="resource-return"><a href="#session/memory-real-observations">Return to five real observation records →</a></p>
+</article>
+</div>
+<p>For the idea directly in front of you, use <a href="#resource-print-design">the illustrated print-design guide</a>, <a href="#resource-neural-video">the neural-network animation</a>, or <a href="https://articulatedrobotics.xyz/tutorials/mobile-robot/applications/slam" target="_blank" rel="noopener noreferrer">the room-mapping video</a>. The course’s Help panel brings the relevant companion alongside your current milestone. <a href="#workbench">Return to your current work →</a></p>
 </section>
 <section aria-labelledby="resources-make"><h3 id="resources-make">Make parts that fit</h3>
 <p>Use the next two resources while your first small part is on the screen or on the bench. The rest answer specific fit, strength, and assembly questions. You do not need to complete an entire CAD course before making your rover.</p><div class="resource-grid">

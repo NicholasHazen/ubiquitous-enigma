@@ -1,6 +1,6 @@
 {
   "name": "robotics-fieldbook",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "private": true,
   "description": "Static robotics textbook and session workbench",
   "scripts": {

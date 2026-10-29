@@ -26,6 +26,9 @@ async function go(page,hash='workbench'){
  }else await page.waitForFunction(id=>!document.getElementById(id)?.closest('.chapter')?.hidden,hash);
 }
 async function snapshot(page){return page.evaluate(()=>window.FieldbookWorkbench.exportData());}
+async function openPause(page){
+ if(!await page.locator('#wb-next-action').isVisible())await page.getByRole('button',{name:'Pause this session',exact:true}).click();
+}
 async function exportNotes(page){
  await go(page,'ch-practice');
  const [d]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'Export notes & progress',exact:true}).click()]);
@@ -62,6 +65,7 @@ async function domIntegrity(page){
   page.on('pageerror',e=>errors.push(e.message));
   await go(page,'');
   const plan=await page.locator('#session-plan').evaluate(e=>JSON.parse(e.textContent));
+  const companions=await page.locator('#learning-companions').evaluate(e=>JSON.parse(e.textContent));
   await check('First arrival has one next session and no competing chapter view',async()=>{
    assert.equal(await page.locator('.chapter:not([hidden])').count(),0);
    assert.ok((await page.locator('#workbench-view').textContent()).includes(plan.sessions[0].title));
@@ -69,15 +73,86 @@ async function domIntegrity(page){
    assert.ok((await page.locator('#workbench-view').textContent()).includes(plan.sessions[0].why));
   });
   await page.screenshot({animations:'disabled',path:path.join(artifacts,'workbench-home-desktop.png')});
-  await check('Every focused session includes its contract and source instructions',async()=>{
+  await check('Help and the project goal stay available on home, every chapter and focused sessions',async()=>{
+   const chapters=await page.locator('.chapter').evaluateAll(es=>es.map(e=>e.id));
+   assert.equal(chapters.length,13);
+   const chapterBySession=await page.evaluate(ids=>Object.fromEntries(ids.map(id=>[id,document.getElementById(id).closest('.chapter').id])),plan.sessions.map(s=>s.id));
+   for(const route of ['workbench',...chapters,'session/first-hour','session/drive-power']){
+    await go(page,route);const beforeURL=page.url();const before=await snapshot(page);
+    const active=plan.sessions.find(s=>s.id===before.active)||plan.sessions[0];
+    const expected=route.startsWith('session/')?plan.sessions.find(s=>s.id===route.slice(8)):
+     chapters.includes(route)?plan.sessions.find(s=>s.id===active.id&&chapterBySession[s.id]===route)||plan.sessions.find(s=>chapterBySession[s.id]===route)||active:active;
+    assert.equal(await page.locator('#help-button').count(),1);assert.equal(await page.locator('#help-button').isVisible(),true,route+' hides help');
+    assert.equal(await page.locator('#help-button').getAttribute('aria-haspopup'),'dialog');
+    assert.equal(await page.locator('#project-compass').isVisible(),true,route+' hides the goal');
+    assert.equal(await page.locator('#project-compass').evaluate(e=>!!e.closest('.chapter,#workbench-view')),false);
+    assert.ok((await page.locator('#project-compass .project-capability').textContent()).includes(plan.milestones.find(m=>m.id===expected.milestone).title),route+' has stale capability');
+    assert.equal(await page.locator('#workbench-view .wb-recovery').count(),0,'Recovery interrupts the main task');
+    await page.locator('#help-button').click();
+    assert.equal(await page.locator('dialog#fieldbook-help').evaluate(e=>e.open),true);
+    assert.equal(await page.getByRole('dialog',{name:'Help for your build',exact:true}).count(),1,'Help needs an accessible name');
+    assert.equal(await page.locator('#help-button').getAttribute('aria-expanded'),'true');
+    assert.ok((await page.locator('#help-session-context').textContent()).includes(expected.title),route+' help has stale session context');
+    assert.equal(await page.locator('#fieldbook-help .wb-recovery').count(),1);
+    const material=companions.milestones[expected.milestone];
+    const learningLinks=await page.locator('#fieldbook-help .companion-link').evaluateAll(es=>es.map(e=>({href:e.href,target:e.target,rel:e.rel})));
+    assert.deepEqual(learningLinks.map(a=>a.href),material.items.map(item=>new URL(item.url).href),route+' loses companion choices');
+    for(const a of learningLinks){assert.ok(a.href.startsWith('https://'));assert.equal(a.target,'_blank');assert.ok(a.rel.split(/\s+/).includes('noopener'));}
+    assert.ok(normalize(await page.locator('#fieldbook-help').textContent()).includes(normalize(material.vision)));
+    await page.keyboard.press('Shift+Tab');
+    const focus=await page.evaluate(()=>({inside:document.getElementById('fieldbook-help').contains(document.activeElement),element:document.activeElement.tagName+'#'+document.activeElement.id}));
+    // Native modal traversal may visit browser chrome, reported as BODY, but
+    // must not reach a control in the underlying page.
+    assert.ok(focus.inside||focus.element==='BODY#',route+' focus reached the underlying page: '+focus.element);
+    await page.keyboard.press('Tab');
+    assert.equal(await page.evaluate(()=>document.getElementById('fieldbook-help').contains(document.activeElement)),true,route+' keyboard focus did not return to help');
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(()=>!document.getElementById('fieldbook-help').open&&document.getElementById('help-button').getAttribute('aria-expanded')==='false');
+    assert.equal(await page.evaluate(()=>document.activeElement.id),'help-button');
+    assert.equal(await page.locator('#help-button').getAttribute('aria-expanded'),'false');
+    assert.equal(page.url(),beforeURL,'Help changed the return route');
+    assert.deepEqual(await snapshot(page),before,'Help changed saved progress');
+   }
+  });
+  await check('Every focused session gives one ordered task, explicit records and blank evidence',async()=>{
    for(const s of plan.sessions){
     await go(page,'session/'+s.id);
     const text=normalize(await page.locator('#workbench-view').textContent());
-    for(const phrase of [s.title,s.why,s.finish])assert.ok(text.includes(normalize(phrase)),s.id+' misses '+phrase);
-    const originalHeading=await page.locator('#'+s.id+' > h3').first().textContent();
-    assert.ok(text.includes(normalize(originalHeading)),s.id+' source heading missing');
+    for(const phrase of [s.title,s.finish,s.objective,companions.milestones[s.milestone].vision])assert.ok(text.includes(normalize(phrase)),s.id+' misses '+phrase);
+    assert.ok(normalize(await page.locator('.wb-objective').textContent()).includes(normalize(s.objective)));
+    assert.deepEqual(await page.locator('.wb-record-prompts li').allTextContents(),s.recordPrompts,s.id+' loses recording guidance');
+    assert.equal(await page.locator('#wb-evidence').inputValue(),'','Examples must not be saved as learner evidence');
+    assert.equal(await page.locator('#wb-evidence').getAttribute('placeholder'),s.recordExample);
+    assert.equal(await page.locator('#wb-finish-checked').isChecked(),false);
+    assert.equal(await page.locator('#wb-next-action').isVisible(),false,'An empty pause note interrupts '+s.id);
+    assert.equal(await page.locator('.wb-action-list').count(),0,'A summary duplicates the detailed steps');
+    assert.equal(await page.locator('.wb-instructions').count(),1);
+    assert.equal(await page.locator('.wb-instructions').evaluate(e=>!!(e.compareDocumentPosition(document.querySelector('.wb-evidence-form'))&Node.DOCUMENT_POSITION_FOLLOWING)),true,s.id+' asks for results before instructions');
+    assert.equal(normalize(await page.locator('#workbench-view h1').textContent()),normalize(s.title));
+    // Heading, timing and objective already appear in the focus introduction.
+    // Every authored instruction, diagram label, bench check and template must remain.
+    const fullSource=await page.locator('#'+s.id).evaluate(e=>{const c=e.cloneNode(true);c.querySelector(':scope > h3,:scope > h2,:scope > h4')?.remove();c.querySelectorAll('.session-pin-row,.session-objective,.session-meta,.authored-session-objective').forEach(x=>x.remove());return c.textContent;});
+    assert.equal(normalize(await page.locator('#wb-source-'+s.id+'-'+s.id).textContent()),normalize(fullSource),s.id+' drops source instructions');
+    const links=await page.locator('.wb-learning .companion-link').evaluateAll(es=>es.map(e=>({href:e.href,target:e.target,rel:e.rel})));
+    assert.ok(links.length>0,s.id+' has no learning companion');
+    for(const a of links){assert.ok(a.href.startsWith('https://'));assert.equal(a.target,'_blank');assert.ok(a.rel.split(/\s+/).includes('noopener'));}
+    assert.equal(await page.locator('.wb-evidence-form').evaluate(e=>!!(e.compareDocumentPosition(document.querySelector('.wb-learning'))&Node.DOCUMENT_POSITION_FOLLOWING)),true,'Optional inspiration interrupts the task');
     await domIntegrity(page);
    }
+   assert.deepEqual((await snapshot(page)).records,{},'Reading guidance created learner evidence');
+  });
+  await check('Opening contextual help preserves an unfinished measurement, pause note and finish choice',async()=>{
+   const c=await browser.newContext();const p=await c.newPage();await go(p,'session/first-hour');
+   const evidence='Draft: A–B is 3.72 m; repeat the measurement before deciding.';
+   const next='Return to the photographed A and B endpoints and measure again.';
+   await p.locator('#wb-evidence').fill(evidence);await openPause(p);await p.locator('#wb-next-action').fill(next);await p.locator('#wb-finish-checked').check();
+   const before=await snapshot(p);const beforeURL=p.url();await p.locator('#help-button').click();
+   await p.locator('#fieldbook-help summary').filter({hasText:'I’m stuck'}).click();await p.keyboard.press('Escape');
+   assert.equal(p.url(),beforeURL);assert.equal(await p.locator('#wb-evidence').inputValue(),evidence);assert.equal(await p.locator('#wb-next-action').inputValue(),next);
+   assert.equal(await p.locator('#wb-finish-checked').isChecked(),true);assert.deepEqual(await snapshot(p),before);
+   await p.reload();await p.locator('#wb-evidence').waitFor({state:'visible'});
+   assert.equal(await p.locator('#wb-evidence').inputValue(),evidence);assert.equal(await p.locator('#wb-next-action').isVisible(),true);assert.equal(await p.locator('#wb-next-action').inputValue(),next);
+   assert.equal((await snapshot(p)).records['first-hour'].status,'working');assert.deepEqual((await snapshot(p)).history,[]);await c.close();
   });
   await check('Focused setup retains supplied downloads and essential shared contracts',async()=>{
    await go(page,'session/model-setup');
@@ -100,13 +175,14 @@ async function domIntegrity(page){
   });
   await check('Session shortcuts reach restart and idea fields without changing the return route',async()=>{
    await go(page,'session/drive-interface');const before=page.url();
-   await page.getByRole('button',{name:'Leave a restart note',exact:true}).click();
+   await page.getByRole('button',{name:'Pause this session',exact:true}).click();
    assert.equal(await page.evaluate(()=>document.activeElement.id),'wb-next-action');assert.equal(page.url(),before);
    await page.getByRole('button',{name:'Park an idea',exact:true}).click();
    assert.equal(await page.evaluate(()=>document.activeElement.id),'wb-new-idea');assert.equal(await page.locator('#wb-new-idea').isVisible(),true);assert.equal(page.url(),before);
   });
   await check('A short visit can save only a restart action without claiming an experiment passed',async()=>{
    const c=await browser.newContext();const p=await c.newPage();await go(p,'session/first-hour');
+   await openPause(p);
    await p.locator('#wb-next-action').fill('Tomorrow: choose the room and photograph its boundaries.');
    await p.getByRole('button',{name:'Save and pause',exact:true}).click();await p.waitForURL('**#workbench');await p.locator('#workbench-view .wb-now').waitFor({state:'visible'});
    const state=await snapshot(p);assert.equal(state.records['first-hour'].evidence,'');assert.equal(state.records['first-hour'].status,'working');
@@ -116,6 +192,7 @@ async function domIntegrity(page){
   await check('An unfinished observation and exact next action survive immediate departure',async()=>{
    await go(page,'session/first-hour');
    await page.locator('#wb-evidence').fill('Measured room span: 3.72 m; endpoints photographed. One shorter span remains.');
+   await openPause(page);
    await page.locator('#wb-next-action').fill('Open notes/room-reference.md and measure the doorway-to-cabinet span.');
    await go(page,'ch-resources');await page.reload();await go(page,'workbench');
    const home=await page.locator('#workbench-view').textContent();
@@ -168,6 +245,7 @@ async function domIntegrity(page){
    for(const s of plan.sessions.filter(s=>!s.optional&&s.id!==target.id&&s.id!==candidate.id))fixture.records[s.id]={evidence:'Fixture: prerequisite was checked.',nextAction:'',status:'complete',updatedAt:now};
    await page.evaluate(x=>window.FieldbookWorkbench.importData(x),fixture);
    await go(page,'session/'+target.id);
+   await page.locator('#help-button').click();
    for(const title of ['I’m stuck','Returning after a break','Only ten minutes']){
     const box=page.locator('.wb-recovery details').filter({has:page.locator('summary',{hasText:title})});
     await box.locator('summary').click();assert.ok((await box.textContent()).length>title.length+30);
@@ -177,6 +255,7 @@ async function domIntegrity(page){
    const routes=await waiting.locator('a[href^="#session/"]').evaluateAll(es=>es.map(e=>e.getAttribute('href').slice(9)));
    const state=await snapshot(page);assert.equal(state.active,target.id);
    for(const sessionId of routes){const chosen=plan.sessions.find(s=>s.id===sessionId);assert.ok(chosen.requires.every(dep=>state.records[dep]?.status==='complete'));assert.notEqual(chosen.track,target.track);}
+   await page.keyboard.press('Escape');
   });
   await check('Legacy notes and pins migrate without overriding a later deliberate session',async()=>{
    const c=await browser.newContext();const p=await c.newPage();await go(p,'ch-start');
@@ -217,6 +296,7 @@ async function domIntegrity(page){
    await p.addInitScript(()=>{Storage.prototype.setItem=function(){throw new DOMException('Test storage full','QuotaExceededError');};});
    await go(p,'session/first-hour');
    await p.locator('#wb-evidence').fill('Storage-failure fixture: measured one span.');
+   await openPause(p);
    await p.locator('#wb-next-action').fill('Keep this page open and export the measurements.');
    await p.getByRole('button',{name:'Save and pause',exact:true}).click();await p.waitForURL('**#workbench');await p.locator('#workbench-view .wb-now').waitFor({state:'visible'});
    assert.ok((await p.locator('.wb-storage-status').first().textContent()).includes('unavailable'));
@@ -242,6 +322,7 @@ async function domIntegrity(page){
    const state=await snapshot(p);assert.equal(state.records['first-hour'].status,'working');assert.equal(state.records['capture-session-a'].status,'complete');
    assert.ok(state.records['capture-session-a'].evidence.includes('finish recorded'));
    await go(p,'workbench');assert.ok((await p.locator('.wb-milestones').textContent()).includes('Review earlier check'));
+   await p.locator('#help-button').click();
    const waiting=p.locator('.wb-recovery details').filter({has:p.locator('summary',{hasText:'Waiting for parts'})});await waiting.locator('summary').click();
    assert.equal(await waiting.locator('a[href^="#session/"]').count(),0);
    await c.close();
@@ -268,6 +349,7 @@ async function domIntegrity(page){
     await page.setViewportSize({width,height:1000});
     for(const route of ['workbench','session/first-hour','session/drive-power','session/model-setup','session/memory-real-observations']){
      await go(page,route);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),route+' overflow at '+width);
+     assert.equal(await page.locator('#help-button').isVisible(),true,route+' hides help at '+width);assert.equal(await page.locator('#project-compass').isVisible(),true,route+' hides vision at '+width);
     }
    }
    await page.setViewportSize({width:390,height:844});await go(page,'session/first-hour');

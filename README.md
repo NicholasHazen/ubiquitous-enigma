@@ -9,8 +9,22 @@ and saved ideas together. The core path covers one supervised room; broader
 reconstruction and unusual locomotion remain optional extensions.
 
 The book includes 34 working sessions, eight capability milestones, a dependency
-roadmap, and 33 curated resources. It supplies fit coupons and software exercises;
+roadmap, and 36 curated resources. It supplies fit coupons and software exercises;
 it does not claim a physically validated robot kit or a complete chassis CAD model.
+
+## Working through the guide
+
+Each working session identifies a concrete result, the steps that produce it,
+and the measurements, decisions or file locations to record. The first session
+creates a room reference; image collection and a measured hardware interface
+follow. Use the guided session links to save results and continue to the next
+prepared task. Full chapters remain available for reading and reference.
+
+The toolbar's **Help** control is available throughout the guide. It holds
+contextual help for being stuck, returning after a break, working briefly or
+waiting for parts. A compact project cue connects the current capability to the
+room-survey rover. Optional reading, videos and audio provide context along the
+path; they are not extra prerequisites or completion requirements.
 
 ## Build and preview
 
@@ -70,7 +84,7 @@ The GitHub integration can update repository files but cannot enable Pages in
 repository settings, so the repository owner must make the one-time setting.
 No repository variable or deployment secret is needed.
 
-The expected site address after successful deployment is
+The published site is
 <https://nicholashazen.github.io/ubiquitous-enigma/>. The repository and Pages site
 are public. The workflow publishes only `dist/`; hash navigation and relative
 download links work under the project URL. Future pushes to `main` rebuild and

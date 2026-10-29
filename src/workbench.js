@@ -7,6 +7,8 @@
   try { plan = JSON.parse(source.textContent); } catch (_) { return; }
   if (!Array.isArray(plan.sessions) || !plan.sessions.length) return;
   const sessions = plan.sessions;
+  let companions={milestones:{}};
+  try{companions=JSON.parse(document.getElementById('learning-companions')?.textContent||'{}');}catch(_){}
   const lookup = new Map(sessions.map(s => [s.id, s]));
   const core = sessions.filter(s => !s.optional);
   const KEY = 'robotics-fieldbook-workbench-v1';
@@ -126,8 +128,13 @@
   }
   function sourceClone(element, prefix) {
     const copy=element.cloneNode(true);
-    copy.querySelectorAll('.session-pin-row,.chapter-footer,.chapter-pagination').forEach(n=>n.remove());
-    if(copy.classList.contains('bench-session'))copy.classList.remove('bench-session');
+    copy.querySelectorAll('.session-pin-row,.session-objective,.chapter-footer,.chapter-pagination').forEach(n=>n.remove());
+    if(copy.classList.contains('bench-session')){
+      // The focused heading, objective and preparation list already carry this metadata.
+      copy.querySelector(':scope > h3,:scope > h2,:scope > h4')?.remove();
+      copy.querySelectorAll('.session-meta,.authored-session-objective').forEach(n=>n.remove());
+      copy.classList.remove('bench-session');
+    }
     copy.removeAttribute('hidden');
     const mapping=new Map();
     for(const el of [copy,...copy.querySelectorAll('[id]')])if(el.id){const old=el.id;el.id=prefix+old;mapping.set(old,el.id);}
@@ -143,9 +150,9 @@
   }
   function originalInstructions(s) {
     const original=document.getElementById(s.id);if(!original)return paragraph('Open the full lesson to see its instructions.');
-    const chapter=original.closest('.chapter');const prep=node('section','wb-source-context');prep.append(node('h2','','Shared setup for this chapter'),paragraph('Review these requirements before the session. Component choices, downloads and shared contracts apply to the instructions below.'));
+    const chapter=original.closest('.chapter');const prep=node('section','wb-source-context');prep.append(node('h2','','Before you start'));
     const children=[...chapter.children], firstSession=children.findIndex(el=>el.matches('.bench-session'));
-    let shared=children.slice(0,firstSession).filter(el=>!el.matches('.chapter-heading,.chapter-footer,.next-action,.edition-banner,.checkpoint'));
+    let shared=children.slice(0,firstSession).filter(el=>!el.matches('.chapter-heading,.chapter-footer,.next-action,.edition-banner,.checkpoint,.chapter-overview,.chapter-route,.chapter-outcomes'));
     // A coupon needs printer setup, not the later drivetrain shopping decision.
     if(['precision-setup','precision-measure'].includes(s.id)){
       const driveHeading=shared.findIndex(el=>el.matches('h3')&&el.textContent.includes('Choose the reference drivetrain'));
@@ -163,7 +170,7 @@
     if(s.id==='capture-driver-check'||s.id==='mapping-record')addRange('recording-contract');
     if(s.id==='memory-real-observations'||s.id==='memory-position')addRange('memory-contract');
     shared.forEach(el=>prep.append(sourceClone(el,'wb-context-'+s.id+'-')));
-    const full=node('section','wb-instructions');full.append(node('h2','','Follow the bench instructions'),paragraph('Keep the required checks in order. The complete source instructions are shown here, including their downloads and diagrams.'),sourceClone(original,'wb-source-'+s.id+'-'));
+    const full=node('section','wb-instructions');full.append(node('h2','','Work through the steps'),sourceClone(original,'wb-source-'+s.id+'-'));
     const fragment=document.createDocumentFragment();if(shared.length)fragment.append(prep);fragment.append(full);
     if(s.id==='capture-driver-check'){
       const mountedHeading=[...chapter.children].find(el=>el.tagName==='H3'&&el.textContent.includes('Move the learning experiment onto the rover'));
@@ -172,7 +179,7 @@
     return fragment;
   }
   function recovery(s) {
-    const wrap=node('section','wb-recovery');wrap.append(node('h2','','A way forward from here'));
+    const wrap=node('section','wb-recovery');wrap.append(node('h2','','Choose the help you need'));
     wrap.append(details('I’m stuck',[paragraph(s.diagnostic),paragraph('Save what you observed before changing another variable. An unresolved check is useful evidence; leave its checkpoint open.')]));
     wrap.append(details('Returning after a break',[returnContext(s),paragraph(s.restart)]));
     wrap.append(details('Only ten minutes',[paragraph(s.shortAction),paragraph('Stop after that small result. Leave the full checkpoint open until its finish condition is met.')]));
@@ -181,6 +188,65 @@
     const waiting=[paragraph(alternate?'The next prepared task on the other track is below. Your current session stays saved until you choose to switch.':'There is no unfinished task on the other track with all its prerequisites recorded. Use the small preparation step below, or review the dependency map.'),paragraph(alternate?alternate.why:s.shortAction)];
     waiting.push(alternate?link(alternate.title,sessionLink(alternate),'wb-button'):link('Open the dependency map','#learning-roadmap'));
     wrap.append(details('Waiting for parts',waiting));return wrap;
+  }
+  function contextSession() {
+    let target=null;
+    try{const value=decodeURIComponent(location.hash.slice(1));if(value.startsWith('session/')&&lookup.has(value.slice(8)))return lookup.get(value.slice(8));target=document.getElementById(value);}catch(_){}
+    const chapter=target?.closest('.chapter')||document.querySelector('.chapter:not([hidden])');
+    const direct=target?.closest('.bench-session');if(direct&&lookup.has(direct.id))return lookup.get(direct.id);
+    if(chapter){
+      const choices=sessions.filter(s=>document.getElementById(s.id)?.closest('.chapter')===chapter);
+      if(choices.length){const active=current();return choices.find(s=>s.id===active.id)||choices[0];}
+    }
+    return current();
+  }
+  function learningSection(s, all=false) {
+    const material=companions.milestones?.[s.milestone];
+    if(!material?.items?.length)return null;
+    const box=node('section',all?'companion-learning':'wb-learning');
+    box.append(node('h2','',all?'Keep learning along the way':'See what this makes possible'),paragraph(material.vision||s.why,'wb-small'));
+    const items=all?material.items:material.items.slice(0,1);
+    for(const item of items){
+      if(!/^https:\/\//.test(item.url||''))continue;
+      const row=node('div','companion-item');
+      const a=link((item.format?item.format+' · ':'')+item.title,item.url,'companion-link');a.target='_blank';a.rel='noopener noreferrer';
+      row.append(a);if(item.creator)row.append(node('span','companion-creator',item.creator));
+      if(item.why)row.append(paragraph(item.why));if(item.focus)row.append(paragraph('Look for: '+item.focus,'wb-small'));
+      box.append(row);
+    }
+    box.append(paragraph('Optional company for the build. Your next session does not depend on finishing this.','wb-small'));
+    if(!all)box.append(button('More to read, watch or listen to',()=>openHelp('learning'),'wb-text-button'));
+    return box;
+  }
+  let helpDialog,helpButton,projectCompass,helpReturnFocus;
+  function updateCompanion() {
+    if(!projectCompass)return;
+    const s=contextSession(),milestone=(plan.milestones||[]).find(m=>m.id===s.milestone);
+    const goal=link('Our rover: room map → supervised trip → observations in context','#ch-start','project-goal');
+    const stage=link('Building toward: '+(milestone?.title||s.title),'#learning-roadmap','project-capability');
+    projectCompass.replaceChildren(goal,stage);
+  }
+  function openHelp(section) {
+    save();const s=contextSession();helpReturnFocus=document.activeElement;
+    helpDialog.replaceChildren();
+    const header=node('div','companion-header');const title=node('h2','','Help for your build');title.id='fieldbook-help-title';
+    const close=button('Close',()=>helpDialog.close(),'tool-button companion-close');close.setAttribute('aria-label','Close help');header.append(title,close);
+    const context=paragraph('For this session: '+s.title,'companion-context');context.id='help-session-context';
+    const vision=node('section','companion-vision');vision.append(node('h3','','Where we’re going'),paragraph('A rover that measures one room, makes a supervised trip, and remembers what it observed with a place and time.'),link('See the project vision and route','#experienced-path','wb-text-link'));
+    helpDialog.append(header,context,paragraph(s.why,'companion-purpose'),recovery(s),vision);
+    const learning=learningSection(s,true);if(learning)helpDialog.append(learning);
+    helpDialog.append(link('Open the resource library','#ch-resources','wb-text-link'));
+    if(!helpDialog.open)helpDialog.showModal();helpButton.setAttribute('aria-expanded','true');
+    if(section==='learning'&&learning){learning.tabIndex=-1;learning.focus();learning.scrollIntoView({block:'start'});}else close.focus();
+  }
+  function setupCompanion() {
+    helpDialog=node('dialog','fieldbook-help');helpDialog.id='fieldbook-help';helpDialog.setAttribute('aria-labelledby','fieldbook-help-title');const label=node('h2','','Help for your build');label.id='fieldbook-help-title';helpDialog.append(label);document.body.append(helpDialog);
+    helpButton=button('Help',()=>openHelp(),'tool-button help-button');helpButton.id='help-button';helpButton.setAttribute('aria-haspopup','dialog');helpButton.setAttribute('aria-controls',helpDialog.id);helpButton.setAttribute('aria-expanded','false');
+    document.querySelector('.toolbar-actions')?.prepend(helpButton);
+    projectCompass=node('nav','project-compass');projectCompass.id='project-compass';projectCompass.setAttribute('aria-label','Project goal and current capability');document.getElementById('main')?.before(projectCompass);
+    helpDialog.addEventListener('close',()=>{helpButton.setAttribute('aria-expanded','false');if(helpReturnFocus?.isConnected)helpReturnFocus.focus({preventScroll:true});helpReturnFocus=null;});
+    helpDialog.addEventListener('click',e=>{if(e.target===helpDialog){const r=helpDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)helpDialog.close();}const a=e.target.closest('a[href^="#"]');if(a){helpReturnFocus=null;helpDialog.close();}});
+    updateCompanion();
   }
   function ideaCapture(s) {
     const body=node('div','wb-idea-body');body.append(paragraph('Keep the idea and the session it interrupted together. You can return to this exact task later.'));
@@ -195,28 +261,33 @@
     });body.append(label,input,saveIdea,status);return details('Save an idea without losing your place',[body],'wb-idea-capture');
   }
   function evidenceForm(s) {
-    const form=node('form','wb-evidence-form');form.addEventListener('submit',e=>e.preventDefault());form.append(node('h2','','Leave yourself a way back'),paragraph('One artifact or observation and one exact next action are enough. A saved investigation can remain unfinished.'));
-    const r=record(s);const evidenceLabel=node('label','','Evidence or artifact path');evidenceLabel.htmlFor='wb-evidence';const evidence=node('textarea');evidence.id='wb-evidence';evidence.rows=3;evidence.maxLength=20000;evidence.value=r.evidence;evidence.placeholder=s.artifact;
+    const form=node('form','wb-evidence-form');form.addEventListener('submit',e=>e.preventDefault());form.append(node('h2','','Record your result'),paragraph('Keep the measurements, choices and files this session produced. You can save an unfinished attempt without marking the checkpoint complete.'));
+    const prompts=labelledList('What to record',s.recordPrompts?.length?s.recordPrompts:[s.artifact],'wb-record-prompts');form.append(prompts);
+    const r=record(s);const evidenceLabel=node('label','','Your measurements, decisions and files');evidenceLabel.htmlFor='wb-evidence';const evidence=node('textarea');evidence.id='wb-evidence';evidence.rows=Math.min(9,Math.max(4,(s.recordPrompts||[]).length+1));evidence.maxLength=20000;evidence.value=r.evidence;evidence.placeholder=s.recordExample||s.artifact;
+    const recordHelp=paragraph('Save larger artifacts in your project folder; record their names or local paths here. '+s.artifact,'wb-small');recordHelp.id='wb-record-help';evidence.setAttribute('aria-describedby',recordHelp.id);
     const nextLabel=node('label','','Exact next action');nextLabel.htmlFor='wb-next-action';const next=node('textarea');next.id='wb-next-action';next.rows=2;next.maxLength=3000;next.value=r.nextAction;next.placeholder=s.actions[0];
+    const pause=details('Pausing before you finish?',[paragraph('Optional: write the next small action so you can resume from this point. Finishing the session gives you the next task automatically.','wb-small'),nextLabel,next],'wb-pause-options');pause.open=!!r.nextAction.trim();
+    const finish=node('div','wb-finish');finish.append(node('h3','','Check your result'),paragraph(s.finish));
     const claim=node('label','wb-check');const checkbox=node('input');checkbox.type='checkbox';checkbox.id='wb-finish-checked';claim.htmlFor=checkbox.id;claim.append(checkbox,node('span','','I checked the finish condition above.'));
     const status=paragraph('','wb-form-status');status.setAttribute('role','status');
     function draft(){const previous=record(s);state.records[s.id]={...previous,evidence:evidence.value,nextAction:next.value,updatedAt:new Date().toISOString()};if(previous.status==='complete'&&!evidence.value.trim())state.records[s.id].status='working';scheduleSave();}
     evidence.addEventListener('input',draft);next.addEventListener('input',draft);
     function commit(statusValue) {
-      if(!evidence.value.trim()&&(statusValue==='complete'||!next.value.trim())){status.textContent=statusValue==='complete'?'Save one observation or artifact path for this checkpoint.':'Leave an observation or an exact next action before pausing.';(statusValue==='complete'?evidence:next).focus();return false;}
+      if(!evidence.value.trim()&&(statusValue==='complete'||!next.value.trim())){status.textContent=statusValue==='complete'?'Save one observation or artifact path for this checkpoint.':'Leave an observation or an exact next action before pausing.';if(statusValue!=='complete')pause.open=true;(statusValue==='complete'?evidence:next).focus();return false;}
       if(statusValue==='complete'&&!checkbox.checked&&!(record(s).status==='complete'&&supported(s.id))){status.textContent='Check the finish condition before recording this checkpoint.';checkbox.focus();return false;}
       const updatedAt=new Date().toISOString();const rec={evidence:evidence.value.trim(),nextAction:next.value.trim(),status:statusValue,updatedAt};state.records[s.id]=rec;
       state.history.push({id:id(),session:s.id,evidence:rec.evidence,nextAction:rec.nextAction,status:statusValue,at:updatedAt});state.history=state.history.slice(-500);
       save();return true;
     }
-    const actions=node('div','wb-actions');actions.append(button('Save and pause',()=>{if(commit(record(s).status==='complete'?'complete':'working')){if(record(s).status==='working')activate(s);location.hash='workbench';}},'wb-button wb-secondary'));
+    const actions=node('div','wb-actions');
     actions.append(button('Record checkpoint met',()=>{
       if(!commit('complete'))return;
       const nextSession=nextReady();activate(nextSession);status.textContent=!storageOK?'Checkpoint kept in this open page. Export notes before leaving.':coreFinished()?'Your core checkpoints are recorded. Review the project evidence on your workbench.':!supported(s.id)?'This result is recorded. Review earlier checkpoints before treating the dependent capability as ready.':'Checkpoint recorded. Your next prepared session is ready on the workbench.';
       const destination=link(coreFinished()?'Review your core finish':'Continue to '+nextSession.title,coreFinished()?'#workbench':sessionLink(nextSession),'wb-button wb-next-session');const old=form.querySelector('.wb-next-session');if(old)old.replaceWith(destination);else form.append(destination);
     }));
+    actions.append(button('Save and pause',()=>{if(commit(record(s).status==='complete'?'complete':'working')){if(record(s).status==='working')activate(s);location.hash='workbench';}},'wb-button wb-secondary'));
     if(r.status==='complete')actions.append(button('Reopen this checkpoint',()=>{state.records[s.id]={...record(s),status:'working',updatedAt:new Date().toISOString()};activate(s);renderSession(s);},'wb-button wb-secondary'));
-    form.append(evidenceLabel,evidence,nextLabel,next,claim,actions,status,storageNote());return form;
+    form.append(evidenceLabel,recordHelp,evidence,finish,claim,actions,pause,status,storageNote());return form;
   }
   function evidenceTimeline() {
     const entries=[...state.history].reverse().slice(0,12);const box=node('section','wb-timeline');box.append(node('h2','','Your evidence trail'),paragraph('Saved evidence shows what you tried. “Checkpoint met” means you explicitly recorded its finish condition; a working entry keeps that check open.'));
@@ -257,32 +328,30 @@
     const active=node('section','wb-active-zone');active.setAttribute('aria-label','Current work');
     const finished=coreFinished();const card=node('section','wb-now');card.append(node('span','eyebrow',finished?'Core path recorded':'Your next working session'),node('h2','',finished?'You have a project to demonstrate.':s.title),paragraph(finished?'Review the fitted assembly, motion and stop evidence, measured map, navigation run, model evaluation and real observations together. Your records remain available below.':s.why,'wb-purpose'));
     if(!finished){const next=paragraph('','wb-home-next');next.append(node('strong','','Next action: '),document.createTextNode(record(s).nextAction||s.actions[0]));card.append(next);}
-    const action=node('div','wb-actions');const primary=link(finished?'Review the core finish':'Continue this session',finished?'#core-finish':sessionLink(s),'wb-button');const direction=node('span','wb-continue-glyph');direction.setAttribute('aria-hidden','true');primary.append(direction);action.append(primary,link(finished?'Choose an optional next experiment':'See the project vision',finished?'#ch-horizons':'#ch-start','wb-text-link'));card.append(action,returnContext(s,false));active.append(card);
+    const action=node('div','wb-actions');const primary=link(finished?'Review the core finish':'Continue this session',finished?'#core-finish':sessionLink(s),'wb-button');const direction=node('span','wb-continue-glyph');direction.setAttribute('aria-hidden','true');primary.append(direction);action.append(primary,link(finished?'Choose an optional next experiment':'See the project vision',finished?'#ch-horizons':'#ch-start','wb-text-link'));card.append(action);if(state.history.some(h=>h.evidence.trim()))card.append(returnContext(s,false));active.append(card);
     if(!finished){
       const facts=node('div','wb-session-facts');facts.append(labelledList('Have nearby',s.needs),labelledList('Finish this step when',[s.finish]));
-      active.append(facts,paragraph(s.minutes+' · Active-work estimate; stop at a useful observation.','wb-small wb-session-estimate'),recovery(s));
+      active.append(facts,paragraph(s.minutes+' · Active-work estimate; stop at a useful observation.','wb-small wb-session-estimate'));
     }
     const oldNotes=window.Fieldbook?.getChapterNotes?.() || {};const original=document.getElementById(s.id);const chapter=original?.closest('.chapter');if(chapter&&oldNotes[chapter.id])active.append(details('Earlier notes for this chapter',[paragraph(oldNotes[chapter.id],'wb-preserve-lines')]));
     const notebook=node('section','wb-notebook-zone');notebook.setAttribute('aria-label','Project notebook');notebook.append(evidenceTimeline(),ideasList());
     notebook.append(details('Notebook, map and reference shelf',[paragraph('Your notes and ideas stay in this browser. Export a copy before changing browsers or clearing site data.'),link('Export or import notes','#ch-practice'),paragraph(''),link('Dependency map','#learning-roadmap'),paragraph(''),link('Books, videos and references','#ch-resources')],'wb-reference-shelf'));
-    host.append(active,milestones(),notebook,storageNote());save();
+    host.append(active,milestones(),notebook,storageNote());save();updateCompanion();
   }
   function renderSession(s) {
     activate(s);reset(s.title);host.dataset.view='session';host.append(link('← Your workbench','#workbench','wb-back'));
-    heading((s.optional?'Optional experiment':'Working session')+' · '+s.minutes,s.title,s.why);
+    heading((s.optional?'Optional experiment':'Working session')+' · '+s.minutes,s.title);
+    const objective=node('section','wb-objective');objective.append(node('h2','','Your result for this session'),paragraph(s.objective||s.finish));host.append(objective);
     const card=node('section','wb-session-brief');card.append(labelledList('Have nearby',s.needs));
     const unfinished=(s.requires||[]).filter(x=>!supported(x));if(unfinished.length){const prereq=node('div','wb-prerequisites');prereq.append(node('h3','','Check the earlier steps'),paragraph('These checkpoints have not been recorded here. Review their results before using this session; importing old chapter notes does not certify these new checks.'));const list=node('ul');for(const key of unfinished){const item=node('li');item.append(link(lookup.get(key)?.title||key,sessionLink(lookup.get(key)||{id:key})));list.append(item);}prereq.append(list);card.append(prereq);}
-    card.append(node('h2','','Today’s moves'),paragraph('This is the plan for the session. Follow the detailed setup and bench checks below before carrying it out; the summary is not enough to energize hardware.','wb-small'));const actions=node('ol','wb-action-list');for(const action of s.actions)actions.append(node('li','',action));card.append(actions);
-    const finish=node('div','wb-finish');finish.append(node('h3','','A useful stopping point'),paragraph(s.finish));card.append(finish);
     if(s.uncertainty)card.append(paragraph((s.kind==='integration'?'Integration work: ':'What this checks: ')+s.uncertainty,'wb-uncertainty-text'));
-    host.append(card,recovery(s));
+    host.append(card);
     const related=node('div','wb-related');related.append(link('View the full chapter','#'+document.getElementById(s.id).closest('.chapter').id,'wb-text-link'));
     if(s.reference?.href)related.append(link(s.reference.label,s.reference.href,'wb-text-link'));
-    related.append(button('Leave a restart note',()=>{const field=document.getElementById('wb-next-action');field?.scrollIntoView({block:'center',behavior:'instant'});field?.focus({preventScroll:true});},'wb-text-button'));
+    related.append(button('Pause this session',()=>{const field=document.getElementById('wb-next-action');const panel=field?.closest('details');if(panel)panel.open=true;field?.scrollIntoView({block:'center',behavior:'instant'});field?.focus({preventScroll:true});},'wb-text-button'));
     related.append(button('Park an idea',()=>{const field=document.getElementById('wb-new-idea');const panel=field?.closest('details');if(panel)panel.open=true;field?.scrollIntoView({block:'center',behavior:'instant'});field?.focus({preventScroll:true});},'wb-text-button'));
-    host.append(related);
-    host.append(originalInstructions(s),evidenceForm(s),ideaCapture(s));
-    const note=window.Fieldbook?.getChapterNotes?.()?.[document.getElementById(s.id).closest('.chapter').id];if(note)host.append(details('Earlier chapter notes',[paragraph(note,'wb-preserve-lines')]));
+    host.append(originalInstructions(s),evidenceForm(s));const learning=learningSection(s);if(learning)host.append(learning);host.append(related,ideaCapture(s));
+    const note=window.Fieldbook?.getChapterNotes?.()?.[document.getElementById(s.id).closest('.chapter').id];if(note)host.append(details('Earlier chapter notes',[paragraph(note,'wb-preserve-lines')]));updateCompanion();
   }
   function route() {
     const hash=location.hash;
@@ -322,10 +391,12 @@
     save();if(!host.hidden)route();
     return {accepted:true,records:Object.keys(incoming.records).length};
   }
+  setupCompanion();
   window.FieldbookWorkbench={route,exportData,importData};
   window.addEventListener('hashchange',route);
   document.addEventListener('click',e=>{const a=e.target.closest('a');if(a&&a.getAttribute('href')===location.hash&&(location.hash==='#workbench'||location.hash.startsWith('#session/'))){e.preventDefault();route();}});
-  window.addEventListener('fieldbook:chapter',()=>{host.hidden=true;document.body.classList.remove('workbench-active');save();});
-  window.addEventListener('fieldbook:pin',()=>{const pinned=window.Fieldbook?.getPinnedSession?.();if(lookup.has(pinned)&&state.active!==pinned){state.active=pinned;save();if(!host.hidden&&location.hash==='#workbench')renderHome();}});
+  window.addEventListener('fieldbook:chapter',()=>{host.hidden=true;document.body.classList.remove('workbench-active');save();updateCompanion();});
+  window.addEventListener('fieldbook:pin',()=>{const pinned=window.Fieldbook?.getPinnedSession?.();if(lookup.has(pinned)&&state.active!==pinned){state.active=pinned;save();if(!host.hidden&&location.hash==='#workbench')renderHome();}updateCompanion();});
+  window.addEventListener('hashchange',()=>{if(helpDialog.open){helpReturnFocus=null;helpDialog.close();}updateCompanion();});
   route();
 })();

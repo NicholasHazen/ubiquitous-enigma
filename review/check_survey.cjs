@@ -8,6 +8,7 @@ const root=path.resolve(__dirname,'..');
 const artifacts=path.join(root,'test-results');fs.mkdirSync(artifacts,{recursive:true});
 const url=process.env.FIELDBOOK_TEST_URL || pathToFileURL(path.join(root,'dist/index.html')).href;
 const checks=[],errors=[];
+const resourceIds=[...fs.readFileSync(path.join(root,'course/resources.html'),'utf8').matchAll(/<article\b[^>]*\bclass="[^"]*\bresource-card\b[^"]*"[^>]*\bid="([^"]+)"/g)].map(m=>m[1]);
 async function check(name,fn){await fn();checks.push(name);console.log('PASS '+name);}
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
@@ -18,7 +19,7 @@ async function check(name,fn){await fn();checks.push(name);console.log('PASS '+n
  await page.goto(url);await page.waitForSelector('.chapter-link',{state:'attached'});
  await page.evaluate(()=>{localStorage.clear();localStorage.setItem('robotics-fieldbook-v1',JSON.stringify({completed:['ch-start'],notes:{'ch-start':'Earlier edition note'},last:'ch-start'}));});await page.reload();
  await check('New course initializes without inheriting old completion',async()=>{
-   assert.equal(await page.locator('.chapter').count(),13);assert.equal(await page.locator('.chapter-link').count(),13);assert.equal(await page.locator('.resource-card').count(),33);assert.equal(await page.locator('#progress-text').textContent(),'0 / 10');
+   assert.equal(await page.locator('.chapter').count(),13);assert.equal(await page.locator('.chapter-link').count(),13);assert.ok(resourceIds.length>0);assert.deepEqual(await page.locator('.resource-card').evaluateAll(es=>es.map(e=>e.id)),resourceIds);assert.equal(await page.locator('#progress-text').textContent(),'0 / 10');
    assert.equal(await page.locator('.chapter:not([hidden])').count(),0);assert.equal(await page.locator('#workbench-view').isVisible(),true);
  });
  await page.screenshot({animations:'disabled',path:artifacts+'/survey-cover-desktop.png'});
@@ -38,7 +39,7 @@ async function check(name,fn){await fn();checks.push(name);console.log('PASS '+n
    await page.goto(url+'#ch-models');await page.locator('#ch-models .next-chapter').click();await page.waitForFunction(()=>document.querySelector('.chapter:not([hidden])')?.id==='ch-mechanics');
  });
  await check('Deep links reveal roadmap, training, recording and resources',async()=>{
-   for(const target of ['learning-roadmap','experienced-path','model-neural','mapping-record','ch-resources']){
+   for(const target of ['learning-roadmap','experienced-path','model-neural','mapping-record','ch-resources','resource-inspiration']){
      await page.goto(url+'#'+target);await page.waitForFunction(t=>!!document.getElementById(t)?.getClientRects().length,target);
    }
  });

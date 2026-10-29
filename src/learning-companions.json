@@ -1,0 +1,124 @@
+{
+  "milestones": {
+    "room": {
+      "vision": "Choosing a real test area and one visual question starts our rover’s job: measure a room, make a supervised trip, and remember what it saw.",
+      "items": [
+        {
+          "format": "Watch",
+          "title": "Build a Mobile Robot with ROS: Project Overview",
+          "url": "https://articulatedrobotics.xyz/tutorials/mobile-robot/project-overview",
+          "creator": "Josh Newans · Articulated Robotics",
+          "focus": "Watch the opening overview for the three capabilities: remote driving, room mapping, and camera-based observations. Pick the one you most want to see your rover perform.",
+          "why": "See how a small mobile robot combines the interests you are learning. This is a visual companion; our hardware choices and Jazzy instructions remain the build route."
+        },
+        {
+          "format": "Read",
+          "title": "RT-2: New model translates vision and language into action",
+          "url": "https://deepmind.google/blog/rt-2-new-model-translates-vision-and-language-into-action/",
+          "creator": "Google DeepMind",
+          "focus": "Look at how the research connects camera observations, language, and robot actions. Name one future request you would like your rover to understand.",
+          "why": "This shows a longer-term possibility for a physical assistant. Our first result is deliberately smaller: one room and one present/absent observation, with no manipulation or general language control."
+        }
+      ]
+    },
+    "fit": {
+      "vision": "Your measured fit coupon is the first step toward a mount that holds the rover’s camera and sensors steadily in place.",
+      "items": [
+        {
+          "format": "Read",
+          "title": "Modeling with 3D printing in mind",
+          "url": "https://help.prusa3d.com/article/modeling-with-3d-printing-in-mind_164135",
+          "creator": "Prusa Research",
+          "focus": "Look at the orientation, support, and tolerance examples with your part in front of you. Identify the surface that must fit and the direction that carries its load.",
+          "why": "You can see why a printable shape and a dependable robot part are different design problems. Use measured X1 Carbon coupons for your own dimensions."
+        }
+      ]
+    },
+    "model": {
+      "vision": "Your first model learns one question from your own images, ready for the rover to attach those observations to a time and capture pose.",
+      "items": [
+        {
+          "format": "Watch",
+          "title": "But what is a Neural Network?",
+          "url": "https://www.3blue1brown.com/lessons/neural-networks/",
+          "creator": "Grant Sanderson · 3Blue1Brown",
+          "focus": "Watch how an image becomes numbers and how weights change the output. Translate the digit example into our toy-present versus toy-absent question.",
+          "why": "The animation gives a picture of what your training code changes. You can return to the experiment without mastering every equation in the series."
+        }
+      ]
+    },
+    "motion": {
+      "vision": "Commands, encoder feedback, and a tested stop turn the printed assembly into a mobile instrument for the room survey.",
+      "items": [
+        {
+          "format": "Watch",
+          "title": "Build a Mobile Robot with ROS: Project Overview",
+          "url": "https://articulatedrobotics.xyz/tutorials/mobile-robot/project-overview",
+          "creator": "Josh Newans · Articulated Robotics",
+          "focus": "Revisit the moving robot and trace one request from the operator to the wheels. Separate the job of driving from the jobs of sensing and mapping.",
+          "why": "The assembled rover makes the purpose of each bench check visible. Use our selected controller and its documented checks when you wire your own robot."
+        }
+      ]
+    },
+    "sensing": {
+      "vision": "A stationary sensor check prepares the rover to place camera images, laser returns, and wheel motion together using known frames and times.",
+      "items": [
+        {
+          "format": "Watch",
+          "title": "SLAM with slam_toolbox",
+          "url": "https://articulatedrobotics.xyz/tutorials/mobile-robot/applications/slam",
+          "creator": "Josh Newans · Articulated Robotics",
+          "focus": "Look at the laser observations and the robot display. Notice that the measurements need a position and orientation before they can form a coherent room.",
+          "why": "Seeing the output gives the coordinate-frame work a purpose. The video is visual reinforcement; keep the course’s Jazzy configuration and actual sensor mounting measurements."
+        }
+      ]
+    },
+    "map": {
+      "vision": "Your room sketch and tape measurements become independent checks that make the robot’s map useful for understanding the room.",
+      "items": [
+        {
+          "format": "Watch",
+          "title": "SLAM with slam_toolbox",
+          "url": "https://articulatedrobotics.xyz/tutorials/mobile-robot/applications/slam",
+          "creator": "Josh Newans · Articulated Robotics",
+          "focus": "Watch the grid map take shape as the robot observes the room. Look for revisiting an area, and compare that process with the reference spans you measured.",
+          "why": "This is the visible result our mapping sessions work toward. Follow our recording, frame, and measurement checks rather than copying another robot’s configuration."
+        },
+        {
+          "format": "Listen",
+          "title": "Episode 91 – Robot navigation on land and in water",
+          "url": "https://www.robottalk.org/2024/09/27/episode-91-john-leonard/",
+          "creator": "Robot Talk · Claire Asher with John Leonard",
+          "focus": "Listen for the relationship between knowing where a robot is and building a map. Bring back one idea that helps explain your own room experiment.",
+          "why": "John Leonard connects mapping and navigation to a wider field of real robots. This is optional listening, with no new software or prerequisite assignment."
+        }
+      ]
+    },
+    "navigation": {
+      "vision": "A checked map and dependable motion support a short requested trip, including knowing when the rover should stop or refuse the route.",
+      "items": [
+        {
+          "format": "Listen",
+          "title": "Episode 91 – Robot navigation on land and in water",
+          "url": "https://www.robottalk.org/2024/09/27/episode-91-john-leonard/",
+          "creator": "Robot Talk · Claire Asher with John Leonard",
+          "focus": "Listen for how navigation depends on observations and uncertainty, rather than a map alone. Relate that to a toy or chair moving after your survey.",
+          "why": "The interview puts your small supervised route in the same family of questions as larger autonomous systems. It does not establish that this rover is ready for unattended household use."
+        }
+      ]
+    },
+    "memory": {
+      "vision": "Records of what an image showed, when it was captured, and the rover’s pose give us evidence for future questions about the room.",
+      "items": [
+        {
+          "format": "Read",
+          "title": "RT-2: New model translates vision and language into action",
+          "url": "https://deepmind.google/blog/rt-2-new-model-translates-vision-and-language-into-action/",
+          "creator": "Google DeepMind",
+          "focus": "Inspect the examples connecting vision, language, and actions. Write down which observations and tested actions your own rover would need before answering one similar request.",
+          "why": "This is research inspiration for the physical-assistant vision. Our current memory records and checked navigation are narrower capabilities; a language model does not supply missing measurements or robot skills."
+        }
+      ]
+    }
+  }
+}

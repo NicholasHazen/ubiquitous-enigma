@@ -45,22 +45,22 @@
   "sessions": [
     {
       "id": "first-hour",
-      "title": "Choose the room and the toy",
+      "title": "Define the room your rover will learn",
       "track": "shared",
       "milestone": "room",
-      "minutes": "About 10–20 minutes",
-      "why": "One bounded room and one distinctive object make the first robot experiment specific enough to test.",
+      "minutes": "About 20–35 minutes",
+      "why": "Your rover will eventually compare its map with this room and attach observations to places in it. Today you choose that first place and create measurements it can be checked against.",
       "needs": [
         "Computer, camera and tape measure",
         "One clear area on a single floor; stair access will be physically blocked for powered tests"
       ],
       "actions": [
-        "Create home-rover with notes, cad, data and runs folders.",
-        "Photograph and sketch the test area; mark three measured spans and their exact endpoints.",
-        "Write the one-sentence present/absent question for your chosen toy."
+        "Choose one bounded test area and one distinctive toy; write the exact present/absent question.",
+        "Photograph and sketch the area, then label and measure three spans in at least two directions.",
+        "Save the room, target rule, measured endpoints, lengths and method in notes/room-reference.md."
       ],
-      "finish": "Your notes identify the room, measurement endpoints and target object.",
-      "artifact": "notes/room-reference.md, a room photograph and the target sentence",
+      "finish": "Your room-reference note identifies the test boundary and target rule, links a photo/sketch, and records three measured spans with endpoints, units and method.",
+      "artifact": "notes/room-reference.md, a labelled room sketch and one room photograph",
       "restart": "Open the room sketch and point to one measured span in the real room.",
       "diagnostic": "If choosing the room stalls you, use one clear section with three accessible reference spans and record that boundary.",
       "shortAction": "Choose the object and write its one-sentence label rule.",
@@ -70,26 +70,34 @@
       },
       "requires": [],
       "kind": "guided",
-      "uncertainty": "The first experiment measures one bounded area; whole-house coverage remains a later question."
+      "uncertainty": "The first experiment measures one bounded area; whole-house coverage remains a later question.",
+      "objective": "Create a room reference that identifies your first test area, three measured spans, and the one object your model will learn to recognize.",
+      "recordPrompts": [
+        "Name the room or bounded test area and explain why it is a manageable first survey.",
+        "Identify the target object and write the exact present/absent label rule.",
+        "Record three span IDs, their physical start/end surfaces, measured lengths in metres, and the measuring tool/method.",
+        "Save paths to the room photograph and labelled sketch, with the date and any measurement limitation."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nRoom / test boundary: [fill in]\nTarget object and label rule: [fill in]\nR1 — from [surface] to [surface]: [measured] m\nR2 — from [surface] to [surface]: [measured] m\nR3 — from [surface] to [surface]: [measured] m\nTool / method / limitation: [fill in]\nPhoto / sketch / note paths: [fill in]"
     },
     {
       "id": "capture-session-a",
       "title": "Capture your first twenty examples",
       "track": "learn",
       "milestone": "room",
-      "minutes": "About 25 minutes",
+      "minutes": "About 25–40 minutes",
       "why": "These are the first images your own model will learn from while the rover is still being built.",
       "needs": [
         "The selected toy and an existing camera",
         "home-rover/data; ordinary image files with people and private material kept out of frame"
       ],
       "actions": [
-        "Create data/train/A/present and data/train/A/absent.",
-        "Alternate ten present and ten absent photographs with varied viewpoints and backgrounds.",
-        "Open the files and check their labels; record the camera and capture conditions."
+        "Create the session-A present/absent folders and open your target rule from the room reference.",
+        "Alternate ten present and ten absent photographs, varying viewpoints and background in both conditions.",
+        "Open and count the files, correct ambiguous labels, and save the camera, conditions, counts and limitation in notes/capture-A.md."
       ],
-      "finish": "Twenty distinct images open correctly and are in their matching session and label folders.",
-      "artifact": "data/train/A with ten images per class and a capture note",
+      "finish": "Ten distinct present images and ten distinct absent images open correctly in their matching folders, and notes/capture-A.md records the conditions and counts.",
+      "artifact": "data/train/A with ten images per class, plus notes/capture-A.md",
       "restart": "Open one present and one absent image from session A and check their folder labels.",
       "diagnostic": "If the images look almost identical, change viewpoint and placement; do not duplicate files to reach twenty.",
       "shortAction": "Capture and label one varied present/absent pair, then note the remaining count.",
@@ -101,27 +109,35 @@
         "first-hour"
       ],
       "kind": "guided",
-      "uncertainty": "Session A alone cannot train and evaluate the complete experiment; later capture sessions provide independent comparisons."
+      "uncertainty": "Session A alone cannot train and evaluate the complete experiment; later capture sessions provide independent comparisons.",
+      "objective": "Save twenty distinct, correctly labelled photographs—ten with your target visible and ten with it absent—plus a capture note that explains how you made them.",
+      "recordPrompts": [
+        "Record the capture date, camera, lighting, background, and the viewpoints you changed.",
+        "Count the readable files in data/train/A/present and data/train/A/absent separately.",
+        "Record the target/label rule and one ambiguous image you removed or recaptured, if any.",
+        "Save the capture-note path and name one condition this session does not cover."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nSession: A / training\nPresent files: [count] / Absent files: [count]\nCamera / date / lighting: [fill in]\nViewpoint and background variation: [fill in]\nLabel check or recapture: [fill in]\nLimitation / capture-note path: [fill in]"
     },
     {
       "id": "first-measurement",
-      "title": "Measure one physical interface",
+      "title": "Measure the part your first print must fit",
       "track": "build",
       "milestone": "fit",
-      "minutes": "About 15 minutes",
+      "minutes": "About 15–20 minutes",
       "why": "A measured bolt or pin gives your printed fit experiment a real mating part.",
       "needs": [
         "Calipers and one actual M3 through-bolt or smooth pin",
         "The fit-log template from this session"
       ],
       "actions": [
-        "Clean and zero the caliper jaws.",
-        "Measure the part in more than one direction and record units and method.",
-        "Save the first fit-log entry and name the coupon you will print next."
+        "Label one real M3 bolt or smooth pin, then clean and zero the calipers.",
+        "Measure the same diameter three times with a change of direction or contact position; record every reading in millimetres.",
+        "Save a new mating-part row in notes/fit-log.csv, keep the part, and name the matching coupon you will print next."
       ],
-      "finish": "The log identifies a real measured part and the next small print.",
-      "artifact": "The first row of your fit log and the labelled mating part",
-      "restart": "Find the same part and repeat one recorded dimension.",
+      "finish": "The saved fit log identifies the real part, contains three actual readings with units and method, and names the next small print.",
+      "artifact": "notes/fit-log.csv with a measured mating-part row and the labelled physical part",
+      "restart": "Find the labelled part, reopen notes/fit-log.csv, and repeat one recorded dimension.",
       "diagnostic": "If readings vary, check zero and jaw contact and use light consistent pressure before changing the design.",
       "shortAction": "Zero the calipers and record one repeated measurement.",
       "reference": {
@@ -132,7 +148,15 @@
         "first-hour"
       ],
       "kind": "guided",
-      "uncertainty": "A nominal M3 label or caliper display resolution does not establish a printed hole’s fit."
+      "uncertainty": "A nominal M3 label or caliper display resolution does not establish a printed hole’s fit.",
+      "objective": "Measure one real mating part repeatedly and save a fit-log row you can use when choosing a printed clearance.",
+      "recordPrompts": [
+        "Identify and label the actual bolt or pin so you can test the same part later.",
+        "Record three caliper readings in millimetres, including the direction or location of each reading.",
+        "Record the caliper zero check and how you contacted the part; keep nominal size separate from measured size.",
+        "Save the fit-log path and name the small coupon you will use with this part."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nPart ID / nominal size if known: [fill in]\nMeasured feature: [fill in]\nReadings: [actual_1] / [actual_2] / [actual_3] mm\nZero check / contact method: [fill in]\nNext coupon / saved fit-log path: [fill in]"
     },
     {
       "id": "precision-setup",
@@ -163,7 +187,15 @@
         "first-measurement"
       ],
       "kind": "guided",
-      "uncertainty": "The baseline makes comparison repeatable; your own coupon measurements establish the local fit."
+      "uncertainty": "The baseline makes comparison repeatable; your own coupon measurements establish the local fit.",
+      "objective": "Save one X1 Carbon print recipe and coupon 3MF that you can reopen and repeat without guessing the settings.",
+      "recordPrompts": [
+        "Record actual printer, nozzle diameter, build plate, filament type/batch, and slicer version.",
+        "Record layer height, walls, top/bottom layers, infill, supports, and print orientation.",
+        "Record manual hole/contour compensation, circle compensation if available, and elephant-foot compensation.",
+        "Save the process name and the path/revision of the arranged 3MF."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nPrinter / nozzle / plate: [fill in]\nFilament / batch / slicer version: [fill in]\nProcess / orientation / compensation settings: [fill in]\nSaved process and 3MF path: [fill in]"
     },
     {
       "id": "precision-measure",
@@ -194,7 +226,15 @@
         "precision-setup"
       ],
       "kind": "guided",
-      "uncertainty": "This result applies to the measured feature, orientation and process; different geometry needs another small check."
+      "uncertainty": "This result applies to the measured feature, orientation and process; different geometry needs another small check.",
+      "objective": "Keep a labelled printed coupon and mating part whose fit is supported by repeated measurements under a recorded print setup.",
+      "recordPrompts": [
+        "Record coupon ID, print recipe/revision, material, orientation, and the mating-part ID.",
+        "Record nominal and repeated actual dimensions in millimetres; include top/bottom or seam differences you inspected.",
+        "Record which slot or hole fits with light pressure and what happens in the adjacent tighter fit.",
+        "Record the repeat check and the local clearance choice you will transfer to the mount."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nCoupon / mating part / 3MF: [fill in]\nFeature and nominal dimension: [fill in] mm\nRepeated actual dimensions: [fill in] mm\nFit observation / repeat check: [fill in]\nChosen local clearance and reason: [fill in]"
     },
     {
       "id": "model-data",
@@ -225,7 +265,15 @@
         "capture-session-a"
       ],
       "kind": "guided",
-      "uncertainty": "The initial 160-image target exercises the pipeline; it does not promise useful recognition throughout the house."
+      "uncertainty": "The initial 160-image target exercises the pipeline; it does not promise useful recognition throughout the house.",
+      "objective": "Create an auditable A–H image collection whose capture sessions stay intact across training, validation, and reserved testing.",
+      "recordPrompts": [
+        "Record the present/absent counts and capture conditions for each session A–H.",
+        "Record A–D as training, E–F as validation, and G–H as the reserved test, without moving related images between splits.",
+        "Record any ambiguous labels, duplicates, or missing files you removed or recaptured.",
+        "Save capture-note paths and identify conditions still missing from the collection."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nSession / split / present count / absent count / conditions\n[repeat one row for each of A–H]\nLabel and duplicate check: [fill in]\nCapture notes / missing conditions: [fill in]"
     },
     {
       "id": "model-setup",
@@ -256,7 +304,15 @@
         "model-data"
       ],
       "kind": "integration",
-      "uncertainty": "The supplied pipeline was checked on Linux CPU; your Windows execution and any later GPU environment require their own check."
+      "uncertainty": "The supplied pipeline was checked on Linux CPU; your Windows execution and any later GPU environment require their own check.",
+      "objective": "Run the supplied pipeline checks and inspect the actual resized images that the model will receive.",
+      "recordPrompts": [
+        "Record OS, Python, dependency versions, and the environment creation commands.",
+        "Record the synthetic smoke-check outcome separately from any real-data result.",
+        "Save the validated manifest path, session/split counts, and the training-input contact sheet.",
+        "Record whether the target remains recognizable at 64 × 64 pixels and any corrective data decision."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nEnvironment / versions: [fill in]\nSynthetic check outcome: [fill in]\nManifest / split counts: [fill in]\nTraining-input sheet: [path]\n64 × 64 target visibility / decision: [fill in]"
     },
     {
       "id": "model-baseline",
@@ -287,7 +343,15 @@
         "model-setup"
       ],
       "kind": "guided",
-      "uncertainty": "A small validation result is evidence about these sessions, not established household accuracy."
+      "uncertainty": "A small validation result is evidence about these sessions, not established household accuracy.",
+      "objective": "Save a reproducible baseline model and validation evidence, then explain one mistake or borderline prediction using the image that produced it.",
+      "recordPrompts": [
+        "Record the baseline command, run directory, data manifest, seed, and relevant versions.",
+        "Save validation metrics, detailed report, and error/contact-sheet paths.",
+        "Identify one error or boundary image with its true label and prediction, and explain what you noticed.",
+        "Record where preprocessing is fitted on training data only."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nBaseline run / command / seed / manifest: [fill in]\nValidation metrics and report paths: [fill in]\nImage / true label / prediction / observation: [fill in]\nTraining-only preprocessing location: [fill in]"
     },
     {
       "id": "model-neural",
@@ -318,7 +382,15 @@
         "model-baseline"
       ],
       "kind": "guided",
-      "uncertainty": "The neural model may lose to the baseline; that is a legitimate comparison rather than a failed course checkpoint."
+      "uncertainty": "The neural model may lose to the baseline; that is a legitimate comparison rather than a failed course checkpoint.",
+      "objective": "Save a reloadable CNN run and compare its validation behavior with the baseline on the same declared data split.",
+      "recordPrompts": [
+        "Record the CNN command, seed, run directory, data manifest, and checkpoint identity.",
+        "Save training history, run metadata, reload-check outcome, and validation-report paths.",
+        "Compare baseline and CNN validation results using a shared error, changed prediction, or difficult/low-margin example. If both are correct on every inspected image, explicitly record that no errors or disagreements were observed.",
+        "Explain the gradient reset, backward pass, and optimizer update by naming the corresponding code operations."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nCNN run / seed / checkpoint / manifest: [fill in]\nHistory / run metadata / reload result: [fill in]\nBaseline vs CNN validation evidence: [fill in]\nOne image comparison / observed errors or disagreements: [fill in; record none observed when applicable]\nGradient reset → backward → update: [code locations and explanation]"
     },
     {
       "id": "model-evaluation",
@@ -349,7 +421,15 @@
         "model-neural"
       ],
       "kind": "guided",
-      "uncertainty": "Once test errors guide changes, those sessions become development evidence; a new claim needs a fresh final test."
+      "uncertainty": "Once test errors guide changes, those sessions become development evidence; a new claim needs a fresh final test.",
+      "objective": "Evaluate the frozen baseline and CNN once on the reserved test sessions and state what the results do and do not support.",
+      "recordPrompts": [
+        "Record the frozen model/run identifiers and comparison decisions before reading test results.",
+        "Save both final test reports, reload evidence, and per-session outcomes.",
+        "Record one real-image prediction with its input, true condition if known, score, and observed error or limitation.",
+        "Write the next data-collection question; keep test-driven redesigns separate from this final comparison."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nFrozen comparison and model IDs: [fill in]\nTest reports / per-session results: [fill in]\nReal image / prediction / observed condition: [fill in]\nConclusion / limitation / next data question: [fill in]"
     },
     {
       "id": "mechanics-layout",
@@ -380,7 +460,15 @@
         "precision-measure"
       ],
       "kind": "integration",
-      "uncertainty": "The initial deck dimensions are a packaging trial; the course does not supply a physically validated complete chassis design."
+      "uncertainty": "The initial deck dimensions are a packaging trial; the course does not supply a physically validated complete chassis design.",
+      "objective": "Produce a Fusion assembly layout that shows how the real components, three support contacts, and service access fit together.",
+      "recordPrompts": [
+        "Record component identities/drawing revisions and the dimensions used for their envelopes.",
+        "Record the body-frame origin, forward direction, wheel geometry, deck height, and wheel-centre separation in millimetres.",
+        "Save labelled front/side views showing support contacts, scan clearance, cable paths, and the disconnect.",
+        "Record one packaging decision and how fasteners and replaceable parts remain accessible."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nFusion revision / component drawings: [fill in]\nOrigin / forward direction / measured geometry (mm): [fill in]\nFront and side screenshots: [paths]\nSupport / scan / cable / service checks: [fill in]\nPackaging decision and reason: [fill in]"
     },
     {
       "id": "precision-cad",
@@ -411,7 +499,15 @@
         "mechanics-layout"
       ],
       "kind": "integration",
-      "uncertainty": "The local mounting check establishes fit and serviceability; it does not certify the full deck’s load capacity."
+      "uncertainty": "The local mounting check establishes fit and serviceability; it does not certify the full deck’s load capacity.",
+      "objective": "Prove one bracket mounting pattern with a small printed mount before transferring it into the full deck.",
+      "recordPrompts": [
+        "Record the bracket identity, drawing revision, measured hole spacing, and named CAD parameters in millimetres.",
+        "Save the native design and slicer project with material, orientation, and revision.",
+        "Record bolt fit, tool access, gentle hand-load behavior, and removal/reassembly observations.",
+        "Record the rigid-joint/grounding check and any geometry change needed before the deck."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nBracket / drawing / spacing (mm): [fill in]\nCAD / 3MF / print revision: [fill in]\nFit / tool access / load / removal check: [fill in]\nRigid-joint check / design decision: [fill in]"
     },
     {
       "id": "mechanics-assembly",
@@ -442,7 +538,15 @@
         "precision-cad"
       ],
       "kind": "integration",
-      "uncertainty": "A roll check supports the prototype layout; it is not a rated payload or endurance test."
+      "uncertainty": "A roll check supports the prototype layout; it is not a rated payload or endurance test.",
+      "objective": "Assemble an unpowered chassis that supports its intended components and rolls without visible binding.",
+      "recordPrompts": [
+        "Record the assembly revision, fitted components/load, and print/fastener changes.",
+        "Measure the footprint, wheel-centre separation, and loaded wheel-radius estimate with units and method.",
+        "Save photographs showing all three support contacts and accessible disconnect/fasteners.",
+        "Record the roll test surface, wheel/caster clearances, binding or flex, and the resulting adjustment decision."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nAssembly revision / fitted load: [fill in]\nFootprint / track width / loaded radius: [measured values and units]\nThree-contact / disconnect photographs: [paths]\nUnpowered roll observations / adjustment: [fill in]"
     },
     {
       "id": "drive-power",
@@ -474,7 +578,15 @@
         "mechanics-assembly"
       ],
       "kind": "integration",
-      "uncertainty": "Wire protection, voltage settings and regeneration behavior depend on your actual pack and controller; documentation is not a completed bench check."
+      "uncertainty": "Wire protection, voltage settings and regeneration behavior depend on your actual pack and controller; documentation is not a completed bench check.",
+      "objective": "Produce a checked wiring record that traces the real motor power path and confirms pack polarity before motor operation.",
+      "recordPrompts": [
+        "Record battery, controller, fuse, disconnect, wire, and connector identities/ratings from their actual labels or datasheets.",
+        "Save a labelled positive and negative power-path diagram.",
+        "Record the unpowered continuity/short checks and disconnected-pack DC voltage and polarity, with meter mode.",
+        "Record any mismatch and keep power disconnected until it is resolved."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nComponents / ratings / datasheet revisions: [fill in]\nWiring diagram: [path]\nUnpowered harness check: [result]\nDisconnected pack: [measured voltage] V DC / polarity [result]\nUnresolved issue or connection decision: [fill in]"
     },
     {
       "id": "drive-encoder",
@@ -506,7 +618,15 @@
         "drive-power"
       ],
       "kind": "integration",
-      "uncertainty": "The expected count is based on a stated quadrature convention; the controller’s actual reporting must be measured."
+      "uncertainty": "The expected count is based on a stated quadrature convention; the controller’s actual reporting must be measured.",
+      "objective": "Establish a separate direction and encoder-count convention for each wheel, including a verified zero-command stop.",
+      "recordPrompts": [
+        "Record controller/firmware identity, verified motor/encoder pinout, channel, and configuration.",
+        "Record hand-turned counts for one marked revolution of each wheel and the stated count convention.",
+        "Record each wheel’s command sign, physical direction, count sign, and zero-command outcome.",
+        "Save any wiring/configuration correction and repeat-check result."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nController / firmware / configuration: [fill in]\nWheel | channel | counts per marked revolution | count convention\n[left/right measured records]\nPositive command / direction / count sign / zero-stop: [fill in]\nCorrection / repeat check: [fill in]"
     },
     {
       "id": "drive-feedback",
@@ -538,7 +658,15 @@
         "drive-encoder"
       ],
       "kind": "integration",
-      "uncertainty": "Suspended-wheel response does not establish loaded floor behavior; record what each measured trial actually supports."
+      "uncertainty": "Suspended-wheel response does not establish loaded floor behavior; record what each measured trial actually supports.",
+      "objective": "Capture requested-versus-measured speed traces for both wheels and document the low-speed operating limits they passed.",
+      "recordPrompts": [
+        "Record motor/supply identities, controller/software versions, velocity settings, and justified current/speed limits.",
+        "Save one zero-to-low-speed-to-zero trace per wheel with numeric axes, units, and time scale.",
+        "Record requested and measured speed, current behavior, oscillation, and return-to-zero observations.",
+        "Record any tuning change and preserve the before/after run identities."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nController setup / supply / limits: [fill in]\nLeft trace / right trace: [paths with units]\nTracking / current / oscillation / zero return: [fill in]\nChanged setting / before-after run IDs: [fill in]"
     },
     {
       "id": "drive-linux",
@@ -569,7 +697,15 @@
         "first-hour"
       ],
       "kind": "integration",
-      "uncertainty": "Passing the local demo verifies this setup step; each real driver still needs its own compatibility and device check."
+      "uncertainty": "Passing the local demo verifies this setup step; each real driver still needs its own compatibility and device check.",
+      "objective": "Demonstrate that two locally running ROS 2 programs exchange messages in the selected environment.",
+      "recordPrompts": [
+        "Record computer, OS version, ROS distribution, installation source, and package versions.",
+        "Record the setup command sourced in both terminals and the talker/listener commands.",
+        "Save matching sent/received message evidence and the date of the check.",
+        "Record any environment mismatch you corrected, or state that none was observed."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nComputer / OS / ROS / package versions: [fill in]\nSource command / talker command / listener command: [fill in]\nMatching sent and received message: [observed text or screenshot path]\nEnvironment correction: [fill in]"
     },
     {
       "id": "drive-interface",
@@ -602,7 +738,15 @@
         "drive-linux"
       ],
       "kind": "integration",
-      "uncertainty": "The guide supplies an interface contract and driver candidate; a complete validated bridge and local freshness guard are implementation work."
+      "uncertainty": "The guide supplies an interface contract and driver candidate; a complete validated bridge and local freshness guard are implementation work.",
+      "objective": "Demonstrate bounded manual movement and measured stopping/re-arm behavior for every required command and connection failure case.",
+      "recordPrompts": [
+        "Record bridge revision, controller identity, command/message contract, geometry, limits, and watchdog settings.",
+        "Save the failure-test setup and time/telemetry measurement method.",
+        "Record command-age loss while polling continues, bridge failure, network loss, and physical-stop outcomes, including delay and travel where measured.",
+        "Record re-arm behavior and unresolved stale-motion cases; do not mark the checkpoint met while they remain."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nBridge/config revision / limits / watchdogs: [fill in]\nCase | trigger | measured stop delay/travel | re-arm outcome\n[one row for each required failure case]\nTelemetry paths / measurement method: [fill in]\nUnresolved result or pass decision: [fill in]"
     },
     {
       "id": "capture-driver-check",
@@ -634,7 +778,15 @@
         "drive-linux"
       ],
       "kind": "integration",
-      "uncertainty": "A viewer image does not establish depth; firmware, USB and ROS-driver support must be checked for each selected device."
+      "uncertainty": "A viewer image does not establish depth; firmware, USB and ROS-driver support must be checked for each selected device.",
+      "objective": "Inspect a real stationary lidar measurement and explain its units, coordinate frame, time, and response to a measured target movement.",
+      "recordPrompts": [
+        "Record sensor, driver/package revision, configuration, connection, and software environment.",
+        "Record actual topic, message type, frame, timestamp, and observed rate.",
+        "Record target positions/movement with units and the corresponding displayed measurement change.",
+        "Save the RViz configuration and labelled screenshot; keep separate camera checks and optional depth results identified."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nDevice / driver / configuration: [fill in]\nTopic / type / frame / timestamp / rate: [fill in]\nTarget movement and observed change: [measured values with units]\nRViz / screenshot paths: [fill in]\nSeparate camera or depth check, if performed: [fill in]"
     },
     {
       "id": "geometry-frames",
@@ -666,7 +818,15 @@
         "capture-driver-check"
       ],
       "kind": "guided",
-      "uncertainty": "A measured offset is incomplete without orientation; a changed mount revision requires revisiting the transform."
+      "uncertainty": "A measured offset is incomplete without orientation; a changed mount revision requires revisiting the transform.",
+      "objective": "Create a measured frame sketch that locates the rover origin and sensor mounts using explicit directions and units.",
+      "recordPrompts": [
+        "Record the base_link origin, its floor projection, and forward/left/up directions.",
+        "Record sensor translation and orientation with sign, units, measuring method, and mount revision.",
+        "Save the map → odom → base_link → sensor sketch and identify the intended publisher of each transform.",
+        "Record any offset you have not yet measured rather than filling it with a guess."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nBody origin / direction convention: [fill in]\nSensor | signed x/y/z | orientation | units | method | mount revision\n[measured rows]\nFrame diagram / transform owners: [fill in]\nStill unmeasured: [fill in]"
     },
     {
       "id": "geometry-odometry",
@@ -699,7 +859,15 @@
         "geometry-frames"
       ],
       "kind": "integration",
-      "uncertainty": "Wheel rotation estimates travel under an ideal rolling assumption; traction can make physical travel differ."
+      "uncertainty": "Wheel rotation estimates travel under an ideal rolling assumption; traction can make physical travel differ.",
+      "objective": "Compare short measured rover motions with wheel odometry and preserve the raw evidence behind any scale correction.",
+      "recordPrompts": [
+        "Record counts per revolution and its convention, wheel geometry, configuration revision, and surface/load.",
+        "Record the inhibited-output forward-count and positive-left-yaw sign checks.",
+        "Record repeated straight-run tape distances versus odometry, plus the slow-turn comparison, with units.",
+        "Save raw counts and state which single scale change, if any, the repeated evidence justifies."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nGeometry / count convention / config / floor and load: [fill in]\nSign checks: [fill in]\nTrial | tape distance | odometry distance | units | raw-count path\n[actual trials]\nTurn comparison / correction decision: [fill in]"
     },
     {
       "id": "geometry-rays",
@@ -730,7 +898,15 @@
         "capture-driver-check"
       ],
       "kind": "guided",
-      "uncertainty": "A horizontal scan is a slice; it cannot establish clearance above/below the plane or detect every stair edge."
+      "uncertainty": "A horizontal scan is a slice; it cannot establish clearance above/below the plane or detect every stair edge.",
+      "objective": "Annotate one scan so observed surfaces, observed free rays, and unknown space are visibly distinct.",
+      "recordPrompts": [
+        "Record the scan frame, target positions, and measured target movement with units.",
+        "Save an annotated screenshot or sketch identifying a return, a free ray, and an occluded unknown region.",
+        "Record what changed when the target moved out of the scan plane.",
+        "Explain why a missing return does not establish that the whole volume is clear."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nScan frame / target movement: [fill in with units]\nAnnotated scan: [path]\nIn-plane observation: [fill in]\nOut-of-plane observation: [fill in]\nWhat remains unknown: [fill in]"
     },
     {
       "id": "geometry-inspect",
@@ -763,7 +939,15 @@
         "geometry-rays"
       ],
       "kind": "integration",
-      "uncertainty": "The inspection commands do not create missing drivers or transforms; those publishers must already implement the measured contract."
+      "uncertainty": "The inspection commands do not create missing drivers or transforms; those publishers must already implement the measured contract.",
+      "objective": "Verify that the live transform chain and message timing agree with the measured rover and sensor mounts.",
+      "recordPrompts": [
+        "Record the commands, ROS environment, configuration revision, and capture time.",
+        "Save the live frame diagram and topic/message inspection outputs.",
+        "Match each transform owner and signed offset to the physical mount record.",
+        "Record timestamp/transform availability checks and any unresolved mismatch."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nEnvironment / commands / capture time: [fill in]\nFrame diagram / message outputs: [paths]\nLive offsets vs measured mount revision: [fill in]\nTransform ownership / timing checks: [fill in]\nUnresolved mismatch: [fill in]"
     },
     {
       "id": "mapping-record",
@@ -796,7 +980,15 @@
         "geometry-inspect"
       ],
       "kind": "integration",
-      "uncertainty": "The 0.10 m comparison target is a provisional course goal; only your survey measurements establish whether it is met."
+      "uncertainty": "The 0.10 m comparison target is a provisional course goal; only your survey measurements establish whether it is met.",
+      "objective": "Save one raw survey recording with enough measured references and acquisition metadata to judge a later map.",
+      "recordPrompts": [
+        "Record the planned loop and three observable reference spans, including endpoints, metres, and measurement method.",
+        "Write the provisional dimensional acceptance target before comparing a map.",
+        "Record the stationary check, required retained topics/transforms, sensor/clock setup, and recording commands.",
+        "Save bag identity, route/time, component/software/configuration revisions, and acquisition-manifest path."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nRoute / three reference spans and endpoints (m): [fill in]\nDeclared dimensional target and reason: [fill in]\nStationary check / retained topics and transforms: [fill in]\nBag / acquisition manifest / config revision: [paths]\nRecording conditions and limitation: [fill in]"
     },
     {
       "id": "mapping-replay",
@@ -828,7 +1020,15 @@
         "mapping-record"
       ],
       "kind": "integration",
-      "uncertainty": "A consistent-looking image is a first inspection; independent dimensional checks come next."
+      "uncertainty": "A consistent-looking image is a first inspection; independent dimensional checks come next.",
+      "objective": "Turn the saved survey into a map you can inspect beside the room sketch, using a reproducible replay configuration.",
+      "recordPrompts": [
+        "Record bag identity, SLAM Toolbox version, copied configuration, and frame/topic mappings.",
+        "Record domain and simulated-time settings plus the mapping/playback commands.",
+        "Save an annotated map/scan/frame screenshot and compare the observed route with the room sketch.",
+        "Record visible misalignment or loop problems before making a configuration change."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nBag / mapper version / config: [fill in]\nDomain / clock / replay commands: [fill in]\nAnnotated first map: [path]\nRoute and surface comparison: [fill in]\nObserved mismatch / next single change: [fill in]"
     },
     {
       "id": "mapping-measure",
@@ -859,7 +1059,15 @@
         "mapping-replay"
       ],
       "kind": "integration",
-      "uncertainty": "Grid resolution is not measurement accuracy; endpoint selection and pose errors affect the result. Navigation needs a map fit for its tested route."
+      "uncertainty": "Grid resolution is not measurement accuracy; endpoint selection and pose errors affect the result. Navigation needs a map fit for its tested route.",
+      "objective": "Compare two independent room surveys against the same physical spans and document whether the declared dimensional target is met.",
+      "recordPrompts": [
+        "Record each physical span and matching map span in the same units, with endpoints and measurement method.",
+        "Compute signed map-minus-physical error and absolute error for all three spans.",
+        "Record the acceptance target, each pass/fail result, and loop-closure observations.",
+        "Save the independent second-survey comparison and any failed-attempt investigation."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nSurvey/map revisions / declared target: [fill in]\nSpan | physical (m) | map (m) | signed error (m) | absolute error (m) | pass/fail\n[three measured rows per survey]\nLoop closure / independent repeat: [fill in]\nFailed attempt and tested cause, if any: [fill in]"
     },
     {
       "id": "mapping-save",
@@ -890,7 +1098,15 @@
         "mapping-measure"
       ],
       "kind": "guided",
-      "uncertainty": "An occupancy raster and a serialized pose graph serve different purposes; retain the raw observations regardless."
+      "uncertainty": "An occupancy raster and a serialized pose graph serve different purposes; retain the raw observations regardless.",
+      "objective": "Package a named map revision with its scale, origin, measurements, configuration, and raw survey provenance.",
+      "recordPrompts": [
+        "Record map_revision and paths to the map YAML/image, preserving resolution and origin metadata.",
+        "Record the environment, domain/clock settings, and save commands.",
+        "Link the raw bag, acquisition manifest, frame diagram, and dimensional comparison report.",
+        "Record whether resumable SLAM state was saved and what is needed to reproduce or resume the result."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nmap_revision: [fill in]\nMap YAML/image / resolution / origin: [fill in]\nSave commands / environment / domain / clock: [fill in]\nBag / manifest / frames / measurement report: [paths]\nResumable state saved? [status and path]"
     },
     {
       "id": "navigation-gate",
@@ -924,7 +1140,15 @@
         "drive-interface"
       ],
       "kind": "integration",
-      "uncertainty": "The installed sample is not a calibrated rover configuration; adapting plugins and implementing guards are substantial integration work."
+      "uncertainty": "The installed sample is not a calibrated rover configuration; adapting plugins and implementing guards are substantial integration work.",
+      "objective": "Complete a navigation integration contract that traces a goal through measured configuration to bounded motor commands and local stopping.",
+      "recordPrompts": [
+        "Record Nav2/ROS versions, map revision, configuration paths, footprint, limits, and their measurement sources.",
+        "Record live transform, sensor, odometry, and manual-stop checks at the current floor/load.",
+        "Trace command type/topic, routing, freshness guards, and local stopping/re-arm implementations.",
+        "Record unresolved contract rows and keep autonomous movement disabled until each required row is supported."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nNav2 / ROS / map / config revisions: [fill in]\nMeasured footprint and limits / sources: [fill in]\nLive and manual-stop checks: [fill in]\nGoal-to-motor route / freshness / stop / re-arm: [fill in]\nUnresolved contract rows: [fill in]"
     },
     {
       "id": "navigation-localize",
@@ -956,7 +1180,15 @@
         "navigation-gate"
       ],
       "kind": "integration",
-      "uncertainty": "Loading a map does not tell the rover where it was placed; localization and obstacle updates need direct checks."
+      "uncertainty": "Loading a map does not tell the rover where it was placed; localization and obstacle updates need direct checks.",
+      "objective": "Match the stationary rover to its real marked pose in the saved map and verify obstacle marking and clearing.",
+      "recordPrompts": [
+        "Record map/configuration revisions and the physically marked pose and heading with units.",
+        "Save views showing scan/wall alignment and a footprint that covers the actual rover.",
+        "Record the test obstacle placement, marking, removal, clearing, and remaining unknown space.",
+        "Record any pose, footprint, or obstacle-handling discrepancy before driving."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nMap/config / real marked pose and heading: [fill in]\nAlignment and footprint screenshots: [paths]\nObstacle add/remove observations: [fill in]\nUnknown space / unresolved discrepancy: [fill in]"
     },
     {
       "id": "navigation-trip",
@@ -988,7 +1220,15 @@
         "navigation-localize"
       ],
       "kind": "integration",
-      "uncertainty": "The initial 0.15 m endpoint target is provisional; a success status alone does not establish physical arrival or stopped wheels."
+      "uncertainty": "The initial 0.15 m endpoint target is provisional; a success status alone does not establish physical arrival or stopped wheels.",
+      "objective": "Produce three measured records of a short supervised navigation goal, including arrival error, stopping, and any intervention.",
+      "recordPrompts": [
+        "Record map/configuration revisions, floor/load/speed conditions, and the marked start/goal positions.",
+        "Record the planned swept-footprint inspection and the command route used.",
+        "For all three trials, record physical endpoint error with units, timing, stop behavior, and reported outcome.",
+        "Preserve unsuccessful attempts and record any human intervention or change between trials."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nMap/config / floor/load/speed / marked route: [fill in]\nSwept-footprint check / command route: [fill in]\nTrial | endpoint error + units | time | stop behavior | outcome | intervention\n[three actual trials]\nChange between trials, if any: [fill in]"
     },
     {
       "id": "navigation-change",
@@ -1019,7 +1259,15 @@
         "navigation-trip"
       ],
       "kind": "integration",
-      "uncertainty": "Passing a broad obstacle test does not establish detection of low toys, shoelaces, glass or stair edges."
+      "uncertainty": "Passing a broad obstacle test does not establish detection of low toys, shoelaces, glass or stair edges.",
+      "objective": "Document the conditions in which navigation avoids an obstacle, refuses a route, or stops after a cancellation or freshness failure.",
+      "recordPrompts": [
+        "Record the obstacle/route setup and the tested floor, load, speed, and sensing conditions.",
+        "Record alternate-path clearance or refusal for the blocked route.",
+        "Record cancellation, command timeout, and sensor-freshness failure cases with measured stop delay/travel and method.",
+        "Record recovery/re-arm steps and the result of the uncomplicated trip after restoration."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nOperating envelope / obstacle setup: [fill in]\nBlocked-route path or refusal: [fill in]\nFailure case | trigger | stop delay/travel + units | result\n[actual required tests]\nRecovery procedure / restored-route result: [fill in]"
     },
     {
       "id": "memory-evidence",
@@ -1050,7 +1298,15 @@
         "model-setup"
       ],
       "kind": "guided",
-      "uncertainty": "The demo image paths and poses are illustrative; completing it does not complete the real-observation milestone."
+      "uncertainty": "The demo image paths and poses are illustrative; completing it does not complete the real-observation milestone.",
+      "objective": "Explain exactly which supplied historical observations a query returns, without treating the example as current object localization.",
+      "recordPrompts": [
+        "Record demo input/database paths and the query time window, score filter, and map revision.",
+        "Save returned observation IDs and explain one inclusion and one exclusion.",
+        "Record the result of re-importing unchanged data and the deduplication behavior.",
+        "Explain the difference between candidates and all recent observations, and the absent evidence for a current object position."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nDemo inputs / database / query filters: [fill in]\nReturned IDs / inclusion / exclusion: [fill in]\nUnchanged re-import result: [fill in]\nCandidates vs recent observations: [fill in]\nWhy current object position is unknown: [fill in]"
     },
     {
       "id": "memory-real-observations",
@@ -1087,7 +1343,15 @@
         "capture-driver-check"
       ],
       "kind": "integration",
-      "uncertainty": "The starter stores references but cannot verify image existence or pose accuracy; your inspection supplies that evidence. Automatic ROS association is later work."
+      "uncertainty": "The starter stores references but cannot verify image existence or pose accuracy; your inspection supplies that evidence. Automatic ROS association is later work.",
+      "objective": "Connect five real image predictions to checkable capture times and measured observer poses in the current room map.",
+      "recordPrompts": [
+        "Record the two measured observer poses, heading, map revision, units, method, and pose-note path.",
+        "For each of five distinct images, record actual capture time, image path, model identifier, score/decision, and observer pose.",
+        "Keep object position null unless separate evidence supports localization; document the actual pose source.",
+        "Save JSONL/database/query paths and check all five images against recent_observations."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nMap / measured observer poses / pose-note path: [fill in]\nObservation ID | image | capture time | model ID | score/decision | observer pose\n[five real records; object position remains null]\nJSONL / real database / query output: [paths]\nImage-by-image evidence check: [fill in]"
     },
     {
       "id": "memory-position",
@@ -1120,7 +1384,15 @@
       ],
       "kind": "guided",
       "uncertainty": "This is an optional paper exercise; the current observation schema intentionally rejects object coordinates until a new localization contract is designed.",
-      "optional": true
+      "optional": true,
+      "objective": "Check a planar coordinate transform against two drawings and distinguish measured object points from image-only predictions.",
+      "recordPrompts": [
+        "Record the supplied measured base-frame point, observer poses, axes, and units.",
+        "Show the arithmetic for zero yaw and a quarter-turn with consistent angle units.",
+        "Save both drawings and compare their transformed points with the calculation.",
+        "List the missing camera intrinsics, depth, and time-matched transforms needed for a real image pixel."
+      ],
+      "recordExample": "Blank record — replace the brackets with your own observations.\nMeasured point / observer poses / units: [fill in]\nZero-yaw calculation: [fill in]\nQuarter-turn calculation: [fill in]\nDrawing comparison: [paths and observation]\nInputs missing for a real pixel: [fill in]"
     }
   ]
 }

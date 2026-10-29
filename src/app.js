@@ -41,9 +41,9 @@
     if(c.dataset.progress !== 'utility') footer.append(complete,finishHelp);
     if(c.dataset.progress === 'optional') finishHelp.textContent='Optional research checkpoint. This does not change your core-project progress.';
     const notebook=document.createElement('details');notebook.className='notebook';
-    const summary=document.createElement('summary');summary.textContent='Park the project here · leave yourself a restart note';
+    const summary=document.createElement('summary');summary.textContent='Chapter notes and decisions';
     const label=document.createElement('label');label.htmlFor='note-'+c.id;label.className='sr-only';label.textContent='Workshop notes for '+c.dataset.title;
-    const textarea=document.createElement('textarea');textarea.id='note-'+c.id;textarea.value=safeNote(c.id);textarea.placeholder='Last thing that worked:\nWhat I saw:\nNext time: open this chapter and start at step …';
+    const textarea=document.createElement('textarea');textarea.id='note-'+c.id;textarea.value=safeNote(c.id);textarea.placeholder='Measurements and units:\nDecisions and why:\nFiles or photographs saved:\nAn open question, if there is one:';
     const status=document.createElement('span');status.className='note-status';status.setAttribute('role','status');status.textContent=storageOK?'Stored in this browser. Export a backup from chapter 11.':'Browser storage is unavailable. Export notes before closing.';
     let timer;
     textarea.addEventListener('input',()=>{state.notes[c.id]=textarea.value;clearTimeout(timer);timer=setTimeout(()=>{save();status.textContent=storageOK?'Saved in this browser.':'Storage unavailable. Export notes before closing.';},350);});
@@ -118,11 +118,22 @@
   const resumeContext=document.createElement('p');resumeContext.id='resume-context';resumeContext.className='resume-context';if(resume)resume.after(resumeContext);
   const pinTarget = id => typeof id === 'string' ? document.querySelector('.bench-session[id="'+CSS.escape(id)+'"]') : null;
   const sessionName = target => target?.matches('.chapter') ? target.dataset.title : target?.querySelector('h3,h2,h4')?.textContent || target?.textContent?.trim().slice(0,100);
+  let sessionPlan=[];try{sessionPlan=JSON.parse(document.getElementById('session-plan')?.textContent||'{}').sessions||[];}catch(_){}
   document.querySelectorAll('.bench-session[id]').forEach(session=>{
     const button=document.createElement('button');button.type='button';button.className='session-pin';button.dataset.pin=session.id;
     const status=document.createElement('span');status.className='pin-status';status.setAttribute('role','status');
     button.addEventListener('click',()=>{state.pinnedNext=state.pinnedNext===session.id?null:session.id;save();updateResume();window.dispatchEvent(new Event('fieldbook:pin'));status.textContent=state.pinnedNext===session.id?(storageOK?'Saved in this browser.':'Browser storage is unavailable; keep this session link.'):'Saved session cleared.';});
-    const row=document.createElement('div');row.className='session-pin-row';row.append(button,status);const meta=session.querySelector('.session-meta');if(meta)meta.after(row);else session.prepend(row);
+    const row=document.createElement('div');row.className='session-pin-row';
+    const contract=sessionPlan.find(s=>s.id===session.id);
+    if(contract){
+      if(!session.querySelector('.authored-session-objective')){
+        const objective=document.createElement('p');objective.className='session-objective';
+        const label=document.createElement('strong');label.textContent='Your result: ';objective.append(label,document.createTextNode(contract.objective||contract.finish));
+        const meta=session.querySelector('.session-meta');if(meta)meta.after(objective);else session.prepend(objective);
+      }
+      const guided=document.createElement('a');guided.className='session-record-link';guided.href='#session/'+session.id;guided.textContent='Do this session and record your result →';row.append(guided);
+    }
+    row.append(button,status);session.append(row);
   });
   if(reopenedMemory){const notice=document.createElement('p');notice.className='edition-banner';notice.textContent='Chapter 09 now requires five real linked observations to finish the core project. Its completion check has been reopened; your notes are preserved.';document.querySelector('#ch-start .chapter-heading').after(notice);}
   function updateResume(){
@@ -160,7 +171,7 @@
   }
   function openSearch(){renderSearch();dialog.showModal();input.focus();}
   document.getElementById('search-button').addEventListener('click',openSearch);document.getElementById('search-close').addEventListener('click',()=>dialog.close());input.addEventListener('input',renderSearch);
-  document.addEventListener('keydown',e=>{const typing=e.target.closest('input,textarea,select,[contenteditable]');if(e.key==='/'&&!typing&&!dialog.open){e.preventDefault();openSearch();}if(e.key==='Escape'){if(dialog.open){e.preventDefault();dialog.close();}if(document.body.classList.contains('nav-open')){setNav(false);document.getElementById('menu-button').focus();}}});
+  document.addEventListener('keydown',e=>{const typing=e.target.closest('input,textarea,select,[contenteditable]');if(e.key==='/'&&!typing&&!dialog.open&&!document.querySelector('#fieldbook-help[open]')){e.preventDefault();openSearch();}if(e.key==='Escape'){if(dialog.open){e.preventDefault();dialog.close();}if(document.body.classList.contains('nav-open')){setNav(false);document.getElementById('menu-button').focus();}}});
   let printDetails=[];
   window.addEventListener('beforeprint',()=>{printDetails=[...document.querySelectorAll('details')].map(el=>[el,el.open]);printDetails.forEach(([el])=>el.open=true);});
   window.addEventListener('afterprint',()=>printDetails.forEach(([el,open])=>el.open=open));

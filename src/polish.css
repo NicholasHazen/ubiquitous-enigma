@@ -86,6 +86,7 @@
   .chapter-heading h2 {font-family:var(--sans);font-weight:800;font-size:clamp(34px,3.5vw,46px);line-height:1.15;letter-spacing:-.045em;margin:18px 0}
   .chapter-heading>.eyebrow {font-size:10px;letter-spacing:.14em}
   .chapter-deck {font-size:18px;line-height:1.75;max-width:660px}
+  .chapter-session-start {display:inline-block;font-size:14px;font-weight:750;line-height:1.7;margin-bottom:15px}
   .chapter h3 {font-size:22px;letter-spacing:-.025em;margin-top:40px}
   .chapter p {margin-bottom:23px}
   .chapter :is(ol,ul) {line-height:1.85}
@@ -101,6 +102,14 @@
   .session-pin[aria-pressed=true] {background:var(--green);color:var(--accent-ink)}
   .chapter .bench-steps>li {border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:17px}
   .chapter .bench-steps>li::marker {font-size:13px}
+  #workbench-view :is(.wb-source-context,.wb-instructions) {max-width:780px}
+  #workbench-view .wb-instructions .bench-steps {padding-left:27px;margin:22px 0 28px;line-height:1.85}
+  #workbench-view .wb-instructions .bench-steps>li {padding:0 0 20px 6px;margin:0 0 20px;border-bottom:1px solid var(--line)}
+  #workbench-view .wb-instructions .bench-steps>li:last-child {border-bottom:0}
+  #workbench-view .wb-instructions .bench-steps>li::marker {font-family:var(--sans);font-size:13px;font-weight:800;color:var(--orange)}
+  .room-reference-example {margin:28px 0}
+  .room-reference-example svg {display:block;width:100%;height:auto}
+  .room-reference-example figcaption {margin-top:12px;font-size:13px;line-height:1.75;color:var(--muted)}
   :is(.callout,.pit-stop,.bench-check,.exercise,.checkpoint,.edition-banner) {border-radius:0 9px 9px 0;box-shadow:none;line-height:1.8}
   .checkpoint {border:1px solid var(--line);border-left:3px solid var(--green)}
   .chapter details {border-radius:8px;background:var(--surface);padding:17px 20px}
